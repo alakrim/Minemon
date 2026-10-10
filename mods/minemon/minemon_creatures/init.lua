@@ -6,6 +6,7 @@
 local MODPATH = core.get_modpath("minemon_creatures")
 local defs = dofile(MODPATH .. "/defs.lua")
 local spawning = dofile(MODPATH .. "/spawning.lua")
+local runtime = dofile(MODPATH .. "/runtime.lua")
 
 minemon.creatures = minemon.creatures or {}
 local API = minemon.creatures
@@ -58,6 +59,12 @@ local function register_all()
 		local name = defs.entity_name(sp)
 		local def = defs.build_def(sp)
 		def.on_spawn = make_on_spawn(sp, defs.min_spawn_level(stage))
+		-- Runtime hooks (T-24): brains, the single damage path, punches, death safety net.
+		def.do_custom = runtime.do_custom
+		def.do_punch = runtime.do_punch
+		def.deal_damage = runtime.deal_damage
+		def.after_activate = runtime.after_activate
+		def.on_die = runtime.on_die
 		mcl_mobs.register_mob(name, def)
 		local plan = defs.spawn_plan(sp, stage)
 		if plan then
@@ -88,10 +95,32 @@ function API.get_instance(obj)
 	return le._mm
 end
 
--- T-21b implements the exhausted state; until then no creature is exhausted.
-function API.is_exhausted(_obj)
-	return false
+-- Runtime API (T-24, D-027). The rules are in runtime_logic.lua; see runtime.lua for the hooks.
+
+-- The single damage path: returns the HP removed. info = {move_id?, effectiveness?, crit?, source?, type?}.
+API.damage = runtime.damage
+
+-- Adds HP up to max; returns the HP added. Exhausted creatures do not heal.
+API.heal = runtime.heal
+
+-- Called when a creature's HP reaches 0: wild creatures become exhausted, owned creatures faint.
+API.on_zero_hp = runtime.on_zero_hp
+
+function API.is_exhausted(obj)
+	return runtime.is_exhausted(obj)
 end
+
+function API.is_owned(obj)
+	return runtime.is_owned(obj)
+end
+
+function API.owner_name(obj)
+	return runtime.owner_name(obj)
+end
+
+-- Brains run in do_custom in registration order. Return true to stop the chain (mcl default states still run),
+-- "skip_states" to stop the chain and skip the default states, or nil to continue.
+API.register_brain = runtime.register_brain
 
 -- A wild creature (owner_name nil) despawns through the sweep in spawning.lua. An owned one is tamed,
 -- persistent and never despawns.
