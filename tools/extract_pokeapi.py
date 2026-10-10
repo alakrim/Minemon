@@ -50,12 +50,19 @@ Gen 2 version rules
       method level-up (id 1). Output is the union, sorted by (level, move).
 
 Design rules (our fields, derived from PokeAPI data)
-  D1  temperament. Order: (a) tools/design_overrides.json; (b) no-eggs egg group
-      or legendary or mythical -> territorial; (c) max(atk, spa) >= 120, or a
-      dark or fighting type with max(atk, spa) >= 70 -> aggressive; (d) speed
-      >= 80 and max(atk, spa) < 90 -> skittish; (e) egg group plant or fairy ->
-      peaceful; (f) otherwise territorial.
-      Note: (c) uses 120, not 100. At 100 the aggressive group was 73 of 251.
+  D1  temperament, first match wins:
+      (a) tools/design_overrides.json (clear named cases);
+      (b) legendary, mythical or no-eggs: aggressive if max(atk, spa) >= 110
+          (predators such as Mewtwo), otherwise territorial;
+      (c) aggressive if atk >= 100, or spa >= 120, or max(atk, spa) >= 85 with
+          speed >= 90, or a dark or fighting type with max(atk, spa) >= 70;
+      (d) peaceful if egg group plant or fairy, or if max(atk, spa) < 60 and
+          (hp >= 60 or def >= 100) (passive or defensive);
+      (e) skittish if size is tiny or small with max(atk, spa) < 70, or
+          speed >= 80 with max(atk, spa) < 90;
+      (f) otherwise territorial.
+      Targets (of 251): aggressive 25-35%, territorial 25-35%, skittish 15-25%,
+      peaceful 15-25%. Tests check the named cases and the ranges.
   D2  size_class from height in metres: tiny < 0.4, small < 0.9, medium < 1.6,
       large < 3, huge < 6, colossal >= 6.
   D3  body_plan from the PokeAPI shape: ball, arms, upright, legs, humanoid,
@@ -189,6 +196,21 @@ UNHANDLED_COLS = [
 GEN2_HAPPINESS = 220
 TEMPERAMENTS = {"aggressive", "territorial", "skittish", "peaceful"}
 SIZES = ["tiny", "small", "medium", "large", "huge", "colossal"]
+
+
+def size_class_for(height_m):
+    """D2 thresholds, in metres."""
+    if height_m < 0.4:
+        return "tiny"
+    if height_m < 0.9:
+        return "small"
+    if height_m < 1.6:
+        return "medium"
+    if height_m < 3:
+        return "large"
+    if height_m < 6:
+        return "huge"
+    return "colossal"
 
 
 def fetch(url, path):
@@ -596,32 +618,23 @@ def main():
         height_m = round(int(default_pokemon[sid]["height"]) / 10.0, 1)
         weight_kg = round(int(default_pokemon[sid]["weight"]) / 10.0, 1)
 
+        size = size_class_for(height_m)
+        is_legend = sp["is_legendary"] == "1" or sp["is_mythical"] == "1" or "no-eggs" in egg
         if name in temper_over:
             temper = temper_over[name]
-        elif "no-eggs" in egg or sp["is_legendary"] == "1" or sp["is_mythical"] == "1":
-            temper = "territorial"
-        elif atk_max >= 120 or (({"dark", "fighting"} & set(types)) and atk_max >= 70):
+        elif is_legend:
+            temper = "aggressive" if atk_max >= 110 else "territorial"
+        elif (stats["atk"] >= 100 or stats["spa"] >= 120 or (atk_max >= 85 and stats["spe"] >= 90)
+              or ({"dark", "fighting"} & set(types) and atk_max >= 70)):
             temper = "aggressive"
-        elif stats["spe"] >= 80 and atk_max < 90:
-            temper = "skittish"
-        elif egg & {"plant", "fairy"}:
+        elif (egg & {"plant", "fairy"}) or (atk_max < 60 and (stats["hp"] >= 60 or stats["def"] >= 100)):
             temper = "peaceful"
+        elif (size in ("tiny", "small") and atk_max < 70) or (stats["spe"] >= 80 and atk_max < 90):
+            temper = "skittish"
         else:
             temper = "territorial"
         temper_counts[temper] += 1
 
-        if height_m < 0.4:
-            size = "tiny"
-        elif height_m < 0.9:
-            size = "small"
-        elif height_m < 1.6:
-            size = "medium"
-        elif height_m < 3:
-            size = "large"
-        elif height_m < 6:
-            size = "huge"
-        else:
-            size = "colossal"
         if name in ov.get("size_class", {}):
             size = ov["size_class"][name]
         body = SHAPE_PLAN[shape_name[int(sp["shape_id"])]] if sp["shape_id"] else "other"
