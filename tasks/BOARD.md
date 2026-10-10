@@ -8,4 +8,4 @@
 | T-03 | M0 / w2 | high | DONE (attempt 2 + Opus fix) | voxel world + streamer |
 | T-04 | M0 / w2 | low | DONE | player/fly controller, debug overlay, settings |
 | T-05 | M0 / w3 | medium | DONE (attempt 2; CONCERN → T-06) | integration, benchmark, Windows .zip |
-| T-06 | M0 / w4 | high | BUILDING | main-thread stutter fix (snapshots off main thread, caps, wall-clock benchmark) |
+| T-06 | M0 / w4 | high | DONE | main-thread stutter fix (snapshots off main thread, caps, wall-clock benchmark) |

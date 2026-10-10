@@ -22,8 +22,10 @@ func run_generate(col: Vector2i, serial: int) -> void:
 	_push({"kind": RESULT_CHUNK, "pos": col, "serial": serial, "payload": chunk})
 
 
-## Worker thread: meshes an immutable snapshot and reports the packed arrays.
-func run_mesh(col: Vector2i, serial: int, snap: ChunkSnapshot, blocks: BlockRegistry) -> void:
+## Worker thread: pads the raw inputs of ChunkSnapshot.copy_inputs() into a snapshot, meshes it and
+## reports the packed arrays. The padding happens here, never on the main thread.
+func run_mesh(col: Vector2i, serial: int, inputs: Array, blocks: BlockRegistry) -> void:
+	var snap: ChunkSnapshot = ChunkSnapshot.from_raw(inputs[0], inputs[1])
 	var data: ChunkMeshData = ChunkMesher.build(snap, blocks)
 	_push({"kind": RESULT_MESH, "pos": col, "serial": serial, "payload": data})
 

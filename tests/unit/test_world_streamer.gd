@@ -75,3 +75,51 @@ func test_stale_mesh_is_dropped_after_unload_and_reload() -> void:
 	streamer.flush()
 	var mesh: Mesh = streamer._nodes[Vector2i.ZERO].mesh
 	assert_gt(mesh.get_surface_count(), 0, "the empty stale mesh must not replace the real one")
+
+
+func test_five_requests_for_one_column_in_one_frame_give_one_job() -> void:
+	var streamer := WorldStreamer.new()
+	streamer.seed = 1
+	streamer.view_radius = 1
+	add_child_autofree(streamer)
+	streamer.set_focus(Vector3.ZERO)
+	streamer.flush()
+	for i: int in 5:
+		streamer._enqueue_mesh(Vector2i.ZERO)
+	streamer._issue_mesh_requests(WorldStreamer.MESH_REQUESTS_PER_FRAME)
+	assert_eq(streamer._task_ids.size(), 1, "one column must give one mesh job")
+	assert_eq(streamer._mesh_queue.size(), 0, "nothing may stay queued for that column")
+	streamer.flush()
+
+
+func test_at_most_eight_mesh_requests_are_issued_per_frame() -> void:
+	var streamer := WorldStreamer.new()
+	streamer.seed = 1
+	streamer.view_radius = 3
+	add_child_autofree(streamer)
+	streamer.set_focus(Vector3.ZERO)
+	streamer.flush()
+	for z: int in range(-2, 2):
+		for x: int in range(-2, 3):
+			streamer._enqueue_mesh(Vector2i(x, z))
+	assert_eq(streamer._mesh_queue.size(), 20, "20 distinct columns must be queued")
+	streamer._process(0.0)
+	assert_eq(streamer._mesh_queue.size(), 12, "one frame must issue 8 and keep 12 queued")
+	streamer._process(0.0)
+	assert_eq(streamer._mesh_queue.size(), 4, "the next frame must issue 8 more")
+	streamer.flush()
+	assert_eq(streamer._mesh_queue.size(), 0, "flush must issue every queued request")
+
+
+func test_profiling_is_off_by_default_and_records_nothing() -> void:
+	assert_false(WorldStreamer.profile_enabled, "profiling must be off unless a tool turns it on")
+	var streamer := WorldStreamer.new()
+	streamer.seed = 1
+	streamer.view_radius = 1
+	add_child_autofree(streamer)
+	streamer.set_focus(Vector3.ZERO)
+	streamer.flush()
+	streamer._process(0.0)
+	assert_eq(
+		WorldStreamer.profile_ms.size(), 0, "no timing may be recorded while profiling is off"
+	)

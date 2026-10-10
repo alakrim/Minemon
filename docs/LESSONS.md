@@ -6,3 +6,4 @@
 - 2026-10-10: Face-count tests could not catch inverted triangle winding; rendering defects need a render or winding test. The verifier's Xvfb render check found it.
 - 2026-10-10: Worker-thread tasks bound to Callable(node) lock the Node, so free() is refused. Run jobs on a RefCounted runner.
 - 2026-10-10: check.sh must exclude .claude/worktrees/ when parallel worktree builds exist.
+- 2026-10-10: Headless benchmarks using engine delta hide spikes; always measure wall-clock (Time.get_ticks_usec). Profile main-thread costs before shipping a perf build.

@@ -1,21 +1,24 @@
 # STATE
 
-- **Phase:** C — Build loop, M0 (Gate 1 approved; Gate 2 summary sent 2026-10-10, owner said "start the project")
-- **Milestone:** M0 — skeleton + world spike + benchmark .zip
+- **Phase:** D: M0 close, waiting on the owner's benchmark (the performance gate)
+- **Milestone:** M0 built and verified (T-01..T-06 DONE). Not tagged yet.
 - **Last session:** 2026-10-10
 
 ## Active tasks
-- T-01 BUILDING (wave 1). T-02, T-03, T-04 READY (wave 2, separate worktrees, max 3 parallel). T-05 READY (wave 3).
-
-## Blockers
 - none
 
+## Blockers
+- Owner benchmark results from the Vega 8 (`benchmark_*.txt` for low-end and Vulkan)
+
 ## Decisions needed from owner
-- none (Gate 2 objections welcome)
+- none (just run the two benchmark .bat files and send the results)
 
 ## Next action
-- Verify T-01 → commit → run wave 2 (T-02/T-03/T-04 in worktrees) → verify → merge → T-05 → deliver M0 zip to owner for the benchmark.
+1. Read the owner's benchmark files. Pass = avg ≥ 30 fps and low1 ≥ 20 at radius 4 on either renderer.
+2. Pass: record the default-renderer D-entry, tag `m0-done`, update PROGRESS, then plan M1 (combat core) briefs. Fail: try the BACKLOG perf candidates (T-07), and if still failing, reconsider Luanti (D-015).
+3. M1 briefs must include: WorldStreamer set_block/re-mesh API, and a fix for `_closing` (BACKLOG).
 
 ## Notes
-- Workers: spawn `worker` agent type if loaded, else `general-purpose` with model haiku (D-007).
-- Repo: github.com/alakrim/Minemon (cloned at /home/claude/minemon in cloud sessions).
+- Workers: spawn `worker` agent type if loaded, else `general-purpose` with model haiku (D-007). Max 3 at once (D-011).
+- Repo: github.com/alakrim/Minemon. A cloud session clones it to /home/claude/minemon, then runs `bash scripts/setup.sh`.
+- Build the zip with `bash scripts/export_windows.sh` (downloads 1.3 GB of templates on first run).

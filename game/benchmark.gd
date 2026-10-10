@@ -4,6 +4,9 @@ extends Node
 ## writes benchmark_<renderer>_<yyyyMMdd_HHmm>.txt (8 "key: value" lines) and quits.
 ## The file goes next to the executable when that folder is writable, otherwise to user://.
 
+## Emitted once the result file is written, just before the game quits.
+signal finished
+
 const DEFAULT_SECONDS: float = 60.0
 const SECONDS_ARG: String = "--bench-seconds="
 const SIDE: float = 160.0
@@ -11,6 +14,8 @@ const LOOK_AHEAD: float = 0.005
 const LOOK_DROP: float = 8.0
 const LOW_FRACTION: float = 0.01
 const BYTES_PER_MB: float = 1048576.0
+const MICRO_PER_MS: float = 1000.0
+const MS_PER_SECOND: float = 1000.0
 
 var _player: Player
 var _camera: Camera3D
@@ -19,6 +24,7 @@ var _centre: Vector3
 var _duration: float = DEFAULT_SECONDS
 var _running: bool = false
 var _warmed_up: bool = false
+var _last_usec: int = 0
 var _elapsed: float = 0.0
 var _frame_ms: PackedFloat64Array = PackedFloat64Array()
 var _max_static_mb: float = 0.0
@@ -38,13 +44,17 @@ func start(player: Player, camera: Camera3D, streamer: WorldStreamer, centre: Ve
 	_running = true
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not _running:
 		return
-	# The first frame after start can carry scene loading time, so it is not timed.
+	# Each frame is the wall-clock time since the previous _process call, so stalls the engine delta
+	# would hide are counted. The first call after start has no previous call and is not recorded.
+	var now: int = Time.get_ticks_usec()
 	if _warmed_up:
-		_elapsed += delta
-		_frame_ms.append(delta * 1000.0)
+		var frame_ms: float = float(now - _last_usec) / MICRO_PER_MS
+		_elapsed += frame_ms / MS_PER_SECOND
+		_frame_ms.append(frame_ms)
+	_last_usec = now
 	_warmed_up = true
 	_move_camera()
 	_streamer.set_focus(_camera.global_position)
@@ -56,11 +66,21 @@ func _process(delta: float) -> void:
 
 
 func _read_seconds() -> float:
-	for arg: String in OS.get_cmdline_user_args():
+	return parse_seconds(OS.get_cmdline_user_args())
+
+
+## Returns the value of --bench-seconds= in `args`. A missing value gives DEFAULT_SECONDS. A value that is
+## not a finite number above zero prints a warning and also gives DEFAULT_SECONDS.
+static func parse_seconds(args: PackedStringArray) -> float:
+	for arg: String in args:
 		if arg.begins_with(SECONDS_ARG):
-			var value: float = arg.trim_prefix(SECONDS_ARG).to_float()
-			if value > 0.0:
+			var text: String = arg.trim_prefix(SECONDS_ARG)
+			var value: float = text.to_float()
+			if text.is_valid_float() and is_finite(value) and value > 0.0:
 				return value
+			var message: String = "Benchmark: '%s' is not a positive number, using %d seconds"
+			push_warning(message % [text, int(DEFAULT_SECONDS)])
+			return DEFAULT_SECONDS
 	return DEFAULT_SECONDS
 
 
@@ -97,6 +117,7 @@ func _finish() -> void:
 	var avg_fps: float = _fps(count, total_ms)
 	var low1_fps: float = 0.0
 	var min_fps: float = 0.0
+	var max_frame_ms: float = 0.0
 	if count > 0:
 		# The slowest 1% of frames (at least one), as one fps figure.
 		var low_count: int = maxi(1, ceili(count * LOW_FRACTION))
@@ -105,6 +126,7 @@ func _finish() -> void:
 			low_ms += sorted[i]
 		low1_fps = _fps(low_count, low_ms)
 		min_fps = _fps(1, sorted[count - 1])
+		max_frame_ms = sorted[count - 1]
 
 	var renderer: String = RenderingServer.get_current_rendering_method()
 	var gpu: String = RenderingServer.get_video_adapter_name()
@@ -114,6 +136,7 @@ func _finish() -> void:
 	lines.append("avg_fps: %.1f" % avg_fps)
 	lines.append("low1_fps: %.1f" % low1_fps)
 	lines.append("min_fps: %.1f" % min_fps)
+	lines.append("max_frame_ms: %.1f" % max_frame_ms)
 	lines.append("max_static_mb: %.1f" % _max_static_mb)
 	lines.append("peak_columns: %d" % _peak_columns)
 	lines.append("renderer: %s" % renderer)
@@ -127,6 +150,7 @@ func _finish() -> void:
 	)
 	var path: String = _write_result(file_name, "\n".join(lines) + "\n")
 	print("Benchmark result written to %s" % path)
+	finished.emit()
 	get_tree().quit()
 
 

@@ -47,3 +47,18 @@ func test_streamer_moves_then_frees_without_error() -> void:
 		await get_tree().process_frame
 	assert_false(is_instance_valid(streamer), "streamer must be freed")
 	assert_no_new_orphans()
+
+
+func test_benchmark_seconds_argument_parsing() -> void:
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=15"])), 15.0)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=2.5"])), 2.5)
+	assert_eq(
+		Benchmark.parse_seconds(PackedStringArray(["--benchmark"])), 60.0, "no value gives 60"
+	)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray()), 60.0, "no arguments give 60")
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=abc"])), 60.0)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds="])), 60.0)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=0"])), 60.0)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=-3"])), 60.0)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=inf"])), 60.0)
+	assert_eq(Benchmark.parse_seconds(PackedStringArray(["--bench-seconds=15s"])), 60.0)

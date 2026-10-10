@@ -3,6 +3,7 @@ extends GutTest
 
 const STONE: int = 3
 const WATER: int = 5
+const SAMPLE_COLUMNS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(2, -3), Vector2i(-4, 5)]
 
 
 func _registry() -> BlockRegistry:
@@ -124,3 +125,96 @@ func test_triangles_wind_like_godot_box_mesh() -> void:
 	assert_eq(dots.size(), 12, "one block is 6 faces, 2 triangles each")
 	for dot: float in dots:
 		assert_lt(dot, 0.0, "mesher triangle is wound the wrong way for Godot front faces")
+
+
+## The raw path (copy_inputs on the main thread, from_raw on a worker) must give the same padding and the
+## same mesh as the old per-cell Chunk.get_block path, for real generated columns.
+func test_snapshot_from_raw_matches_reference_padding_and_mesh() -> void:
+	var gen := TerrainGenerator.new(1)
+	var reg := _registry()
+	for col: Vector2i in SAMPLE_COLUMNS:
+		var c: Chunk = gen.generate(col)
+		var n: Chunk = gen.generate(col + Vector2i(0, -1))
+		var s: Chunk = gen.generate(col + Vector2i(0, 1))
+		var e: Chunk = gen.generate(col + Vector2i(1, 0))
+		var w: Chunk = gen.generate(col + Vector2i(-1, 0))
+		var reference: PackedByteArray = _reference_padded(c, n, s, e, w)
+		var top: int = maxi(maxi(c.top_y, n.top_y), maxi(maxi(s.top_y, e.top_y), w.top_y))
+
+		var inputs: Array = ChunkSnapshot.copy_inputs(c, n, s, e, w)
+		var raw_snap: ChunkSnapshot = ChunkSnapshot.from_raw(inputs[0], inputs[1])
+		assert_eq(raw_snap.padded_blocks(), reference, "padding must match at %s" % col)
+		assert_eq(raw_snap.top_y(), top, "top_y must match at %s" % col)
+
+		var expected: ChunkMeshData = ChunkMesher.build(_ReferenceSnapshot.new(reference, top), reg)
+		var actual: ChunkMeshData = ChunkMesher.build(raw_snap, reg)
+		assert_gt(expected.face_count, 0, "sample column %s must have faces" % col)
+		assert_eq(actual.face_count, expected.face_count, "face count at %s" % col)
+		assert_eq(actual.vertices, expected.vertices, "vertices at %s" % col)
+		assert_eq(actual.normals, expected.normals, "normals at %s" % col)
+		assert_eq(actual.colors, expected.colors, "colours at %s" % col)
+		assert_eq(actual.indices, expected.indices, "indices at %s" % col)
+
+
+func test_copy_inputs_is_unaffected_by_later_chunk_edits() -> void:
+	var c := _chunk_with([[Vector3i(5, 5, 5), STONE]])
+	var inputs: Array = ChunkSnapshot.copy_inputs(c, null, null, null, null)
+	c.set_block(Vector3i(5, 5, 5), 0)
+	var snap: ChunkSnapshot = ChunkSnapshot.from_raw(inputs[0], inputs[1])
+	assert_eq(snap.get_block(Vector3i(5, 5, 5)), STONE, "copied inputs must not follow the chunk")
+
+
+## The padding as the old code built it: every cell read through Chunk.get_block with its neighbour rule.
+func _reference_padded(
+	c: Chunk, north: Chunk, south: Chunk, east: Chunk, west: Chunk
+) -> PackedByteArray:
+	var pad := PackedByteArray()
+	pad.resize(ChunkSnapshot.PAD_VOLUME)
+	for y: int in Chunk.HEIGHT:
+		for z: int in range(-1, Chunk.SIZE + 1):
+			for x: int in range(-1, Chunk.SIZE + 1):
+				var value: int = _reference_block(c, north, south, east, west, Vector3i(x, y, z))
+				pad[(x + 1) + (z + 1) * ChunkSnapshot.PAD_ROW + (y + 1) * ChunkSnapshot.PAD_LAYER] = value
+	return pad
+
+
+func _reference_block(
+	c: Chunk, north: Chunk, south: Chunk, east: Chunk, west: Chunk, p: Vector3i
+) -> int:
+	var inside_x: bool = p.x >= 0 and p.x < Chunk.SIZE
+	var inside_z: bool = p.z >= 0 and p.z < Chunk.SIZE
+	if inside_x and inside_z:
+		return c.get_block(p)
+	if inside_x and p.z == -1:
+		return _block_or_air(north, Vector3i(p.x, p.y, Chunk.SIZE - 1))
+	if inside_x and p.z == Chunk.SIZE:
+		return _block_or_air(south, Vector3i(p.x, p.y, 0))
+	if inside_z and p.x == Chunk.SIZE:
+		return _block_or_air(east, Vector3i(0, p.y, p.z))
+	if inside_z and p.x == -1:
+		return _block_or_air(west, Vector3i(Chunk.SIZE - 1, p.y, p.z))
+	return 0
+
+
+func _block_or_air(chunk: Chunk, p: Vector3i) -> int:
+	if chunk == null:
+		return 0
+	return chunk.get_block(p)
+
+
+## Snapshot whose padded array is fixed by the test, so the mesher runs on the reference padding.
+class _ReferenceSnapshot:
+	extends ChunkSnapshot
+
+	var _reference: PackedByteArray
+	var _top: int
+
+	func _init(reference: PackedByteArray, top: int) -> void:
+		_reference = reference
+		_top = top
+
+	func padded_blocks() -> PackedByteArray:
+		return _reference
+
+	func top_y() -> int:
+		return _top

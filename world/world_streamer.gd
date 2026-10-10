@@ -7,12 +7,18 @@ extends Node3D
 
 const COLUMN_SIZE: int = Chunk.SIZE
 const APPLY_PER_FRAME: int = 4
+const MESH_REQUESTS_PER_FRAME: int = 8
 const BLOCKS_PATH: String = "res://data/blocks.json"
 const RESULT_CHUNK: int = ColumnJobs.RESULT_CHUNK
 const RESULT_MESH: int = ColumnJobs.RESULT_MESH
 const NEIGHBOUR_OFFSETS: Array[Vector2i] = [
 	Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)
 ]
+
+## Debug only (tools/profile_stream.gd). When true, _process records its main-thread time in ms.
+static var profile_enabled: bool = false
+## Main-thread ms of each _process call while profile_enabled is true.
+static var profile_ms: PackedFloat64Array = PackedFloat64Array()
 
 ## Seed used by the terrain. Read once, when the streamer first initialises.
 var seed: int = 1
@@ -30,6 +36,9 @@ var _serials: Dictionary[Vector2i, int] = {}
 var _nodes: Dictionary[Vector2i, MeshInstance3D] = {}
 var _bodies: Dictionary[Vector2i, StaticBody3D] = {}
 var _ready_meshes: Array[Dictionary] = []
+## Columns waiting for a mesh request, in order. _mesh_queued is the same set, for de-duplication.
+var _mesh_queue: Array[Vector2i] = []
+var _mesh_queued: Dictionary[Vector2i, bool] = {}
 var _task_ids: Array[int] = []
 var _serial: int = 0
 var _focus_column: Vector2i = Vector2i.ZERO
@@ -46,11 +55,21 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if profile_enabled:
+		var started: int = Time.get_ticks_usec()
+		_process_frame()
+		profile_ms.append(float(Time.get_ticks_usec() - started) / 1000.0)
+	else:
+		_process_frame()
+
+
+func _process_frame() -> void:
 	if _closing:
 		return
 	_ensure_ready()
 	_prune_tasks()
 	_drain_results()
+	_issue_mesh_requests(MESH_REQUESTS_PER_FRAME)
 	_apply_meshes(APPLY_PER_FRAME)
 
 
@@ -131,18 +150,42 @@ func _request_generate(col: Vector2i) -> void:
 	)
 
 
+## Main thread, O(1): copies the raw bytes of the column and its neighbours. The worker does the padding.
 func _request_mesh(col: Vector2i) -> void:
 	var serial: int = _next_serial()
 	_serials[col] = serial
-	var centre: Chunk = _chunks[col]
-	var north: Chunk = _chunks.get(col + Vector2i(0, -1))
-	var south: Chunk = _chunks.get(col + Vector2i(0, 1))
-	var east: Chunk = _chunks.get(col + Vector2i(1, 0))
-	var west: Chunk = _chunks.get(col + Vector2i(-1, 0))
-	var snap := ChunkSnapshot.new(centre, north, south, east, west)
-	_task_ids.append(
-		WorkerThreadPool.add_task(Callable(_runner, &"run_mesh").bind(col, serial, snap, _blocks))
+	var inputs: Array = ChunkSnapshot.copy_inputs(
+		_chunks[col],
+		_chunks.get(col + Vector2i(0, -1)),
+		_chunks.get(col + Vector2i(0, 1)),
+		_chunks.get(col + Vector2i(1, 0)),
+		_chunks.get(col + Vector2i(-1, 0))
 	)
+	_task_ids.append(
+		WorkerThreadPool.add_task(Callable(_runner, &"run_mesh").bind(col, serial, inputs, _blocks))
+	)
+
+
+## Main thread: queues a column for a mesh request. A column already queued is not added twice.
+func _enqueue_mesh(col: Vector2i) -> void:
+	if _mesh_queued.has(col):
+		return
+	_mesh_queued[col] = true
+	_mesh_queue.append(col)
+
+
+## Main thread: issues at most `limit` queued mesh requests. The rest stay queued for later frames.
+func _issue_mesh_requests(limit: int) -> void:
+	if _closing:
+		return
+	var issued: int = 0
+	while issued < limit and not _mesh_queue.is_empty():
+		var col: Vector2i = _mesh_queue.pop_front()
+		_mesh_queued.erase(col)
+		if not _chunks.has(col):
+			continue
+		_request_mesh(col)
+		issued += 1
 
 
 ## Main thread: moves finished job results into the main-thread queues.
@@ -161,11 +204,11 @@ func _accept_chunk(entry: Dictionary) -> void:
 	_chunks[col] = entry["payload"]
 	if _closing:
 		return
-	_request_mesh(col)
+	_enqueue_mesh(col)
 	for offset: Vector2i in NEIGHBOUR_OFFSETS:
 		var neighbour: Vector2i = col + offset
 		if _chunks.has(neighbour):
-			_request_mesh(neighbour)
+			_enqueue_mesh(neighbour)
 
 
 func _accept_mesh(entry: Dictionary) -> void:
@@ -269,6 +312,8 @@ func _unload_far() -> void:
 func _drop_column(col: Vector2i) -> void:
 	_serials.erase(col)
 	_chunks.erase(col)
+	_mesh_queued.erase(col)
+	_mesh_queue.erase(col)
 	_remove_column_nodes(col)
 	var kept: Array[Dictionary] = []
 	for item: Dictionary in _ready_meshes:
@@ -288,12 +333,14 @@ func _prune_tasks() -> void:
 
 
 ## Waits for all queued tasks. Finished results can queue new mesh tasks, so this repeats until none remain.
+## Unlike a frame, this issues every queued mesh request, not just MESH_REQUESTS_PER_FRAME of them.
 func _wait_and_drain() -> void:
 	while true:
 		for id: int in _task_ids:
 			WorkerThreadPool.wait_for_task_completion(id)
 		_task_ids.clear()
 		_drain_results()
+		_issue_mesh_requests(_mesh_queue.size())
 		if _task_ids.is_empty():
 			break
 
@@ -306,3 +353,5 @@ func _shutdown() -> void:
 	_closing = true
 	_wait_and_drain()
 	_ready_meshes.clear()
+	_mesh_queue.clear()
+	_mesh_queued.clear()
