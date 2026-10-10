@@ -174,3 +174,18 @@ Trade-off: it is heavier than Minetest Game. Fallback: Minetest Game plus Mobs R
 - Permadeath: Luanti has no spectator mode, so the 4th death puts the player into "ghost mode": no interact privilege, invisible, can fly and watch. Admins can revive.
 - Tests: luacheck, busted unit tests for pure Lua, and headless luantiserver integration tests.
 - Delivery: a portable Windows build (Luanti win64 zip plus the game), split into parts of 25 MB or less and written to the owner's Downloads folder through the linked PC.
+
+## D-026 — M1 gameplay architecture (2026-10-10)
+- **Creatures:** one mcl_mobs mob per species, generated from the data. Custom health is held in the instance. The nametag reads "Rattata Lv 4".
+- **Levels:** the level depends on distance from spawn plus a night bonus (wild_level).
+- **Temperament** is implemented in our `do_custom`, every 0.5 s:
+  - aggressive: hunts the player only when the player has no Pokémon out; otherwise it attacks the player's Pokémon;
+  - territorial: attacks when the player is within 5 nodes or hits it;
+  - skittish: flees within 8 nodes;
+  - peaceful: wanders, and flees when hit.
+- **Creature vs player:** mcl_mobs melee (`dogfight`), with damage scaled by level and attack stat. Wild creatures are the main danger.
+- **Creature vs creature:** our move system with real-time archetypes; the AI picks moves by type effectiveness and cooldown.
+- **Defeat:** a wild creature at 0 HP becomes **exhausted** (sits, harmless, 20 s) instead of dying. It is capturable in M2; if not captured it flees.
+- **Vanilla mobs:** hostile VoxeLibre mobs are disabled by per-entity settings in the preset (night danger comes from Ghost/Dark Pokémon); passive farm animals stay.
+- **Player's Pokémon:** the starter is chosen on first join from the 6 Kanto + Johto starters. A "Party Ball" item sends out and recalls the Pokémon (place key). Punching a creature with the ball in hand orders an attack. Moves are chosen by AI in M1; manual move choice comes in M2.
+- **Stand-in visuals:** our procedural .glb per body_plan, plus a per-type texture with eyes (tools/gen_standins.py).

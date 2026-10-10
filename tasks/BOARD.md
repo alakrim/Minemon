@@ -2,9 +2,14 @@
 
 | ID | Milestone/wave | Risk | Status | Output |
 |---|---|---|---|---|
-| S-09..S-11 | Re-plan | — | DONE | docs/research/S-09, S-10, S-11 |
-| T-14 | M0 / w1 | high | DONE | cleanup, setup/check/assemble/test runner, smoke test |
-| T-15 | M0 / w1 | medium | DONE (concerns logged) | minemon_lives |
-| T-17 | M0 / w1 | medium | FAILED (attempt 1: temperament balance) | 251-species data + extractor |
-| T-16 | M0 / w2 | medium | BUILT | Windows portable build + Vega 8 graphics preset |
-| T-19 | M1 / w0 | medium | BUILDING | client build + screenshot harness |
+| T-14 | M0 / w1 | high | DONE | tooling, assembly, check |
+| T-15 | M0 / w1 | medium | DONE (concerns in BACKLOG) | minemon_lives |
+| T-17 | M0 / w1 | medium | DONE (attempt 2) | 251-species data |
+| T-16 | M0 / w2 | medium | DONE (owner fps pending) | Windows build + presets |
+| T-19 | M1 / w0 | medium | DONE (Opus visual review) | client screenshot harness |
+| T-20 | M1 / w1 | high | BUILDING | minemon_core API |
+| T-18 | M1 / w1 | medium | BUILDING | stand-in models + type textures |
+| T-21a | M1 / w2 | high | TODO | creature registration, spawning, levels |
+| T-22 | M1 / w2 | medium | TODO | party, starter, Party Ball |
+| T-21b | M1 / w3 | high | TODO | temperament AI, aggression gate, exhausted state |
+| T-23 | M1 / w3 | high | TODO | move system (6 archetypes), VFX |

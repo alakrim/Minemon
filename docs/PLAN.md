@@ -40,3 +40,44 @@ A private Pokémon game in a Minecraft-like world for the owner and one friend.
 | M4 | Towns and missions: Kanto/Johto towns via VoxeLibre villages placed near canon positions, NPC quests, Pokémon Centers as respawn checkpoints | Each mission completable |
 | M5 | Eldritch giants (titans) | Owner playtest |
 | M6 | Owner Pokémon visual packs; multiplayer with the friend; Android check | — |
+
+## M1 interface contract (D-026). Changing it is a high-risk task plus a D-entry.
+All APIs hang off the global `minemon` table created by `minemon_core`.
+
+**minemon_core** (pure modules have no `core` access and are busted-tested):
+- `minemon.data`:
+  - `get_species(id_or_name)` returns the species.json entry (name matching is case-insensitive) or nil;
+  - `get_move(id)` returns the move table or nil;
+  - `all_species_ids()` returns 1..251;
+  - `type_multiplier(atk_type, def_types)`; `get_item(id)`.
+  - Data loads once at mod load with `core.parse_json` from `minemon_core/data/`.
+- `minemon.formulas` (`formulas.lua`, pure, a Lua port of the Gen 2 rules in docs/research and the archived Godot core; see the T-20 brief):
+  - `calc_stats(base, level, ivs, bond)` returns `{hp,atk,def,spa,spd,spe}`;
+  - `damage(atk_view, def_view, move, type_mult_fn, rng)` returns `{amount, crit, effectiveness, missed}`, where a view is `{level, stats, types, status, stages}`;
+  - `catch_chance(catch_rate, hp_frac, ball_mult, status)` returns 0..1;
+  - `exp_for_level(level, growth)`, `level_for_exp(exp, growth)`, `exp_gain(base_exp, defeated_level, bond)`;
+  - `wild_level(distance_from_origin, is_night, rng)` returns 2..70.
+- `minemon.rng.new(seed)` returns an object with `:float()` (0..1) and `:int(a, b)`.
+- `minemon.instance` (`instance.lua`, pure):
+  - `new(species, level, rng)` returns an instance `{uid, species_id, nickname="", level, exp, ivs={hp,atk,def,spa,spd,spe 0..15}, bond=0, hp, status="none", moves={{id,pp}... ≤4: the last 4 learnset moves at or below level}, ball="poke_ball", shiny=false, owner=nil}`;
+  - `serialize` / `deserialize` (JSON-safe tables); `stats(instance, species)`.
+- `minemon.events`:
+  - `register(name, fn)` and `fire(name, ...)`;
+  - events: `creature_defeated(victim_luaentity, attacker_obj)`, `creature_captured(player, instance)`, `creature_sent_out(player, obj)`, `creature_recalled(player)`.
+
+**minemon_creatures:**
+- One mcl_mobs mob per species, named `minemon_creatures:<lowercase_name_with_underscores>` (e.g. `minemon_creatures:mr_mime`).
+- The luaentity holds `self._mm` (the instance). Health is custom (`self.health` = instance hp).
+- `minemon.creatures.spawn(pos, species_id, level, owner_name_or_nil)` returns an ObjectRef.
+- `minemon.creatures.get_instance(obj)` returns the instance or nil.
+- `minemon.creatures.is_exhausted(obj)` reports the defeated, capturable state.
+
+**minemon_party:**
+- `minemon.party.get(player)` returns the instance list (max 6), stored in player meta `minemon:party:list` as JSON;
+- `set(player, list)`;
+- `get_active(player)` returns the ObjectRef or nil;
+- `send_out(player, index)`; `recall(player)`.
+
+**minemon_combat:**
+- `minemon.combat.use_move(user_obj, target_obj, move_id)` returns true on success; it applies damage and status through the formulas.
+- Move archetypes are implemented once each: projectile, beam, melee_arc, area_burst, aura, status_cloud.
