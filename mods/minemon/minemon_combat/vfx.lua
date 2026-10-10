@@ -2,6 +2,8 @@
 -- Glue: it touches core. Every spawner call is capped at MAX_PER_CALL particles.
 -- luacheck: read_globals core vector
 
+local SAFE = dofile(core.get_modpath("minemon_combat") .. "/safe.lua")
+
 local M = {}
 
 M.MAX_PER_CALL = 8
@@ -286,9 +288,11 @@ function M.feedback(player, text, colour)
 		z_index = 100,
 	})
 	core.after(M.FEEDBACK_SHOW_S, function()
-		if player:get_pos() then
-			player:hud_remove(id)
-		end
+		SAFE.call("feedback hud removal", function()
+			if player:get_pos() then
+				player:hud_remove(id)
+			end
+		end)
 	end)
 	return true
 end

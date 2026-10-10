@@ -184,8 +184,13 @@ end
 -- is rolled until it lands.
 function M.status_cloud(G, user, target, _move_id, move)
 	local centre = vector.add(target:get_pos(), vector.new(0, 0.2, 0))
-	local res = G.formulas.damage(G.view_of(user), G.view_of(target), move, G.type_mult, G.rng)
-	local hit = not res.missed
+	-- Without a view (a target that is not a creature or player) the cloud is cosmetic: no accuracy roll, no effects.
+	local atk, def = G.view_of(user), G.view_of(target)
+	local hit = false
+	if atk and def then
+		local res = G.formulas.damage(atk, def, move, G.type_mult, G.rng)
+		hit = not res.missed
+	end
 	G.vfx.cloud(centre, M.CLOUD_RADIUS, move.type, M.CLOUD_LIFE_S)
 	if hit then
 		for _, c in ipairs(move.effect and move.effect.stat_changes or {}) do
