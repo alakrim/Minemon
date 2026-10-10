@@ -1,0 +1,37 @@
+{
+  "_note": "Per-species design overrides for tools/extract_pokeapi.py (rules D1-D5 in its docstring). Keys starting with _ are ignored. Species names use the output key (PokeAPI identifier with - replaced by _).",
+  "temperament": {
+    "chansey": "peaceful",
+    "ekans": "aggressive",
+    "gyarados": "aggressive",
+    "houndour": "aggressive",
+    "mankey": "aggressive",
+    "miltank": "peaceful",
+    "rattata": "aggressive",
+    "slowpoke": "peaceful",
+    "sneasel": "aggressive",
+    "spearow": "aggressive",
+    "togepi": "peaceful",
+    "tyranitar": "aggressive"
+  },
+  "eldritch": [
+    "dragonite",
+    "gastly",
+    "gengar",
+    "gyarados",
+    "haunter",
+    "ho_oh",
+    "lapras",
+    "lugia",
+    "mewtwo",
+    "misdreavus",
+    "onix",
+    "snorlax",
+    "steelix",
+    "tyranitar",
+    "unown"
+  ],
+  "size_class": {},
+  "body_plan": {},
+  "habitats": {}
+}
