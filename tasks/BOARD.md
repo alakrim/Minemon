@@ -15,3 +15,4 @@
 | T-23 | M1 / w2 | high | FAILED (attempt 1) → T-23b | move system (6 archetypes), VFX |
 | T-24 | M1 / w2 | high | DONE (concerns → D-028) | creature runtime hooks (brains, damage, exhausted/faint) |
 | T-23b | M1 / w3 | high | BUILDING | combat fixes (crash, facing, status persistence) |
+| T-25a | M1 / w4 | high | BUILDING | Cobblemon → glTF converter (geometry, textures) |
