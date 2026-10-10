@@ -7,7 +7,8 @@ A private, single-player fan game: Minecraft-style voxel world + Kanto/Johto Pok
 - **Workers (Haiku, high effort):** read this file, `docs/CONVENTIONS.md` (once it exists) and your task brief. Follow the brief exactly.
 
 ## Key commands
-- Full check: `scripts/check.sh` (defined in M0; not yet created)
+- Setup (Godot 4.7.2 headless into `.tools/`, gdtoolkit): `bash scripts/setup.sh`
+- Full check (format, lint, Godot import, GUT tests): `bash scripts/check.sh`
 
 ## File map
 - `docs/STATE.md` — current source of truth (max 30 lines)
