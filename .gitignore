@@ -4,3 +4,6 @@ builds/
 packs/*
 !packs/README.md
 .claude/worktrees/
+.tools-seed/
+__pycache__/
+*.pyc

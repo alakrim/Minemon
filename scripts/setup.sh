@@ -1,42 +1,65 @@
 #!/usr/bin/env bash
-# Installs the dev tools for this repo. Idempotent: a step whose result exists is skipped.
-#   - Godot 4.7.2 (headless Linux binary) into .tools/, with .tools/godot as a symlink.
-#   - gdtoolkit 4.x (gdformat, gdlint) through pip.
-# GUT is vendored in addons/gut and needs no download here.
+# Idempotent dev-tool setup for Minemon. Quiet when there is nothing to do.
+#   - apt packages (build deps for Luanti, LuaJIT, luacheck, busted)
+#   - luantiserver (server only) at LUANTI_TAG into .tools/luanti (skipped if the version matches)
+#   - VoxeLibre at VOXELIBRE_TAG into .tools/voxelibre (skipped if the tag matches)
+# Versions come from scripts/versions.env.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-GODOT_VERSION="4.7.2-stable"
-GODOT_ZIP="Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-GODOT_URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/${GODOT_ZIP}"
-GODOT_BIN="Godot_v${GODOT_VERSION}_linux.x86_64"
-TOOLS_DIR=".tools"
+# shellcheck source=versions.env
+. scripts/versions.env
+: "${LUANTI_TAG:?LUANTI_TAG is not set in scripts/versions.env}"
+: "${VOXELIBRE_TAG:?VOXELIBRE_TAG is not set in scripts/versions.env (pin the newest working release)}"
 
-mkdir -p "$TOOLS_DIR"
+APT_PKGS="g++ make cmake libc6-dev libsqlite3-dev zlib1g-dev libgmp-dev libjsoncpp-dev libzstd-dev \
+libluajit-5.1-dev libcurl4-openssl-dev gettext git lua-check lua-busted luajit lua5.1"
 
-if [ -x "$TOOLS_DIR/$GODOT_BIN" ]; then
-	echo "[setup] Godot ${GODOT_VERSION} already present, skipping download"
-else
-	echo "[setup] Downloading Godot ${GODOT_VERSION}"
-	curl -fL --retry 3 -o "$TOOLS_DIR/$GODOT_ZIP" "$GODOT_URL"
-	unzip -q -o "$TOOLS_DIR/$GODOT_ZIP" -d "$TOOLS_DIR"
-	rm -f "$TOOLS_DIR/$GODOT_ZIP"
-	chmod +x "$TOOLS_DIR/$GODOT_BIN"
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then SUDO="sudo"; fi
+
+missing=()
+for pkg in $APT_PKGS; do
+	if ! dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "install ok installed"; then
+		missing+=("$pkg")
+	fi
+done
+if [ "${#missing[@]}" -gt 0 ]; then
+	echo "[setup] installing apt packages: ${missing[*]}"
+	$SUDO apt-get update -qq
+	DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y -qq "${missing[@]}"
 fi
 
-if [ "$(readlink "$TOOLS_DIR/godot" 2>/dev/null || true)" = "$GODOT_BIN" ]; then
-	echo "[setup] .tools/godot symlink already set"
+mkdir -p .tools
+
+LUANTI_DIR=.tools/luanti
+LUANTI_BUILD=.tools/luanti-build
+LUANTI_BIN="$LUANTI_DIR/bin/luantiserver"
+LUANTI_VER=""
+if [ -x "$LUANTI_BIN" ]; then
+	LUANTI_VER=$("$LUANTI_BIN" --version 2>/dev/null || true)
+fi
+if [ -x "$LUANTI_BIN" ] && [[ "$LUANTI_VER" == *"$LUANTI_TAG"* ]]; then
+	: # already built at the pinned tag
 else
-	ln -sfn "$GODOT_BIN" "$TOOLS_DIR/godot"
-	echo "[setup] linked .tools/godot -> $GODOT_BIN"
+	echo "[setup] building luantiserver $LUANTI_TAG (server only, about 4 min)"
+	rm -rf "$LUANTI_DIR" "$LUANTI_BUILD"
+	git clone --depth 1 --branch "$LUANTI_TAG" https://github.com/luanti-org/luanti "$LUANTI_DIR"
+	cmake -S "$LUANTI_DIR" -B "$LUANTI_BUILD" -DBUILD_CLIENT=FALSE -DBUILD_SERVER=TRUE -DRUN_IN_PLACE=TRUE \
+		-DCMAKE_BUILD_TYPE=Release -DBUILD_UNITTESTS=FALSE -DBUILD_BENCHMARKS=FALSE \
+		-DBUILD_DOCUMENTATION=FALSE -DENABLE_GETTEXT=0
+	cmake --build "$LUANTI_BUILD" -j"$(nproc)"
+	[ -x "$LUANTI_BIN" ] || { echo "FAIL: build did not produce $LUANTI_BIN"; exit 1; }
+	echo "[setup] built: $("$LUANTI_BIN" --version 2>/dev/null || true)"
 fi
 
-if python3 -m pip show gdtoolkit >/dev/null 2>&1; then
-	echo "[setup] gdtoolkit already installed, skipping"
+VOX_DIR=.tools/voxelibre
+if [ -f "$VOX_DIR/game.conf" ] && [ "$(git -C "$VOX_DIR" describe --tags --exact-match 2>/dev/null || true)" = "$VOXELIBRE_TAG" ]; then
+	: # already present at the pinned tag
 else
-	echo "[setup] Installing gdtoolkit 4.x"
-	python3 -m pip install --break-system-packages "gdtoolkit==4.*"
+	echo "[setup] cloning VoxeLibre $VOXELIBRE_TAG"
+	rm -rf "$VOX_DIR"
+	git clone --depth 1 --branch "$VOXELIBRE_TAG" https://github.com/VoxeLibre/VoxeLibre "$VOX_DIR"
 fi
 
-echo "[setup] done"
