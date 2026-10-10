@@ -76,3 +76,25 @@ Rejected or deferred: missions and region formats are defined in M3's briefs (no
 
 ## D-018 — Record files split; GDScript noise (2026-10-10)
 The core records are split into one file per class_name (CONVENTIONS rule) instead of core/records.gd. Terrain noise is GDScript gradient noise rather than FastNoiseLite, so worker threads never touch Resources. Bench after optimisation: about 25 ms per column (headless debug). Would change if the M0 gate fails (see BACKLOG perf candidates).
+
+## D-019 — M0 performance gate PASSED on the owner's Vega 8; Compatibility is the default renderer (2026-10-10)
+Evidence: docs/benchmarks/M0_vega8_gl_compatibility_20261010_1810.txt. Average 58.8 fps (vsync-capped), 1% low 20.5 (gate 20), worst frame 52 ms, radius 4, 100 columns peak. Vulkan was not measured; Compatibility stays the default.
+Margin on the 1% low is thin: every visual change must keep the low at or above 20 on the owner's PC. M0b also targets better lows.
+Gap: `max_static_mb` reads 0 in release builds (Performance.MEMORY_STATIC is debug-only); needs another memory metric.
+
+## D-020 — Owner priority: world beauty. New milestone M0b "Visual pass" before M1 (2026-10-10)
+Owner: "We want to make it look nice." Plan:
+- textured blocks from an open-licence 16×16 pack, in a single atlas so draw calls stay at 1 per column;
+- per-vertex ambient occlusion and smooth lighting;
+- cross-quad plants (grass, flowers);
+- transparent water and alpha leaves;
+- sky gradient with sun and clouds, plus fog tuning.
+
+The performance gate is re-run by the owner afterwards. M1 (combat) follows.
+
+## D-021 — Block art: our own procedural pixel-art atlas, with pack override later (2026-10-10)
+The workspace cannot reach kenney.nl, opengameart.org or itch.io (egress policy). The only reachable complete CC0 pack (ProgrammerArt, npm) is crude, saturated "programmer art" (contact sheet reviewed by Opus) and was rejected.
+Chosen: a Python tool (`tools/gen_textures.py`, Pillow, dev-time only) generates a cohesive 16×16 atlas from a hand-tuned palette. We own it, so it is licence-free and art-directable (it also suits the horror tone), and it can be regenerated.
+The engine must also accept an owner texture pack (16×16 PNGs by block texture name) later via packs/ (M2), so any pack the owner downloads can replace it.
+Rejected: ProgrammerArt (ugly); CC BY-SA packs (licence rule; can be reconsidered for private use if the owner supplies one).
+Visual review loop: screenshots rendered in the container (Xvfb + gl_compatibility), reviewed by Opus before each owner build.

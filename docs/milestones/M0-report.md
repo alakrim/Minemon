@@ -1,6 +1,6 @@
 # M0 report — skeleton and world spike
 
-**Status:** built and verified. **Awaiting the owner's benchmark on the AMD Vega 8 (the performance gate)** before tagging `m0-done`.
+**Status:** DONE. Performance gate passed on the owner's Vega 8 (D-019). Tagged `m0-done`.
 
 ## Summary
 A Godot 4.7.2 project with tooling (`setup.sh`, `check.sh`: format, lint, import, GUT, with compile-error detection), typed core interfaces with Gen 2 data contracts, 11 sample species, a threaded voxel world of column chunks, a player with fly mode, a debug overlay, settings, a 60 s benchmark mode, and a Windows export.
