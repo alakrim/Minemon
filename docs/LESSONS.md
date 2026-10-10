@@ -7,3 +7,4 @@
 - 2026-10-10: Worker-thread tasks bound to Callable(node) lock the Node, so free() is refused. Run jobs on a RefCounted runner.
 - 2026-10-10: check.sh must exclude .claude/worktrees/ when parallel worktree builds exist.
 - 2026-10-10: Headless benchmarks using engine delta hide spikes; always measure wall-clock (Time.get_ticks_usec). Profile main-thread costs before shipping a perf build.
+- 2026-10-10: Pushing git tags is refused by the session proxy (403). Milestones are marked in docs/milestones and PROGRESS; tags stay local.

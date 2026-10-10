@@ -11,11 +11,13 @@ const LAYER: int = SIZE * SIZE
 var pos: Vector2i
 var top_y: int = -1
 var _blocks: PackedByteArray = PackedByteArray()
+var _biomes: PackedByteArray = PackedByteArray()
 
 
 func _init(p_pos: Vector2i) -> void:
 	pos = p_pos
 	_blocks.resize(VOLUME)
+	_biomes.resize(LAYER)
 
 
 static func index_of(x: int, y: int, z: int) -> int:
@@ -41,6 +43,24 @@ func set_block(p: Vector3i, id: int) -> void:
 		top_y = p.y
 	elif value == 0 and p.y == top_y:
 		_recalculate_top()
+
+
+## Biome id of local column (x, z); see TerrainGenerator BIOME_* constants. Out of range returns 0.
+func get_biome(x: int, z: int) -> int:
+	if x < 0 or x >= SIZE or z < 0 or z >= SIZE:
+		return 0
+	return _biomes[x + z * SIZE]
+
+
+func set_biome(x: int, z: int, biome: int) -> void:
+	if x < 0 or x >= SIZE or z < 0 or z >= SIZE:
+		return
+	_biomes[x + z * SIZE] = clampi(biome, 0, 255)
+
+
+## Read-only view of the raw biome bytes (index x + z*16). Callers must duplicate before keeping it.
+func raw_biomes() -> PackedByteArray:
+	return _biomes
 
 
 ## Read-only view of the raw block bytes. Callers must duplicate before keeping it.
