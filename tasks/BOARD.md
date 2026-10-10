@@ -12,5 +12,5 @@
 | T-21a | M1 / w1 | high | BUILT (Opus: shim removed) | creature registration, spawning, levels |
 | T-22 | M1 / w2 | medium | TODO | party, starter, Party Ball |
 | T-21b | M1 / w3 | high | TODO | temperament AI, aggression gate, exhausted state |
-| T-23 | M1 / w3 | high | TODO | move system (6 archetypes), VFX |
+| T-23 | M1 / w2 | high | BUILDING | move system (6 archetypes), VFX |
 | T-24 | M1 / w2 | high | BUILDING | creature runtime hooks (brains, damage, exhausted/faint) |
