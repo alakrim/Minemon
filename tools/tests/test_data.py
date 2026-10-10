@@ -120,6 +120,36 @@ class DataTests(unittest.TestCase):
             canon = json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
             self.assertEqual(text, canon, name)
 
+    def test_named_species_have_the_brief_temperament(self):
+        expected = {
+            "aggressive": ["beedrill", "fearow", "dodrio", "scyther", "tauros", "mewtwo", "arbok",
+                           "primeape", "gyarados", "houndoom", "ursaring", "granbull", "sneasel",
+                           "tyranitar", "haunter", "gengar", "rattata", "raticate"],
+            "peaceful": ["shuckle", "wobbuffet", "chansey", "blissey", "miltank", "togepi",
+                         "slowpoke", "lapras", "snorlax"],
+            "skittish": ["caterpie", "weedle", "ditto", "pidgey", "sentret", "hoppip", "natu",
+                         "abra", "smoochum", "magikarp"],
+        }
+        for temper, names in expected.items():
+            for name in names:
+                self.assertEqual(self.by_name[name]["temperament"], temper, name)
+
+    def test_temperament_distribution_within_target_ranges(self):
+        counts = {t: 0 for t in TEMPERAMENTS}
+        for s in self.species:
+            counts[s["temperament"]] += 1
+        total = len(self.species)
+        ranges = {"aggressive": (0.25, 0.35), "territorial": (0.25, 0.35),
+                  "skittish": (0.15, 0.25), "peaceful": (0.15, 0.25)}
+        for temper, (low, high) in ranges.items():
+            share = counts[temper] / total
+            self.assertTrue(low <= share <= high,
+                            "%s is %d of %d (%.1f%%)" % (temper, counts[temper], total, share * 100))
+
+    def test_legendary_predators_are_not_territorial_by_default(self):
+        self.assertEqual(self.by_name["mewtwo"]["temperament"], "aggressive")
+        self.assertEqual(self.by_name["zapdos"]["temperament"], "aggressive")
+
     def test_raticate_base_stats(self):
         self.assertEqual(self.by_name["raticate"]["base_stats"],
                          {"hp": 55, "atk": 81, "def": 60, "spa": 50, "spd": 70, "spe": 97})

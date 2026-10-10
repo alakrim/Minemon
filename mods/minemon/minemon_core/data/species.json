@@ -336,7 +336,7 @@
     ],
     "name": "charmander",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "fire"
     ],
@@ -501,7 +501,7 @@
     ],
     "name": "charizard",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire",
       "flying"
@@ -585,7 +585,7 @@
     ],
     "name": "squirtle",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water"
     ],
@@ -810,7 +810,7 @@
     ],
     "name": "caterpie",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "bug"
     ],
@@ -856,7 +856,7 @@
     ],
     "name": "metapod",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "bug"
     ],
@@ -975,7 +975,7 @@
     ],
     "name": "weedle",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "bug",
       "poison"
@@ -1023,7 +1023,7 @@
     ],
     "name": "kakuna",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "bug",
       "poison"
@@ -1088,7 +1088,7 @@
     ],
     "name": "beedrill",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "bug",
       "poison"
@@ -1159,7 +1159,7 @@
     ],
     "name": "pidgey",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "normal",
       "flying"
@@ -1444,7 +1444,7 @@
     ],
     "name": "raticate",
     "size_class": "small",
-    "temperament": "skittish",
+    "temperament": "aggressive",
     "types": [
       "normal"
     ],
@@ -1586,7 +1586,7 @@
     ],
     "name": "fearow",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "normal",
       "flying"
@@ -1730,7 +1730,7 @@
     ],
     "name": "arbok",
     "size_class": "huge",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "poison"
     ],
@@ -1812,7 +1812,7 @@
     ],
     "name": "pikachu",
     "size_class": "small",
-    "temperament": "skittish",
+    "temperament": "peaceful",
     "types": [
       "electric"
     ],
@@ -1859,7 +1859,7 @@
     ],
     "name": "raichu",
     "size_class": "small",
-    "temperament": "peaceful",
+    "temperament": "aggressive",
     "types": [
       "electric"
     ],
@@ -2002,7 +2002,7 @@
     ],
     "name": "sandslash",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "ground"
     ],
@@ -2073,7 +2073,7 @@
     ],
     "name": "nidoran_f",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "poison"
     ],
@@ -2269,7 +2269,7 @@
     ],
     "name": "nidoran_m",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "poison"
     ],
@@ -2393,7 +2393,7 @@
     ],
     "name": "nidoking",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "poison",
       "ground"
@@ -2589,7 +2589,7 @@
     ],
     "name": "vulpix",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "fire"
     ],
@@ -2828,7 +2828,7 @@
     ],
     "name": "zubat",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "poison",
       "flying"
@@ -3338,7 +3338,7 @@
     ],
     "name": "venonat",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "bug",
       "poison"
@@ -3423,7 +3423,7 @@
     ],
     "name": "venomoth",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "bug",
       "poison"
@@ -3571,7 +3571,7 @@
     ],
     "name": "dugtrio",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "ground"
     ],
@@ -3779,7 +3779,7 @@
     ],
     "name": "psyduck",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water"
     ],
@@ -4137,7 +4137,7 @@
     ],
     "name": "arcanine",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire"
     ],
@@ -4393,7 +4393,7 @@
     ],
     "name": "abra",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "psychic"
     ],
@@ -4993,7 +4993,7 @@
     ],
     "name": "victreebel",
     "size_class": "large",
-    "temperament": "peaceful",
+    "temperament": "aggressive",
     "types": [
       "grass",
       "poison"
@@ -5464,7 +5464,7 @@
     ],
     "name": "ponyta",
     "size_class": "medium",
-    "temperament": "skittish",
+    "temperament": "aggressive",
     "types": [
       "fire"
     ],
@@ -5547,7 +5547,7 @@
     ],
     "name": "rapidash",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire"
     ],
@@ -6076,7 +6076,7 @@
     ],
     "name": "dodrio",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "normal",
       "flying"
@@ -6144,7 +6144,7 @@
     ],
     "name": "seel",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "water"
     ],
@@ -6361,7 +6361,7 @@
     ],
     "name": "muk",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "poison"
     ],
@@ -6432,7 +6432,7 @@
     ],
     "name": "shellder",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water"
     ],
@@ -6645,7 +6645,7 @@
     ],
     "name": "haunter",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "ghost",
       "poison"
@@ -6791,7 +6791,7 @@
     ],
     "name": "onix",
     "size_class": "colossal",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "rock",
       "ground"
@@ -6870,7 +6870,7 @@
     ],
     "name": "drowzee",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "psychic"
     ],
@@ -7020,7 +7020,7 @@
     ],
     "name": "krabby",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "water"
     ],
@@ -7455,7 +7455,7 @@
     ],
     "name": "cubone",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "ground"
     ],
@@ -7827,7 +7827,7 @@
     ],
     "name": "koffing",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "poison"
     ],
@@ -8268,7 +8268,7 @@
     ],
     "name": "kangaskhan",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "normal"
     ],
@@ -8490,7 +8490,7 @@
     ],
     "name": "goldeen",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water"
     ],
@@ -8689,7 +8689,7 @@
     ],
     "name": "starmie",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "water",
       "psychic"
@@ -8765,7 +8765,7 @@
     ],
     "name": "mr_mime",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "psychic"
     ],
@@ -8844,7 +8844,7 @@
     ],
     "name": "scyther",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "bug",
       "flying"
@@ -8925,7 +8925,7 @@
     ],
     "name": "jynx",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "ice",
       "psychic"
@@ -8993,7 +8993,7 @@
     ],
     "name": "electabuzz",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "electric"
     ],
@@ -9072,7 +9072,7 @@
     ],
     "name": "magmar",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire"
     ],
@@ -9202,7 +9202,7 @@
     ],
     "name": "tauros",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "normal"
     ],
@@ -9395,7 +9395,7 @@
     ],
     "name": "lapras",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "water",
       "ice"
@@ -9431,7 +9431,7 @@
     ],
     "name": "ditto",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "normal"
     ],
@@ -9531,7 +9531,7 @@
     ],
     "name": "eevee",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "normal"
     ],
@@ -9674,7 +9674,7 @@
     ],
     "name": "jolteon",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "electric"
     ],
@@ -10113,7 +10113,7 @@
     ],
     "name": "kabutops",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "rock",
       "water"
@@ -10177,7 +10177,7 @@
     ],
     "name": "aerodactyl",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "rock",
       "flying"
@@ -10249,7 +10249,7 @@
     ],
     "name": "snorlax",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "normal"
     ],
@@ -10377,7 +10377,7 @@
     ],
     "name": "zapdos",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "electric",
       "flying"
@@ -10441,7 +10441,7 @@
     ],
     "name": "moltres",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire",
       "flying"
@@ -10765,7 +10765,7 @@
     ],
     "name": "mewtwo",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "psychic"
     ],
@@ -11063,7 +11063,7 @@
     ],
     "name": "meganium",
     "size_class": "large",
-    "temperament": "skittish",
+    "temperament": "peaceful",
     "types": [
       "grass"
     ],
@@ -11133,7 +11133,7 @@
     ],
     "name": "cyndaquil",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "fire"
     ],
@@ -11278,7 +11278,7 @@
     ],
     "name": "typhlosion",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire"
     ],
@@ -11353,7 +11353,7 @@
     ],
     "name": "totodile",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water"
     ],
@@ -11508,7 +11508,7 @@
     ],
     "name": "feraligatr",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "water"
     ],
@@ -11574,7 +11574,7 @@
     ],
     "name": "sentret",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "normal"
     ],
@@ -11715,7 +11715,7 @@
     ],
     "name": "hoothoot",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "normal",
       "flying"
@@ -12030,7 +12030,7 @@
     ],
     "name": "spinarak",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "bug",
       "poison"
@@ -12184,7 +12184,7 @@
     ],
     "name": "crobat",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "poison",
       "flying"
@@ -12260,7 +12260,7 @@
     ],
     "name": "chinchou",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "water",
       "electric"
@@ -12700,7 +12700,7 @@
     ],
     "name": "natu",
     "size_class": "tiny",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "psychic",
       "flying"
@@ -12764,7 +12764,7 @@
     ],
     "name": "xatu",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "psychic",
       "flying"
@@ -12831,7 +12831,7 @@
     ],
     "name": "mareep",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "electric"
     ],
@@ -13229,7 +13229,7 @@
     ],
     "name": "sudowoodo",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "rock"
     ],
@@ -13367,7 +13367,7 @@
     ],
     "name": "hoppip",
     "size_class": "small",
-    "temperament": "peaceful",
+    "temperament": "skittish",
     "types": [
       "grass",
       "flying"
@@ -13458,7 +13458,7 @@
     ],
     "name": "skiploom",
     "size_class": "small",
-    "temperament": "skittish",
+    "temperament": "peaceful",
     "types": [
       "grass",
       "flying"
@@ -13542,7 +13542,7 @@
     ],
     "name": "jumpluff",
     "size_class": "small",
-    "temperament": "skittish",
+    "temperament": "peaceful",
     "types": [
       "grass",
       "flying"
@@ -13871,7 +13871,7 @@
     ],
     "name": "wooper",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water",
       "ground"
@@ -14350,7 +14350,7 @@
     ],
     "name": "wobbuffet",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "psychic"
     ],
@@ -14496,7 +14496,7 @@
     ],
     "name": "pineco",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "bug"
     ],
@@ -15103,7 +15103,7 @@
     ],
     "name": "shuckle",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "peaceful",
     "types": [
       "bug",
       "rock"
@@ -15604,7 +15604,7 @@
     ],
     "name": "swinub",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "ice",
       "ground"
@@ -15678,7 +15678,7 @@
     ],
     "name": "piloswine",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "ice",
       "ground"
@@ -15743,7 +15743,7 @@
     ],
     "name": "corsola",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water",
       "rock"
@@ -15815,7 +15815,7 @@
     ],
     "name": "remoraid",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "water"
     ],
@@ -15883,7 +15883,7 @@
     ],
     "name": "octillery",
     "size_class": "medium",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "water"
     ],
@@ -16324,7 +16324,7 @@
     ],
     "name": "phanpy",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "ground"
     ],
@@ -16792,7 +16792,7 @@
     ],
     "name": "smoochum",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "ice",
       "psychic"
@@ -17146,7 +17146,7 @@
     ],
     "name": "raikou",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "electric"
     ],
@@ -17213,7 +17213,7 @@
     ],
     "name": "entei",
     "size_class": "large",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire"
     ],
@@ -17372,7 +17372,7 @@
     ],
     "name": "larvitar",
     "size_class": "small",
-    "temperament": "territorial",
+    "temperament": "skittish",
     "types": [
       "rock",
       "ground"
@@ -17684,7 +17684,7 @@
     ],
     "name": "ho_oh",
     "size_class": "huge",
-    "temperament": "territorial",
+    "temperament": "aggressive",
     "types": [
       "fire",
       "flying"
