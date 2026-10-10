@@ -10,3 +10,5 @@
 - Perf: ChunkSnapshot.from_raw pads twice per job (default _init pads an all-air array); remove to halve worker padding (T-06 verifier)
 - Perf: initial fill to 81 columns took ~13 s on the 2-core container; check on owner's 4-core Ryzen
 - Delivery: builds over 30 MB can't go through chat. Make export_windows.sh also produce 25 MB parts plus a JUNTAR-JOIN .bat, and write them to the owner's Downloads\Minemon folder (M0 was split by hand).
+- Lives: the stale banner timer can cut a new banner short after rejoin (minemon_lives/init.lua:116-126). Also drop `luacheck: globals minemon` in minemon_lives (T-15 verifier).
+- Controls: the inventory key is I in Luanti (E is aux1). Consider remapping to E for Minecraft familiarity after the owner's feedback.
