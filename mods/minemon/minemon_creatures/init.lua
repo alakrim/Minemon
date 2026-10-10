@@ -10,16 +10,6 @@ local spawning = dofile(MODPATH .. "/spawning.lua")
 minemon.creatures = minemon.creatures or {}
 local API = minemon.creatures
 
--- The species data is read with io, which needs a trusted mod. core.request_insecure_environment() works only
--- at init time, from this main scope. The shim is temporary (see shim_core.lua).
-if minemon.data == nil then
-	local shim = dofile(MODPATH .. "/shim_core.lua")
-	local ok, err = shim.install(core.request_insecure_environment())
-	if not ok then
-		core.log("error", "[minemon_creatures] no species data: " .. tostring(err))
-	end
-end
-
 -- Sets the instance's stats on the entity: HP, damage, nametag (and the object HP, which the engine ignores).
 local function apply(self, species)
 	local inst = self._mm

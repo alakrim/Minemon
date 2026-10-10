@@ -48,10 +48,12 @@ printf '%s\n' "gameid = $GAMEID" "backend = sqlite3" "player_backend = sqlite3" 
 printf '%s\n' "ipv6_server = false" "bind_address = 127.0.0.1" "enable_mod_channels = false" \
 	"secure.trusted_mods = $MOD_NAME" > "$RUN_DIR/luanti.conf"
 
-# First free TCP port in 30000-30999.
+# First free port in 30000-30999 (Luanti binds UDP; check both UDP and TCP listeners).
 PORT=""
 for p in $(seq 30000 30999); do
-	if ! (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null; then PORT=$p; break; fi
+	hex=$(printf ':%04X ' "$p")
+	if ! cat /proc/net/udp /proc/net/udp6 2>/dev/null | awk '{print $2}' | grep -q "${hex% }$" \
+		&& ! (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null; then PORT=$p; break; fi
 done
 [ -n "$PORT" ] || { echo "FAIL: no free port"; exit 1; }
 
