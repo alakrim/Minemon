@@ -1,7 +1,8 @@
--- minemon_combat: real-time creature moves (T-23, M1 contract). Glue only. The rules are pure and busted-tested:
--- moves_logic.lua (archetypes, validation), choose_logic.lua (move choice), status_logic.lua (status maths and the
--- bounded registry). This file builds the context G, the public API and the single globalstep. archetypes.lua has
--- the six archetypes, status.lua the status effects and vfx.lua the particles and HUD text.
+-- minemon_combat: real-time creature moves (T-23, M1 contract, fixed in T-23b). Glue only. The rules are pure and
+-- busted-tested: moves_logic.lua (archetypes, validation), choose_logic.lua (move choice), status_logic.lua (status
+-- maths and the bounded registry). This file builds the context G, the public API, the cast brain and the single
+-- globalstep. archetypes.lua has the six archetypes, status.lua the status effects, vfx.lua the particles and HUD
+-- text and safe.lua the pcall wrapper for every callback.
 -- luacheck: read_globals core vector mcl_util vl_projectile
 -- luacheck: globals minemon
 
@@ -17,6 +18,7 @@ local SL = load("status_logic")
 local VFX = load("vfx")
 local STATUS = load("status")
 local ARCH = load("archetypes")
+local SAFE = load("safe")
 
 minemon.combat = minemon.combat or {}
 local API = minemon.combat
@@ -38,6 +40,10 @@ local G = {
 	type_mult = minemon.data.type_multiplier,
 }
 
+-- Casts in progress, keyed by the user's luaentity: { move_id, target }. Kept out of the entity fields: mcl_mobs
+-- saves every field, and a cast saved across a reload would block the creature forever (its timer is lost).
+local casting = setmetatable({}, { __mode = "k" })
+
 -- A creature's instance and luaentity, or nil for players and for anything that is not a creature.
 local function creature_of(obj)
 	if not obj or not obj:get_pos() or obj:is_player() then
@@ -48,6 +54,30 @@ local function creature_of(obj)
 		return nil, nil
 	end
 	return inst, obj:get_luaentity()
+end
+
+-- A player, or one of our creatures. Anything else (an item, an orb, a mob that is not ours) is not a valid target.
+local function valid_target(obj)
+	if not obj or not obj:get_pos() then
+		return false
+	end
+	return obj:is_player() or creature_of(obj) ~= nil
+end
+
+-- Turns obj to face target at once (yaw 0 faces +z, as G.forward). For a mcl mob the pending smooth turn is set to
+-- the same yaw, so mcl does not turn back towards its own wander target.
+function G.face(obj, target)
+	local a, b = obj:get_pos(), target:get_pos()
+	if not a or not b then
+		return
+	end
+	local yaw = math.atan2(-(b.x - a.x), b.z - a.z)
+	obj:set_yaw(yaw)
+	local le = obj:get_luaentity()
+	if le then
+		le.target_yaw = yaw % (2 * math.pi)
+		le.delay = 0
+	end
 end
 
 function G.guid(obj)
@@ -226,29 +256,57 @@ local function is_owned(inst, le)
 	return (inst.owner ~= nil and inst.owner ~= "") or (le.owner ~= nil and le.owner ~= "")
 end
 
--- Runs when the cast time ends. The target is checked again: it must still exist and be in range.
+-- Runs when the cast time ends. The target is checked again: it must still be a valid target and in range. The user
+-- turns to it once more, so the melee check uses the facing at execution.
 local function finish_cast(user, target, move_id, move)
-	if not user:get_pos() then
-		return
-	end
 	local le = user:get_luaentity()
 	if le then
-		le._mm_cast = nil
+		casting[le] = nil
 	end
-	if not creature_of(user) then
+	if not user:get_pos() or not creature_of(user) then
 		return
 	end
 	local needs_target = LOGIC.needs_target(move.archetype)
 	if needs_target then
-		if not target or not target:get_pos() then
+		if not valid_target(target) then
 			return
 		end
 		if LOGIC.needs_range(move.archetype) and not in_range(user, target, move) then
 			return
 		end
+		G.face(user, target)
 	end
 	ARCH.fire(G, move.archetype, user, target, move_id, move)
 end
+
+-- The "combat_cast" brain (T-23b). While a cast runs, the user faces its target every tick and stands still. The
+-- chain returns "skip_states", so mcl's wander turns and walks do not run during the cast.
+local function cast_brain(self, _dtime)
+	local cast = casting[self]
+	if cast == nil then
+		return nil
+	end
+	local user = self.object
+	if not user or not user:get_pos() then
+		return nil
+	end
+	if cast.target and valid_target(cast.target) then
+		G.face(user, cast.target)
+	end
+	local v = user:get_velocity()
+	if v then
+		user:set_velocity({ x = 0, y = v.y, z = 0 })
+	end
+	return "skip_states"
+end
+
+-- The "status_restore" brain (T-23b). The first tick of each activation restores a status the instance still has.
+local function status_brain(self, _dtime)
+	STATUS.restore_on_activate(self)
+end
+
+minemon.creatures.register_brain("status_restore", status_brain)
+minemon.creatures.register_brain("combat_cast", cast_brain)
 
 -- Public API (PLAN.md, minemon_combat). Returns true when the cast started, or false and a reason.
 function API.use_move(user, target, move_id)
@@ -271,7 +329,7 @@ function API.use_move(user, target, move_id)
 	if on_cooldown_le(le, move_id) then
 		return false, "cooldown"
 	end
-	if le._mm_cast then
+	if casting[le] then
 		return false, "busy"
 	end
 	if minemon.creatures.is_exhausted(user) then
@@ -289,19 +347,23 @@ function API.use_move(user, target, move_id)
 		if not target or not target:get_pos() or G.guid(target) == G.guid(user) then
 			return false, "no target"
 		end
+		if not valid_target(target) then
+			return false, "bad target"
+		end
 		if LOGIC.needs_range(move.archetype) and not in_range(user, target, move) then
 			return false, "out of range"
 		end
+		G.face(user, target)
 	end
 	if owned then
 		slot.pp = slot.pp - 1
 	end
 	le._mm_cooldown = le._mm_cooldown or {}
 	le._mm_cooldown[move_id] = now() + move.cooldown_s
-	le._mm_cast = move_id
+	casting[le] = { move_id = move_id, target = target }
 	VFX.windup(G.eye(user), move.type, move.cast_s)
 	core.after(move.cast_s, function()
-		finish_cast(user, target, move_id, move)
+		SAFE.call("cast " .. tostring(move_id), finish_cast, user, target, move_id, move)
 	end)
 	return true
 end
@@ -340,6 +402,20 @@ function API.on_cooldown(user, move_id)
 	return on_cooldown_le(le, move_id)
 end
 
+-- Applies a status of the minimal set to a creature or player (T-23b). Used by freeze and other status moves, and by
+-- the integration test. Returns true when the status was applied.
+function API.apply_status(obj, kind)
+	if not valid_target(obj) then
+		return false
+	end
+	return STATUS.apply(obj, kind, rng)
+end
+
+-- The status of a creature or player: "none", or one of the minimal set (T-23b).
+function API.status_of(obj)
+	return STATUS.get(obj)
+end
+
 -- Clears stages, cooldowns, the cast and the status. For recall (T-22).
 function API.reset(obj)
 	local inst, le = creature_of(obj)
@@ -348,12 +424,13 @@ function API.reset(obj)
 	end
 	le._mm_stages = {}
 	le._mm_cooldown = {}
-	le._mm_cast = nil
+	casting[le] = nil
 	STATUS.clear(obj)
 	return true
 end
 
--- One globalstep: status ticks and cloud checks every 0.5 s (PLAN.md performance rules).
+-- One globalstep: status ticks and cloud checks every 0.5 s (PLAN.md performance rules). Each part runs under pcall,
+-- so an error is logged and the server keeps running (T-23b).
 local tick_acc = 0
 core.register_globalstep(function(dtime)
 	tick_acc = tick_acc + dtime
@@ -362,6 +439,6 @@ core.register_globalstep(function(dtime)
 	end
 	local dt = tick_acc
 	tick_acc = 0
-	STATUS.tick(dt, rng, G.apply_damage)
-	ARCH.tick_clouds(G, dt)
+	SAFE.call("status tick", STATUS.tick, dt, rng, G.apply_damage)
+	SAFE.call("cloud tick", ARCH.tick_clouds, G, dt)
 end)
