@@ -73,3 +73,6 @@ Source: docs/research/CRITIC-architecture.md and CRITIC-briefs-M0.md. Accepted:
 - **Parallel builds:** builders in a parallel wave run in separate git worktrees. T-01 owns all of project.godot (autoloads, InputMap) and main.tscn's structure.
 - **Checkpoints:** respawn goes to the last checkpoint; Pokémon Centers become checkpoints in M3.
 Rejected or deferred: missions and region formats are defined in M3's briefs (not needed earlier). Pack loading stays in M2, with the runtime-loading APIs now named in the contract.
+
+## D-018 — Record files split; GDScript noise (2026-10-10)
+The core records are split into one file per class_name (CONVENTIONS rule) instead of core/records.gd. Terrain noise is GDScript gradient noise rather than FastNoiseLite, so worker threads never touch Resources. Bench after optimisation: about 25 ms per column (headless debug). Would change if the M0 gate fails (see BACKLOG perf candidates).

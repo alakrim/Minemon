@@ -2,3 +2,8 @@
 
 - Android port (after PC milestones; see D-001)
 - Full design brainstorm (living world, difficulty, dread, missions, move animations) → folded into the Gate 1 brief
+- M1: WorldStreamer public `set_block(world_pos, id)` + re-mesh API (T-03 verifier finding)
+- M1: WorldStreamer `_closing` is permanent after _exit_tree; re-adding the streamer silently disables it
+- Perf candidates if the M0 gate fails: FastNoiseLite created on main thread and read-only in workers; GDExtension mesher; lower view radius
+- Fullscreen setting stored but not applied (T-04)
+- Data: base_exp values are modern PokeAPI, not Gen 2; Curse typed ghost (no ??? type)

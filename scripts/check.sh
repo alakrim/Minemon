@@ -16,7 +16,7 @@ step() {
 }
 
 # Lint and format set: every .gd file except addons/, .tools/, .godot/ and .git/.
-mapfile -t GD_FILES < <(find . \( -path ./addons -o -path ./.tools -o -path ./.godot -o -path ./.git \) -prune -o -name '*.gd' -print | sort)
+mapfile -t GD_FILES < <(find . \( -path ./addons -o -path ./.tools -o -path ./.godot -o -path ./.git -o -path ./.claude \) -prune -o -name '*.gd' -print | sort)
 if [ "${#GD_FILES[@]}" -eq 0 ]; then
 	echo "No .gd files found to check"
 	exit 1

@@ -91,9 +91,9 @@ addons/gut GUT (vendored, MIT)
 ### Interfaces (contract-tested; changing one = high-risk task + D-entry)
 - `Rng` (core/rng.gd): `_init(seed:int)`, `randf()->float`, `randi_range(a:int,b:int)->int`, `fork(tag:String)->Rng` (child seed = `hash(str(seed)+tag)`).
 - `TypeChart` (core/typechart.gd): `_init(chart:Dictionary)`, `multiplier(atk:String, defs:Array[String])->float`.
-- `SpeciesData`, `MoveData`, `ItemData` (core/records.gd): typed records with `static func from_dict(d:Dictionary)->X`. The fields follow the data contracts below.
-- `CombatantView` (core/records.gd): `level:int, stats:Dictionary(hp,atk,def,spa,spd,spe), types:Array[String], status:String, stages:Dictionary(atk..spe, acc, eva: -6..6)`.
-- `DamageResult` (core/records.gd): `amount:int, crit:bool, effectiveness:float, missed:bool`.
+- `SpeciesData`, `MoveData`, `ItemData` (one file each in core/, D-018): typed records with `static func from_dict(d:Dictionary)->X`. The fields follow the data contracts below.
+- `CombatantView` (core/combatant_view.gd): `level:int, stats:Dictionary(hp,atk,def,spa,spd,spe), types:Array[String], status:String, stages:Dictionary(atk..spe, acc, eva: -6..6)`.
+- `DamageResult` (core/damage_result.gd): `amount:int, crit:bool, effectiveness:float, missed:bool`.
 - `Stats` (core/stats.gd): `static func calc(base:Dictionary, level:int, ivs:Dictionary, bond:int)->Dictionary`. IVs are 0–15 (Gen 2 DVs). Bond 0–255 adds +floor(bond/25)% to each stat. There is no stat experience; bond replaces it (D-017).
 - `Damage` (core/damage.gd): `static func compute(atk:CombatantView, def:CombatantView, move:MoveData, chart:TypeChart, rng:Rng)->DamageResult`.
 - `Catch` (core/catch.gd): `static func chance(sp:SpeciesData, hp_frac:float, ball_mult:float, status:String)->float`, `static func roll(chance:float, rng:Rng)->bool`.

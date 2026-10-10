@@ -3,3 +3,4 @@
 builds/
 packs/*
 !packs/README.md
+.claude/worktrees/
