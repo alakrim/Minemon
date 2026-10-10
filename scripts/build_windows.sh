@@ -80,7 +80,7 @@ echo "unpacked: $BUILD/bin/luanti.exe"
 step "(c) Minemon game: assemble_game.sh, copied to builds/Minemon/games/minemon"
 bash scripts/assemble_game.sh
 mkdir -p "$BUILD/games"
-cp -a "$ROOT/.tools/games/minemon" "$BUILD/games/minemon"
+cp -a "${MINEMON_GAMES_DIR:-$ROOT/.games}/minemon" "$BUILD/games/minemon"
 [ -f "$BUILD/games/minemon/game.conf" ] || fail "game.conf missing in the copied game"
 
 step "(c2) headless sanity: smoke test against the copied game"

@@ -11,7 +11,7 @@
 #   out_dir     receives <name>.png for each shot (1280x720) and contact.png (labelled grid, half size)
 # Paths are relative to the repo root unless absolute.
 # Needs: scripts/setup.sh --client, scripts/assemble_game.sh (run once after setup). Env overrides:
-#   LUANTI_CLIENT_BIN (default .tools/luanti/bin/luanti), MINEMON_GAMES_DIR (default .tools/games).
+#   LUANTI_CLIENT_BIN (default .tools/luanti/bin/luanti), MINEMON_GAMES_DIR (default .games).
 # Exit: 0 when every shot and the contact sheet are written; 1 on any failure (client crash, timeout, bad input).
 set -euo pipefail
 
@@ -32,7 +32,7 @@ if [ -z "$SHOTS" ] || [ -z "$OUT" ]; then
 fi
 
 BIN=${LUANTI_CLIENT_BIN:-$ROOT/.tools/luanti/bin/luanti}
-GAMES_DIR=${MINEMON_GAMES_DIR:-$ROOT/.tools/games}
+GAMES_DIR=${MINEMON_GAMES_DIR:-$ROOT/.games}
 GAMEID=minemon
 SEED=1337
 HELPER=$ROOT/tests/screenshot/minemon_shots

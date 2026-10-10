@@ -13,3 +13,7 @@
 - Lives: the stale banner timer can cut a new banner short after rejoin (minemon_lives/init.lua:116-126). Also drop `luacheck: globals minemon` in minemon_lives (T-15 verifier).
 - Controls: the inventory key is I in Luanti (E is aux1). Consider remapping to E for Minecraft familiarity after the owner's feedback.
 - Stand-ins look too cheerful for the horror tone. Give aggressive species angry brows, slit pupils or glowing eyes at night (T-18 follow-up, M3 dread).
+- Creature do_punch skips mcl knockback, crits, tool wear and hunger. Restore knockback and crits for player hits on creatures (T-24 deviation).
+- 43 status moves have no effect yet; flinch, confusion, trap, protect, leech seed and similar are ignored (T-23). M2 status pass.
+- Combat rng is clock-seeded; tests pin accuracy. Consider a seeded rng per encounter.
+- An unexplained 4/60 creature vanish at dedicated_server_step 0.0 (T-21a verifier, not reproduced). Low priority.

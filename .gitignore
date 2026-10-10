@@ -1,9 +1,11 @@
-.tools/
+!packs/README.md
+*.pyc
+.claude/worktrees/
+.games/
 .godot/
+.tools
+.tools-seed/
+.tools/
+__pycache__/
 builds/
 packs/*
-!packs/README.md
-.claude/worktrees/
-.tools-seed/
-__pycache__/
-*.pyc

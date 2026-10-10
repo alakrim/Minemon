@@ -6,7 +6,7 @@
 # Usage: scripts/run_luanti_test.sh <test_mod_dir> [timeout_seconds]
 #   test_mod_dir     directory with mod.conf and init.lua (e.g. tests/integration/smoke)
 #   timeout_seconds  wall-clock limit for the run (default 120)
-# Env overrides (optional): LUANTI_BIN, MINEMON_GAMES_DIR (default .tools/games), GAMEID (default minemon).
+# Env overrides (optional): LUANTI_BIN, MINEMON_GAMES_DIR (default .games), GAMEID (default minemon).
 # Exit: 0 on PASS; 1 on FAIL, a crash, a timeout or a missing binary.
 set -u
 
@@ -16,7 +16,7 @@ ROOT=$(pwd)
 TEST_DIR=${1:-}
 TIMEOUT=${2:-120}
 BIN=${LUANTI_BIN:-$ROOT/.tools/luanti/bin/luantiserver}
-GAMES_DIR=${MINEMON_GAMES_DIR:-$ROOT/.tools/games}
+GAMES_DIR=${MINEMON_GAMES_DIR:-$ROOT/.games}
 GAMEID=${GAMEID:-minemon}
 RUNS_DIR=$ROOT/.tools/runs
 

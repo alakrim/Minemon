@@ -8,7 +8,7 @@ A private, free Pokémon game for the owner and one friend: Luanti 5.17.0 + the 
 
 ## Key commands
 - `bash scripts/setup.sh`: apt deps, builds luantiserver 5.17.0 into `.tools/`, clones VoxeLibre (pinned) into `.tools/voxelibre`, installs luacheck and busted. Idempotent.
-- `bash scripts/assemble_game.sh`: builds `.tools/games/minemon` (VoxeLibre plus our mods).
+- `bash scripts/assemble_game.sh`: builds `.games/minemon` (VoxeLibre plus our mods).
 - `bash scripts/check.sh`: luacheck, busted unit tests, headless integration tests.
 - `bash scripts/build_windows.sh`: portable Windows build in `builds/`.
 

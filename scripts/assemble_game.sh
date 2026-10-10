@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Assembles the Minemon game: a fresh copy of VoxeLibre (without .git) plus our mods/minemon modpack,
-# written to .tools/games/minemon. game.conf gets title = Minemon. Run scripts/setup.sh first.
+# written to .games/minemon (or $MINEMON_GAMES_DIR). game.conf gets title = Minemon. Run scripts/setup.sh first.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
 VOXELIBRE_DIR=".tools/voxelibre"
-GAMES_DIR=".tools/games"
+GAMES_DIR="${MINEMON_GAMES_DIR:-.games}"  # per-checkout (worktrees must not share it, LESSONS 2026-10-10)
 GAME_DIR="$GAMES_DIR/minemon"
 
 [ -f "$VOXELIBRE_DIR/game.conf" ] || { echo "FAIL: VoxeLibre not found at $VOXELIBRE_DIR (run scripts/setup.sh)"; exit 1; }
