@@ -8,7 +8,7 @@
 - none
 
 ## Blockers
-- Owner benchmark results from the Vega 8 (`benchmark_*.txt` for low-end and Vulkan)
+- Owner benchmark results from the Vega 8. The build is in the owner's Downloads\\Minemon folder (two parts plus a JUNTAR-JOIN .bat).
 
 ## Decisions needed from owner
 - none (just run the two benchmark .bat files and send the results)
