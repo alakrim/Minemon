@@ -45,3 +45,10 @@ Owner limit to save tokens. Overrides protocol C3 "2–4 builders" and A "2–4 
 
 ## D-012 — First playable slice and defaults (2026-10-10)
 Slice: Pallet Town, Route 1, Viridian Forest edge, day/night, ~10 species, one starter, combat/catch/level. Single-player only. No deadline. Capture odds shown as a bar. GPU assumed Intel HD 520/620 until reported.
+
+## D-013 — Target GPU is AMD Radeon Vega 8 (supersedes the GPU part of D-005) (2026-10-10)
+Owner's PC: AMD Radeon Vega 8 integrated (Ryzen APU), 2 GB dedicated + shared, DirectX 12 FL 12.1, driver from Feb 2021; 6 GB RAM. Supports Vulkan, so Godot's Mobile renderer is a candidate alongside Compatibility; M0 spike measures both.
+Would change if: the spike shows driver problems (then: owner updates AMD driver, or Compatibility/ANGLE).
+
+## D-014 — Pokémon visuals come from an owner-supplied asset pack (2026-10-10)
+Owner wants real Pokémon visuals for a private game with a friend. Claude and workers do not create or fetch Pokémon art/models (Claude's content policy, not a legal judgement). Instead the engine loads per-species models/sprites/sounds from `packs/<pack>/` by species ID with a documented format; any species without pack assets uses a stand-in. The owner supplies the pack.

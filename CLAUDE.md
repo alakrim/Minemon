@@ -1,4 +1,4 @@
-# PokeCraft (working title)
+# Minemon
 
 A private, single-player fan game: Minecraft-style voxel world + Kanto/Johto Pokémon, real-time combat, hard and atmospheric. PC (Windows, low-end) first; Android later from the same codebase.
 
@@ -20,4 +20,4 @@ A private, single-player fan game: Minecraft-style voxel world + Kanto/Johto Pok
 - `.claude/agents/worker.md` — worker definition (model: haiku, effort: high)
 
 ## Hard content rule
-No worker creates art, models, textures or sounds that imitate official Pokémon designs or Nintendo/Game Freak assets. Creatures use neutral stand-in models until the owner supplies assets. Species *data* (names, types, stats, moves) is allowed. Never publish or distribute builds.
+Workers never create, draw, model or download art, models, textures, sprites or sounds that reproduce official Pokémon designs or Nintendo/Game Freak assets. The game loads creature visuals from an owner-supplied asset pack (`packs/`, see D-014) and falls back to neutral stand-in models. Species *data* (names, types, stats, moves) is allowed. Private use only; never publish builds.
