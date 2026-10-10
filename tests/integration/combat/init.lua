@@ -3,13 +3,17 @@
 --   (a) ember from an owned Cyndaquil L20 at a wild Bulbasaur L20 3 m away: returns true, the orb hits, the target
 --       loses HP, and the owned user's PP drops by 1;
 --   (b) a second ember straight after is refused with "cooldown";
---   (c) tackle from a Bulbasaur 1.5 m away, in front of Cyndaquil, hits Cyndaquil (melee arc);
+--   (c) scratch (accuracy 100) from a Bulbasaur 1.5 m away, in front of Cyndaquil, hits Cyndaquil (melee arc);
 --   (d) bubble (area burst) from Squirtle hits Bulbasaur and a bystander Cyndaquil, not Squirtle (the user);
 --   (e) growl (status cloud) lowers the target's atk stage once, not once per check; agility (aura) raises the
 --       user's spe stage by 2; thunder_wave (status cloud) paralyses a Charmander;
 --   (f) a move outside the moveset returns false; a target out of range returns false ("out of range");
 --   (g) choose_move returns a move id from the moveset that is not on cooldown;
---   (h) every move in moves.json passes validate(). The warnings (valid moves that do not work fully) are written
+--   (h) use_move on a non-creature entity (an item) returns false, "bad target", and the server keeps running;
+--   (i) a frozen creature, round-tripped through its staticdata, is either frozen again with speed 0, or has status
+--       none and its walk speed back to the original value;
+--   (j) a melee attack from a creature turned 180 degrees away from the target still hits (it turns first);
+--   (k) every move in moves.json passes validate(). The warnings (valid moves that do not work fully) are written
 --       to moves_report.txt in the world directory.
 -- Writes PASS n or FAIL <reason> to test_result.txt, then shuts down.
 -- luacheck: read_globals core minemon vector VoxelManip VoxelArea mcl_util
@@ -143,7 +147,7 @@ local function remove_all(list)
 	end
 end
 
--- (h): every move validates. Returns the number of moves and the number of warnings.
+-- (k): every move validates. Returns the number of moves and the number of warnings.
 local function validate_all_moves()
 	local path = core.get_modpath("minemon_core") .. "/data/moves.json"
 	local f = io.open(path, "rb")
@@ -216,22 +220,96 @@ local function scenario_basic(done)
 	end)
 end
 
--- (c): Bulbasaur tackles Cyndaquil from 1.5 m, in front.
+-- (c): Bulbasaur scratches Cyndaquil from 1.5 m, in front. Scratch has accuracy 100, so the accuracy roll cannot
+-- miss at stage 0 and the check is deterministic (tackle, at 95, would need a stage workaround).
 local function scenario_melee(done)
-	local bulb = make(16, 0, 1, 20, nil, { "tackle" })
+	local bulb = make(16, 0, 1, 20, nil, { "scratch" })
 	local cyn = make(17.5, 0, 155, 20, nil, { "ember" })
 	face(bulb, cyn)
 	face(cyn, bulb)
-	-- Accuracy stage +6 so the 95% accuracy roll cannot miss (the rng is seeded from the clock). Without it the check
-	-- fails about 1 run in 20, which says nothing about the melee path.
-	bulb:get_luaentity()._mm_stages = { acc = 6 }
 	local hp_before = hp_of(cyn)
-	check(minemon.combat.use_move(bulb, cyn, "tackle") == true, "(c) tackle should start")
+	check(minemon.combat.use_move(bulb, cyn, "scratch") == true, "(c) scratch should start")
 	wait(MELEE_WAIT_S, function()
-		check(hp_of(cyn) < hp_before, "(c) Cyndaquil HP should drop from tackle: " .. hp_before .. " -> "
+		check(hp_of(cyn) < hp_before, "(c) Cyndaquil HP should drop from scratch: " .. hp_before .. " -> "
 			.. hp_of(cyn))
 		remove_all({ bulb, cyn })
 		done()
+	end)
+end
+
+-- (j): the same melee, but the user starts 180 degrees away from the target. It turns to face it when the cast
+-- starts and again at execution, so the hit lands.
+local function scenario_turned(done)
+	local bulb = make(20, 0, 1, 20, nil, { "scratch" })
+	local cyn = make(21.5, 0, 155, 20, nil, { "ember" })
+	face(cyn, bulb)
+	face(bulb, cyn)
+	bulb:set_yaw(bulb:get_yaw() + math.pi)
+	local hp_before = hp_of(cyn)
+	check(minemon.combat.use_move(bulb, cyn, "scratch") == true, "(j) scratch should start")
+	wait(MELEE_WAIT_S, function()
+		check(hp_of(cyn) < hp_before, "(j) a melee from a creature turned 180 degrees should still hit: "
+			.. hp_before .. " -> " .. hp_of(cyn))
+		remove_all({ bulb, cyn })
+		done()
+	end)
+end
+
+-- (h): an item entity is not a creature or a player, so it is a bad target. The server keeps running after it.
+local function scenario_bad_target(done)
+	local cyn = make(90, 0, 155, 20, "tester", { "growl", "ember" })
+	local item = core.add_entity(vector.new(91, floor_y + 0.5, 0), "__builtin:item", "mcl_core:stone")
+	check(item and item:get_pos(), "(h) item entity should exist")
+	local r, why = minemon.combat.use_move(cyn, item, "growl")
+	check(r == false and why == "bad target", "(h) growl on an item should be refused as bad target, got "
+		.. tostring(r) .. " " .. tostring(why))
+	local r2, why2 = minemon.combat.use_move(cyn, item, "ember")
+	check(r2 == false and why2 == "bad target", "(h) ember on an item should be refused as bad target, got "
+		.. tostring(why2))
+	item:remove()
+	remove_all({ cyn })
+	done()
+end
+
+-- (i): a frozen creature is saved and added again. Its walk speed is 0 while frozen. Either it is frozen again (its
+-- status is restored with a fresh duration, and its speed is 0), or it has thawed (status none, walk speed back to
+-- the original value). The status must be one of these two after 1 s, and the thaw roll is random, so both count.
+local function scenario_restore(done)
+	local cyn = make(-12, 0, 155, 20, "tester", { "growl" })
+	local le = cyn:get_luaentity()
+	le.walk_velocity = 1
+	le.run_velocity = 2
+	check(minemon.combat.apply_status(cyn, "freeze") == true, "(i) freeze should apply")
+	check(le.walk_velocity == 0, "(i) freeze should stop walking, walk is " .. tostring(le.walk_velocity))
+	local sd = le:get_staticdata()
+	check(sd ~= "remove", "(i) staticdata must not ask for removal")
+	local pos = cyn:get_pos()
+	cyn:remove()
+	local again = core.add_entity(pos, le.name, sd)
+	check(again, "(i) the creature should be added again")
+	wait(1, function()
+		local nle = again:get_luaentity()
+		local inst = minemon.creatures.get_instance(again)
+		local status = minemon.combat.status_of(again)
+		if status == "freeze" then
+			check(inst.status == "freeze", "(i) instance should say freeze, says " .. tostring(inst.status))
+			check(nle.walk_velocity == 0, "(i) re-registered freeze should keep speed 0, walk is "
+				.. tostring(nle.walk_velocity))
+		else
+			check(status == "none" and inst.status == "none", "(i) thawed creature should have status none, got "
+				.. status .. " / " .. tostring(inst.status))
+			check(nle.walk_velocity == 1 and nle.run_velocity == 2, "(i) thawed creature should have its speed back, "
+				.. "walk " .. tostring(nle.walk_velocity) .. " run " .. tostring(nle.run_velocity))
+		end
+		-- The freeze lasts 3 s from the restore at most. After 4.5 s the speed must be the original one.
+		wait(3.5, function()
+			check(minemon.combat.status_of(again) == "none", "(i) status should end after 3 s, got "
+				.. minemon.combat.status_of(again))
+			check(nle.walk_velocity == 1 and nle.run_velocity == 2, "(i) speed should be fully restored, walk "
+				.. tostring(nle.walk_velocity))
+			again:remove()
+			done()
+		end)
 	end)
 end
 
@@ -302,13 +380,19 @@ core.after(1, function()
 				guard(function()
 					build_platform(floor_y)
 					local moves, warned = validate_all_moves()
-					scenario_basic(function()
-						scenario_melee(function()
-							scenario_area(function()
-								scenario_aura(function()
-									scenario_clouds(function()
-										finish(string.format("PASS %d checks; moves=%d warnings=%d "
-											.. "(see moves_report.txt)", checks, moves, warned))
+					scenario_bad_target(function()
+						scenario_basic(function()
+							scenario_melee(function()
+								scenario_turned(function()
+									scenario_restore(function()
+										scenario_area(function()
+											scenario_aura(function()
+												scenario_clouds(function()
+													finish(string.format("PASS %d checks; moves=%d warnings=%d "
+														.. "(see moves_report.txt)", checks, moves, warned))
+												end)
+											end)
+										end)
 									end)
 								end)
 							end)
