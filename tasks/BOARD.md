@@ -10,7 +10,8 @@
 | T-20 | M1 / w1 | high | DONE | minemon_core API |
 | T-18 | M1 / w1 | medium | DONE | stand-in models + type textures |
 | T-21a | M1 / w1 | high | DONE (fixes → T-21b) | creature registration, spawning, levels |
-| T-22 | M1 / w3 | high | BUILDING | party, starter, Party Ball |
-| T-21b | M1 / w3 | high | BUILDING | temperament AI, aggression gate, exhausted state |
-| T-23 | M1 / w2 | high | BUILT | move system (6 archetypes), VFX |
-| T-24 | M1 / w2 | high | BUILT (Opus reviewed) | creature runtime hooks (brains, damage, exhausted/faint) |
+| T-22 | M1 / w3 | high | BLOCKED (on T-23b) | party, starter, Party Ball |
+| T-21b | M1 / w3 | high | BLOCKED (on T-23b) | temperament AI, aggression gate, exhausted state |
+| T-23 | M1 / w2 | high | FAILED (attempt 1) → T-23b | move system (6 archetypes), VFX |
+| T-24 | M1 / w2 | high | DONE (concerns → D-028) | creature runtime hooks (brains, damage, exhausted/faint) |
+| T-23b | M1 / w3 | high | BUILDING | combat fixes (crash, facing, status persistence) |

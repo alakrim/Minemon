@@ -192,3 +192,9 @@ Trade-off: it is heavier than Minetest Game. Fallback: Minetest Game plus Mobs R
 
 ## D-027 — Creature runtime hooks are a single choke point (2026-10-10)
 All damage goes through `minemon.creatures.damage`, and all behaviour through registered brains in `minemon_creatures`. This prevents parallel tasks (party, wild AI, combat) from editing the same do_custom and health code, and keeps instance HP and entity HP in sync. Owned by T-24 (high risk; Opus reviews the diff).
+
+## D-028 — Ownership scope and attacker facing (2026-10-10)
+- The owned brain manages only creatures sent out by the party system (`_mm_party = true` on the entity). Owned creatures created by other means (tests, future NPC trainers) are left to their own brains.
+- The party treats an active creature that vanished without a faint event (for example void removal, mcl_void_damage/init.lua:45) as recalled, using the last write-back.
+- Attackers turn to face their target at cast start and at execution: a creature never whiffs a valid melee because of idle turning.
+- Brains do not run while a creature is exhausted (T-24 behaviour accepted; the exhausted state is a pause).
