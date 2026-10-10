@@ -1,8 +1,9 @@
-# Board (v2, after pivot D-022; Godot tasks T-01..T-10 archived on branch godot-prototype)
+# Board (v3, Luanti; earlier tasks archived: Godot T-01..T-10 on branch godot-prototype, Cobblemon T-11..T-13 discarded)
 
 | ID | Milestone/wave | Risk | Status | Output |
 |---|---|---|---|---|
-| S-06..S-08 | Re-plan | — | DONE | docs/research/S-06, S-07, S-08 |
-| T-11 | M0' / w1 | high | BUILDING | repo restructure, validate_layer.py, check.sh |
-| T-12 | M0' / w1 | medium | BUILDING | lives datapack |
-| T-13 | M0' / w1 | low | BUILDING | owner setup guide, package_layer.sh |
+| S-09..S-11 | Re-plan | — | DONE | docs/research/S-09, S-10, S-11 |
+| T-14 | M0 / w1 | high | BUILDING | cleanup, setup/check/assemble/test runner, smoke test |
+| T-15 | M0 / w1 | medium | BUILDING | minemon_lives |
+| T-17 | M0 / w1 | medium | BUILDING | 251-species data + extractor |
+| T-16 | M0 / w2 | medium | TODO | Windows portable build + Vega 8 graphics preset |

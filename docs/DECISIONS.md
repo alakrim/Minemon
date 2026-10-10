@@ -160,3 +160,17 @@ Combat returns to real-time in the world (D-003 restored), using Luanti entities
 Pokémon visuals: still the owner-supplied pack (D-014). We write code that loads the owner's files; we never create or fetch Pokémon art. Stand-ins are our own procedural blocky creatures.
 Supersedes D-022/D-023 (the Cobblemon base). Kept from them: the lives design, the temperament data and the layer ideas.
 Would change if: the base game cannot be obtained or tested here, or Lua entity performance is too low on the Vega 8.
+
+## D-025 — Base game: VoxeLibre on Luanti 5.17.0; creatures built on its mcl_mobs API (2026-10-10)
+Evidence: S-09, S-10, S-11.
+- Luanti 5.17.0 is the latest stable release, with a win64 zip.
+- VoxeLibre is GPL code with CC BY-SA media, and has a reachable GitHub mirror.
+- A headless luantiserver builds here in about 3 minutes and test runs take under 1 second.
+
+Why VoxeLibre: the biggest shortcut available. It provides a Minecraft-like look and worldgen, villages (future towns), structures, the mcl_mobs AI framework (pathfinding, attack, taming, spawning by biome), day/night, weather and crafting.
+Trade-off: it is heavier than Minetest Game. Fallback: Minetest Game plus Mobs Redo if the owner's Vega 8 cannot hold at least 30 fps.
+- Our code: Luanti mods in `mods/` (Lua). The game is assembled at build time as `games/minemon` = VoxeLibre mods + our mods; VoxeLibre itself is never edited.
+- Real-time combat (D-003) on top of mcl_mobs.
+- Permadeath: Luanti has no spectator mode, so the 4th death puts the player into "ghost mode": no interact privilege, invisible, can fly and watch. Admins can revive.
+- Tests: luacheck, busted unit tests for pure Lua, and headless luantiserver integration tests.
+- Delivery: a portable Windows build (Luanti win64 zip plus the game), split into parts of 25 MB or less and written to the owner's Downloads folder through the linked PC.

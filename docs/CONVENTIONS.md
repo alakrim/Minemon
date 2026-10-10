@@ -1,20 +1,25 @@
 # Conventions (all workers)
 
-## What we write
-- Only text: datapack files (.mcfunction, .json), config files (.json, .toml, .json5), resource pack files (.json, .lang), and Python tools in `tools/`.
-- Minecraft 1.21.1, datapack `pack_format` 48, namespace `minemon`. 1.21 folder names are singular: `function/`, `advancement/`, `predicate/`, `loot_table/`, `tags/function/`.
-- Cobblemon 1.8.1 formats: copy the structure of the real files in `reference/` (once present). Never invent keys. If reference/ lacks a format you need, say so in your report and mark the item UNVERIFIED.
-- Function files: one command per line, `#` comments allowed, no trailing spaces. Use the scoreboard objectives and tags documented in `layer/datapack/minemon/README.md`, and add new ones there.
-- Per-tick work: `minemon:tick` must stay cheap. Heavy logic runs on `schedule function ... 10t` or 20t loops, with selectors limited by distance or limit (PLAN invariant 5).
-- Multiplayer-safe: every rule works per player (`@s` inside `execute as @a`), never with global flags for player state.
-- English for code and comments. Player-facing text uses JSON text components, written in English.
+## Lua
+- Luanti 5.17 API: use `core.*`, not `minetest.*`. LuaJIT/Lua 5.1 compatible; no `goto` and no 5.2+ features.
+- Every mod has a `mod.conf` (`name`, `description`, `depends`, `optional_depends`) and an `init.lua`. Mod names start with `minemon_`.
+- Module pattern: `local M = {}` ... return M from helper files loaded with `dofile(core.get_modpath(...) .. "/x.lua")`. Shared public API: the global table `minemon` (created by `minemon_core`), with one sub-table per mod (`minemon.lives`, ...). No other globals; luacheck enforces this.
+- **Pure logic goes in separate files that do not touch `core`** (e.g. `lives_logic.lua`), so busted can test it without Luanti. Glue code (callbacks, HUD) stays thin.
+- Player state is stored in player meta under keys `minemon:<mod>:<key>`. Mod-global state goes in `core.get_mod_storage()`.
+- Performance: no unbounded work in globalsteps. Accumulate dtime and act every ≥0.5 s. Cap radius and object counts.
+- Randomness: `PcgRandom` or a seeded RNG from minemon_core, so tests are deterministic.
+- Never modify VoxeLibre or Luanti files. Use their public APIs (`mcl_mobs`, `mcl_*`). Read their source in `.tools/voxelibre` to learn the API.
+- Formatting: 4-space or tab indentation, consistent within each file. Lines up to 120 characters.
 
-## Tests and checks
-- `bash scripts/check.sh` must exit 0 before a task can be BUILT. It covers JSON parsing, `mecha -m 1.21` on all functions, nbtlib on .snbt, and `tools/validate_layer.py`.
-- Every brief lists an **in-game test checklist** (exact commands the owner runs and the result to expect). Put it in your report under "In-game checks".
+## Tests
+- `tests/unit/<mod>_<thing>_spec.lua` (busted): every pure-logic function, with deterministic inputs.
+- `tests/integration/<name>/` is a Luanti mod (mod.conf + init.lua). It runs its checks after `core.after(1, ...)`, writes `test_result.txt` (`PASS n` or `FAIL <reason>`) to the world dir, and calls `core.request_shutdown()`. `scripts/run_luanti_test.sh` runs it inside the assembled game.
+- Every acceptance criterion maps to a test, or to a command with checked output.
+- `bash scripts/check.sh` must exit 0 before a task is BUILT.
 
-## Files
-- Never commit `builds/`, `.tools/` or third-party jars/assets. `reference/` holds extracted text files only (JSON/MoLang) from the owner's installed mods, for format reference.
-- Change only the files your brief allows. No git commit or push (Opus commits after verification), except in a worktree when the brief or launch prompt says so.
-- Reports: builder `tasks/M<n>/T-<nn>.report.md` (max 120 words), verifier `.verdict.md` (max 100 words). Writing these files is required.
+## Files and licences
+- Never commit `.tools/`, `builds/` or third-party code. VoxeLibre and Luanti are fetched by setup.sh.
+- Generated assets (our own stand-in models and textures) are committed with a row in `ASSETS_LICENSES.md`.
+- Change only the files your brief allows. Do not git commit or push, unless working in a worktree where the launch prompt says to.
+- Reports: builder `tasks/M<n>/T-<nn>.report.md` (max 120 words, plus an "In-game checks" list when relevant); verifier `.verdict.md` (max 100 words). Writing these files is required.
 - If your brief is unclear: mark it BLOCKED in your report and ask one specific question.

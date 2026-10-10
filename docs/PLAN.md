@@ -1,51 +1,42 @@
-# PLAN (v2, after the pivot D-022; the Godot plan is archived on branch `godot-prototype`)
+# PLAN v3: Luanti + VoxeLibre + Minemon mods (D-024, D-025)
+Earlier plans are superseded: Godot (branch `godot-prototype`) and Cobblemon (D-022/D-023).
 
-## Project brief (approved goals, unchanged)
-A private Pokémon game in a Minecraft world for the owner and one friend. It should be hard, alive and scary, with Kanto + Johto Pokémon, missions in Kanto + Johto towns, eldritch giants, and look beautiful while running on an AMD Vega 8 with 6 GB RAM.
+## Brief (owner goals, unchanged)
+A private Pokémon game in a Minecraft-like world for the owner and one friend.
+- **Look and performance:** hard, alive, scary and beautiful; runs on an AMD Vega 8 with 6 GB RAM; Android later.
+- **Pokémon:** all 251 Kanto + Johto species, each aggressive or peaceful, fought with real-time combat in the world.
+- **Catching and growth:** wild Pokémon must be defeated before capture, balls have different catch rates, and levels come from battling and bonding.
+- **Danger:** wild Pokémon attack the player when no Pokémon of theirs is out. 3 lives, then permadeath.
+- **World and story:** missions in Kanto + Johto towns; eldritch giants; free, with no purchases.
 
-**Rules:**
-- Defeat a wild Pokémon before catching it.
-- Ball type changes the catch rate.
-- Levels come from battles and bonding.
-- Species are aggressive or peaceful.
-- Wild Pokémon attack the player when no Pokémon of theirs is out.
-- 3 lives; the 4th death is permanent.
-
-## Approach (D-022, D-023)
-Base + layer:
-1. **Base (installed by the owner in the Modrinth App):** Minecraft Java 1.21.1, Fabric, the Cobblemon Official Modpack (Cobblemon 1.8.1 plus a performance stack).
-2. **Adventure world:** the "Cobblemon Johto" map (CurseForge, JondGames). It has Johto towns, gyms, the Elite Four and Team Rocket, with Kanto gyms post-game. The owner downloads it (All Rights Reserved, private use).
-3. **Extra mods (owner installs from Modrinth):** Cobblemon Fight or Flight Reborn (aggression), Server-Side Horror (eerie events). Further add-ons only after compatibility checks on 1.8.1.
-4. **Beauty:** Iris plus the Complementary Reimagined shaders (Potato/Low profile first), Better Leaves, and our own atmosphere tweaks (biome fog colours and ambient sounds).
-5. **The Minemon layer (our work, text only; built by Haiku workers):**
-   - `layer/datapack/minemon/`: functions, spawn pools, Cobblemon NPC/dialogue JSON, advancements, predicates;
-   - `layer/config/`: config overrides for Cobblemon and the add-ons;
-   - `layer/resourcepack/minemon/`: language, sounds and texture tweaks (never Pokémon art).
-
-   It is installed into the owner's world or instance folder by Opus through the linked PC (device file tools), or by the owner from a zip.
-
-## Validation (cloud, no Minecraft available)
-`scripts/check.sh` runs:
-- JSON parsing of every .json;
-- `mecha -m 1.21` on every .mcfunction;
-- nbtlib on .snbt;
-- `tools/validate_layer.py`: schema checks for our own files against reference samples taken from the real Cobblemon 1.8.1 jar on the owner's PC (`reference/`), pack.mcmeta `pack_format` 48, namespace and path rules, and that every function and tag referenced exists.
-
-Then an in-game test checklist per milestone that the owner (or Opus via computer use) runs.
+## Architecture
+- **Engine:** Luanti 5.17.0 (client: the official win64 zip; testing: luantiserver built from source in `.tools/`).
+- **Base game:** VoxeLibre, pinned to a release tag, cloned into `.tools/voxelibre` and never edited.
+- **Our code:** `mods/minemon/` is a modpack (modpack.conf) of small mods, each with its own `mod.conf` and `depends`:
+  - `minemon_core`: shared utilities (rng, data loading, logging), species/move data in `minemon_core/data/*.json`, and a public API table `minemon`;
+  - `minemon_lives`: 3 lives, then ghost mode;
+  - later: `minemon_creatures` (entities via mcl_mobs), `minemon_combat`, `minemon_capture`, `minemon_progress` (exp, levels, bond), `minemon_party` (UI), `minemon_dread`, `minemon_towns`, `minemon_titans`, `minemon_packs` (owner visual packs).
+- **Game assembly:** `scripts/assemble_game.sh` writes `.tools/games/minemon/`. It contains game.conf (`title = Minemon`), VoxeLibre's `mods/*`, our `mods/minemon`, and VoxeLibre's menu and settingtypes where needed.
+- **Tests:**
+  - `tests/unit/*_spec.lua`: busted, pure Lua with mocks of `core`;
+  - `tests/integration/<name>/`: a test mod run inside the assembled game by `scripts/run_luanti_test.sh`. It writes `test_result.txt` and calls `core.request_shutdown`.
+- **Assets:** `tools/*.py` generate our own stand-in creature models (.glb, our art). Pokémon visuals come only from owner-supplied packs (D-014).
 
 ## Invariants
-1. We never ship or create Pokémon art, models or sounds, nor any third-party jars or assets without a redistribution licence. The owner installs mods through the launcher.
-2. Everything we author is text in `layer/` and passes check.sh.
-3. All gameplay rules are per-player and multiplayer-safe (the owner plus a friend).
-4. The layer never edits the adventure map's own files. It adds a datapack and configs only, so it can be removed cleanly.
-5. Performance: no feature may add per-tick work that scans all entities every tick. Use schedules (every 10–20 ticks) and limited selectors (distance, limit).
+1. VoxeLibre and Luanti sources are never modified. We hook only through public APIs (mcl_mobs, core callbacks, overrides in our own mods).
+2. Every gameplay rule is per player and multiplayer-safe. Player state lives in player meta (`minemon:*` keys) or mod storage.
+3. No globalstep does unbounded work. Use timers of at least 0.5 s for scans, limit radius and object counts, and keep per-entity on_step cheap.
+4. No species-specific or move-specific code; behaviour is driven by data.
+5. We never create or fetch Pokémon art, models or sounds. Stand-ins are procedural and our own.
+6. `bash scripts/check.sh` passes before every commit: luacheck, busted, and headless integration tests.
 
 ## Milestones
-| M | Result the owner can play | Acceptance |
+| M | Playable result | Acceptance |
 |---|---|---|
-| M0' | Base installed on the owner's PC (pack, Johto world, shaders, 3 GB RAM); repo restructured; validator; **lives system** (3 lives, then permadeath) | check.sh green; owner screenshot of the lives HUD; fps ≥ 30 with shaders |
-| M1' | **Danger:** aggressive and peaceful species set for dex 1–251 (Fight or Flight config from our temperament data); spawns limited to Kanto + Johto with region level curves; difficulty config (exp, catch); the no-Pokémon-out aggression rule (best feasible approach); capture-after-weakening (mod or rule) | Owner playtest: a Rattata is a real threat |
-| M2' | **Dread:** night and cave atmosphere (fog colours, ambient sounds, Server-Side Horror tuning), Alpha/Titan spawns | Owner playtest |
-| M3' | **Eldritch giants:** rare titanic encounters (scale, darkness, boss bar, telegraphing, special loot) for Gengar, Onix, Gyarados, Lugia and others | Owner playtest |
-| M4' | **Missions:** extra Kanto + Johto town missions via Cobblemon NPCs and dialogues, on top of the map's story | Each mission is completable |
-| M5' | Friend multiplayer (shared instance plus e4mc), polish | Two players online |
+| M0 | Portable Windows build of Minemon (VoxeLibre world) with the lives system; tooling; all 251 species' data | check.sh green; owner runs it and reports fps (≥30, F5 overlay) |
+| M1 | Creatures: Kanto + Johto species spawn by biome with stand-in models, temperaments (aggressive hunt the player when no Pokémon is out), level by distance; real-time fights | Integration tests; owner playtest: a Rattata is dangerous |
+| M2 | Capture and growth: balls (catch rates), capture only when defeated, party UI, send out and recall, exp, levels, bond, evolutions, saves | Tests; owner catches and levels a starter |
+| M3 | Dread: night and cave atmosphere, fog, ambience, rare scares; graphics presets for the Vega 8 | Owner playtest |
+| M4 | Towns and missions: Kanto/Johto towns via VoxeLibre villages placed near canon positions, NPC quests, Pokémon Centers as respawn checkpoints | Each mission completable |
+| M5 | Eldritch giants (titans) | Owner playtest |
+| M6 | Owner Pokémon visual packs; multiplayer with the friend; Android check | — |
