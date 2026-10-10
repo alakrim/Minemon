@@ -122,3 +122,23 @@ Consequences:
 - Android goes through Java-launcher apps (unofficial) and drops from guaranteed scope.
 - The Godot prototype is archived on branch `godot-prototype`. Godot-specific decisions (D-015..D-021) are superseded, but the Gen 2 data work and the lessons are kept.
 Would change if: the base modpack cannot be customised enough with text (then a small Java add-on is built on the owner's PC).
+
+## D-023 — Base stack chosen by Opus on the owner's behalf (2026-10-10)
+The stack:
+- Modrinth App;
+- Minecraft Java 1.21.1, Fabric;
+- Cobblemon Official Modpack (Cobblemon 1.8.1; lightest stack, 3 GB RAM);
+- the "Cobblemon Johto" adventure world (towns, gyms, story, Kanto post-game), owner-downloaded;
+- Fight or Flight Reborn and Server-Side Horror (both MIT);
+- Iris with Complementary Reimagined Potato/Low.
+
+Our work is a text-only layer (datapack, configs, resource pack) validated with mecha, json, nbtlib and our own schema checks against real Cobblemon 1.8.1 reference files staged from the owner's PC.
+Rejected:
+- COBBLEVERSE and CobbleKanto: heavier (6 GB+), All Rights Reserved, and on Cobblemon 1.7.3;
+- a generated world plus gym mods: more work, and the Johto map already covers towns, gyms and story.
+
+Approximations accepted:
+- Aggression "only when no Pokémon is out" may become "aggressive species attack whoever is nearest" if no text-only gate exists. A Java add-on is reconsidered at M1' close.
+- Capture-after-weakening uses an existing mod, or is deferred.
+
+Requirement surfaced to the owner: each player needs Minecraft Java Edition (paid).
