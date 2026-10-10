@@ -142,3 +142,21 @@ Approximations accepted:
 - Capture-after-weakening uses an existing mod, or is deferred.
 
 Requirement surfaced to the owner: each player needs Minecraft Java Edition (paid).
+
+## D-024 — PIVOT 2: Luanti (free, open source) replaces Cobblemon/Minecraft (2026-10-10)
+Owner: no purchases (no Minecraft); use every shortcut available. Opus decides.
+Options:
+- Luanti plus an existing Minecraft-like game (Mineclonia or VoxeLibre) plus our Lua mods;
+- Minosoft (an open Minecraft client that still needs Mojang assets and a licence: rejected);
+- back to Godot (more work).
+
+Chosen: **Luanti 5.14 + a Minecraft-like base game + our "Minemon" Lua mods**.
+Why:
+- free, with an official Android app (restores the Android goal), built for low-end PCs, with built-in shaders (dynamic shadows, bloom, volumetrics), multiplayer, day/night and weather;
+- Lua mods are plain text that Haiku workers can write;
+- **the cloud workspace can apt-install build deps and git-clone GitHub**, so we can build a headless `luantiserver` and run real integration tests.
+
+Combat returns to real-time in the world (D-003 restored), using Luanti entities.
+Pokémon visuals: still the owner-supplied pack (D-014). We write code that loads the owner's files; we never create or fetch Pokémon art. Stand-ins are our own procedural blocky creatures.
+Supersedes D-022/D-023 (the Cobblemon base). Kept from them: the lives design, the temperament data and the layer ideas.
+Would change if: the base game cannot be obtained or tested here, or Lua entity performance is too low on the Vega 8.
