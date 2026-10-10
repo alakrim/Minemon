@@ -30,6 +30,12 @@ fi
 mkdir -p "$GAME_DIR/mods"
 cp -r mods/minemon "$GAME_DIR/mods/minemon"
 
+# The generated Cobblemon pack (T-25a, D-029), when scripts/setup.sh has converted it. Never committed.
+COBBLE_PACK=".tools/pack_cobblemon/minemon_pack_cobblemon"
+if [ -f "$COBBLE_PACK/init.lua" ]; then
+	cp -r "$COBBLE_PACK" "$GAME_DIR/mods/minemon_pack_cobblemon"
+fi
+
 MODS=$(find "$GAME_DIR/mods/minemon" -mindepth 1 -maxdepth 1 -type d | wc -l)
 echo "assembled $GAME_DIR (title: Minemon, $MODS Minemon mods)"
 du -sh "$GAME_DIR" | awk '{print "size: " $1}'
