@@ -120,10 +120,24 @@ printf '%s\n' "gameid = $GAMEID" "backend = sqlite3" "player_backend = sqlite3" 
 	"load_mod_minemon_shots = true" > "$WORLD/world.mt"
 cp "$SHOTS" "$WORLD/minemon_shots.json"
 
+# Optional extra test mods (T-18 lineup): MINEMON_SHOT_EXTRA_MODS is a space-separated list of mod dirs
+# (relative to the repo root). Each is copied with its symlinks resolved and loaded in the throwaway world.
+for EXTRA in ${MINEMON_SHOT_EXTRA_MODS:-}; do
+	[ -f "$EXTRA/mod.conf" ] || fail "extra mod has no mod.conf: $EXTRA"
+	EXTRA_NAME=$(basename "$EXTRA")
+	cp -rL "$EXTRA" "$WORLD/worldmods/$EXTRA_NAME"
+	printf '%s\n' "load_mod_$EXTRA_NAME = true" >> "$WORLD/world.mt"
+done
+
 # First free TCP port in 30000-30999 (the container has no IPv6).
 PORT=""
 for p in $(seq 30000 30999); do
-	if ! (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null; then PORT=$p; break; fi
+	# Luanti serves the game on UDP, so a port is free only if both TCP connect and UDP bind fail.
+	if ! (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null \
+		&& python3 -I -c 'import socket, sys; s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.bind(("127.0.0.1", int(sys.argv[1])))' "$p" 2>/dev/null; then
+		PORT=$p
+		break
+	fi
 done
 [ -n "$PORT" ] || fail "no free port"
 
