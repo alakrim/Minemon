@@ -7,3 +7,4 @@
 | T-15 | M0 / w1 | medium | DONE (concerns logged) | minemon_lives |
 | T-17 | M0 / w1 | medium | FAILED (attempt 1: temperament balance) | 251-species data + extractor |
 | T-16 | M0 / w2 | medium | BUILT | Windows portable build + Vega 8 graphics preset |
+| T-19 | M1 / w0 | medium | BUILDING | client build + screenshot harness |
