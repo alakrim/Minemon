@@ -90,3 +90,46 @@ func test_unknown_ids_return_null() -> void:
 	assert_null(Data.species(999))
 	assert_null(Data.move("no_such_move"))
 	assert_null(Data.item("no_such_item"))
+
+
+func test_cyndaquil_learnset_matches_gold_silver_csv() -> void:
+	# PokeAPI pokemon_moves.csv: pokemon_id 155, version_group_id 3 (gold-silver),
+	# method 1 (level-up), level <= 20.
+	Data.load_all()
+	var expected: Array[String] = [
+		"1:tackle", "1:leer", "6:smokescreen", "12:ember", "19:quick_attack"
+	]
+	var actual: Array[String] = []
+	for row: Dictionary in Data.species(155).learnset:
+		actual.append("%d:%s" % [int(row["level"]), str(row["move"])])
+	expected.sort()
+	actual.sort()
+	assert_eq(actual, expected)
+
+
+func test_gold_silver_learnset_row_counts_match_csv() -> void:
+	# Level-up rows per species from pokemon_moves.csv (gold-silver, level <= 20). Duplicate moves are kept.
+	Data.load_all()
+	var expected: Dictionary = {
+		16: 4,
+		17: 6,
+		18: 7,
+		19: 5,
+		20: 6,
+		92: 5,
+		93: 6,
+		94: 6,
+		155: 5,
+		156: 5,
+		157: 6,
+	}
+	for id: int in expected:
+		assert_eq(
+			Data.species(id).learnset.size(), expected[id], "learnset rows for species %d" % id
+		)
+
+
+func test_scary_face_accuracy_is_gen_2_90() -> void:
+	# move_changelog.csv: accuracy was 90 until version group 11.
+	Data.load_all()
+	assert_eq(Data.move("scary_face").accuracy, 90)

@@ -184,7 +184,7 @@
     "type": "normal",
     "category": "status",
     "power": null,
-    "accuracy": 100,
+    "accuracy": 90,
     "pp": 10,
     "priority": 0,
     "archetype": "status_cloud",

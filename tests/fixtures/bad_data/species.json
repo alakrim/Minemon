@@ -92,6 +92,14 @@
         "move": "tackle"
       },
       {
+        "level": 5,
+        "move": "sand_attack"
+      },
+      {
+        "level": 9,
+        "move": "gust"
+      },
+      {
         "level": 15,
         "move": "quick_attack"
       }
@@ -141,6 +149,18 @@
       {
         "level": 1,
         "move": "tackle"
+      },
+      {
+        "level": 5,
+        "move": "sand_attack"
+      },
+      {
+        "level": 9,
+        "move": "gust"
+      },
+      {
+        "level": 15,
+        "move": "quick_attack"
       }
     ],
     "temperament": "territorial",
@@ -241,6 +261,10 @@
       {
         "level": 1,
         "move": "tail_whip"
+      },
+      {
+        "level": 7,
+        "move": "quick_attack"
       },
       {
         "level": 13,
@@ -360,6 +384,10 @@
         "move": "spite"
       },
       {
+        "level": 8,
+        "move": "spite"
+      },
+      {
         "level": 13,
         "move": "mean_look"
       },
@@ -408,6 +436,10 @@
       },
       {
         "level": 1,
+        "move": "spite"
+      },
+      {
+        "level": 8,
         "move": "spite"
       },
       {
@@ -525,6 +557,10 @@
         "move": "tackle"
       },
       {
+        "level": 6,
+        "move": "smokescreen"
+      },
+      {
         "level": 12,
         "move": "ember"
       }
@@ -573,6 +609,14 @@
       {
         "level": 1,
         "move": "tackle"
+      },
+      {
+        "level": 6,
+        "move": "smokescreen"
+      },
+      {
+        "level": 12,
+        "move": "ember"
       }
     ],
     "temperament": "aggressive",
