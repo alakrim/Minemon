@@ -1,8 +1,9 @@
 class_name WorldStreamer
 extends Node3D
 ## Streams voxel columns in around a focus point.
-## Threading: workers only run TerrainGenerator and ChunkMesher and push plain results into a mutex-guarded
-## queue. The main thread makes snapshots, builds ArrayMeshes and collision, and owns every Node.
+## Threading: worker tasks only run ColumnJobs (a RefCounted that never references this Node). They push
+## plain results into its mutex-guarded queue. The main thread makes snapshots, builds ArrayMeshes and
+## collision, and owns every Node. Freeing the streamer waits for its in-flight tasks first.
 
 const COLUMN_SIZE: int = Chunk.SIZE
 const APPLY_PER_FRAME: int = 4
@@ -20,20 +21,24 @@ var view_radius: int = 4
 ## Columns around the focus that get trimesh collision.
 var collision_radius: int = 2
 
-var _generator: TerrainGenerator
+var _runner: ColumnJobs
 var _blocks: BlockRegistry
 var _material: StandardMaterial3D
 var _chunks: Dictionary[Vector2i, Chunk] = {}
-## Column -> serial of the one job whose result is still wanted. A result with another serial is dropped.
-var _jobs: Dictionary[Vector2i, int] = {}
+## Column -> serial of the newest job asked for it. A result with any other serial is stale and dropped.
+var _serials: Dictionary[Vector2i, int] = {}
 var _nodes: Dictionary[Vector2i, MeshInstance3D] = {}
 var _bodies: Dictionary[Vector2i, StaticBody3D] = {}
 var _ready_meshes: Array[Dictionary] = []
 var _task_ids: Array[int] = []
-var _done: Array[Dictionary] = []
-var _mutex: Mutex = Mutex.new()
 var _serial: int = 0
 var _focus_column: Vector2i = Vector2i.ZERO
+var _closing: bool = false
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_shutdown()
 
 
 func _ready() -> void:
@@ -41,6 +46,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if _closing:
+		return
 	_ensure_ready()
 	_prune_tasks()
 	_drain_results()
@@ -48,10 +55,12 @@ func _process(_delta: float) -> void:
 
 
 func _exit_tree() -> void:
-	_wait_and_drain()
+	_shutdown()
 
 
 func set_focus(pos: Vector3) -> void:
+	if _closing:
+		return
 	_ensure_ready()
 	_focus_column = _column_of(pos)
 	_unload_far()
@@ -59,7 +68,7 @@ func set_focus(pos: Vector3) -> void:
 	for dz: int in range(-r, r + 1):
 		for dx: int in range(-r, r + 1):
 			var col: Vector2i = _focus_column + Vector2i(dx, dz)
-			if _chunks.has(col) or _jobs.has(col):
+			if _serials.has(col):
 				continue
 			_request_generate(col)
 	_refresh_collision()
@@ -81,9 +90,9 @@ func flush() -> void:
 
 
 func _ensure_ready() -> void:
-	if _generator != null:
+	if _runner != null:
 		return
-	_generator = TerrainGenerator.new(seed)
+	_runner = ColumnJobs.new(TerrainGenerator.new(seed))
 	_blocks = BlockRegistry.new()
 	var errors: Array[String] = _blocks.load_from(BLOCKS_PATH)
 	for error: String in errors:
@@ -110,15 +119,21 @@ func _next_serial() -> int:
 	return _serial
 
 
+func _is_latest(col: Vector2i, serial: int) -> bool:
+	return _serials.get(col, -1) == serial
+
+
 func _request_generate(col: Vector2i) -> void:
 	var serial: int = _next_serial()
-	_jobs[col] = serial
-	_task_ids.append(WorkerThreadPool.add_task(Callable(self, &"_run_generate").bind(col, serial)))
+	_serials[col] = serial
+	_task_ids.append(
+		WorkerThreadPool.add_task(Callable(_runner, &"run_generate").bind(col, serial))
+	)
 
 
 func _request_mesh(col: Vector2i) -> void:
 	var serial: int = _next_serial()
-	_jobs[col] = serial
+	_serials[col] = serial
 	var centre: Chunk = _chunks[col]
 	var north: Chunk = _chunks.get(col + Vector2i(0, -1))
 	var south: Chunk = _chunks.get(col + Vector2i(0, 1))
@@ -126,35 +141,13 @@ func _request_mesh(col: Vector2i) -> void:
 	var west: Chunk = _chunks.get(col + Vector2i(-1, 0))
 	var snap := ChunkSnapshot.new(centre, north, south, east, west)
 	_task_ids.append(
-		WorkerThreadPool.add_task(Callable(self, &"_run_mesh").bind(col, serial, snap, _blocks))
+		WorkerThreadPool.add_task(Callable(_runner, &"run_mesh").bind(col, serial, snap, _blocks))
 	)
-
-
-## Worker thread: generates the chunk and reports it.
-func _run_generate(col: Vector2i, serial: int) -> void:
-	var chunk: Chunk = _generator.generate(col)
-	_push_result({"kind": RESULT_CHUNK, "pos": col, "serial": serial, "payload": chunk})
-
-
-## Worker thread: meshes an immutable snapshot and reports the packed arrays.
-func _run_mesh(col: Vector2i, serial: int, snap: ChunkSnapshot, blocks: BlockRegistry) -> void:
-	var data: ChunkMeshData = ChunkMesher.build(snap, blocks)
-	_push_result({"kind": RESULT_MESH, "pos": col, "serial": serial, "payload": data})
-
-
-func _push_result(entry: Dictionary) -> void:
-	_mutex.lock()
-	_done.append(entry)
-	_mutex.unlock()
 
 
 ## Main thread: moves finished job results into the main-thread queues.
 func _drain_results() -> void:
-	_mutex.lock()
-	var batch: Array[Dictionary] = _done.duplicate()
-	_done.clear()
-	_mutex.unlock()
-	for entry: Dictionary in batch:
+	for entry: Dictionary in _runner.take_done():
 		if entry["kind"] == RESULT_CHUNK:
 			_accept_chunk(entry)
 		else:
@@ -163,11 +156,11 @@ func _drain_results() -> void:
 
 func _accept_chunk(entry: Dictionary) -> void:
 	var col: Vector2i = entry["pos"]
-	if _jobs.get(col, -1) != entry["serial"]:
+	if not _is_latest(col, entry["serial"]):
 		return
-	_jobs.erase(col)
-	var chunk: Chunk = entry["payload"]
-	_chunks[col] = chunk
+	_chunks[col] = entry["payload"]
+	if _closing:
+		return
 	_request_mesh(col)
 	for offset: Vector2i in NEIGHBOUR_OFFSETS:
 		var neighbour: Vector2i = col + offset
@@ -177,10 +170,9 @@ func _accept_chunk(entry: Dictionary) -> void:
 
 func _accept_mesh(entry: Dictionary) -> void:
 	var col: Vector2i = entry["pos"]
-	if _jobs.get(col, -1) != entry["serial"]:
+	if not _is_latest(col, entry["serial"]):
 		return
-	_jobs.erase(col)
-	_ready_meshes.append({"pos": col, "data": entry["payload"]})
+	_ready_meshes.append({"pos": col, "serial": entry["serial"], "data": entry["payload"]})
 
 
 func _apply_meshes(limit: int) -> void:
@@ -188,7 +180,7 @@ func _apply_meshes(limit: int) -> void:
 	while applied < limit and not _ready_meshes.is_empty():
 		var item: Dictionary = _ready_meshes.pop_front()
 		var col: Vector2i = item["pos"]
-		if not _chunks.has(col):
+		if not _chunks.has(col) or not _is_latest(col, item["serial"]):
 			continue
 		_apply_column(col, item["data"] as ChunkMeshData)
 		applied += 1
@@ -268,14 +260,21 @@ func _detach_body(col: Vector2i) -> void:
 
 func _unload_far() -> void:
 	var limit: int = view_radius + 1
-	for col: Vector2i in _chunks.keys():
+	for col: Vector2i in _serials.keys():
 		if _chebyshev(col) > limit:
-			_chunks.erase(col)
-			_jobs.erase(col)
-			_remove_column_nodes(col)
-	for col: Vector2i in _jobs.keys():
-		if _chebyshev(col) > limit:
-			_jobs.erase(col)
+			_drop_column(col)
+
+
+## Forgets a column: its chunk, its nodes, its serial and any mesh still waiting to be applied.
+func _drop_column(col: Vector2i) -> void:
+	_serials.erase(col)
+	_chunks.erase(col)
+	_remove_column_nodes(col)
+	var kept: Array[Dictionary] = []
+	for item: Dictionary in _ready_meshes:
+		if item["pos"] != col:
+			kept.append(item)
+	_ready_meshes = kept
 
 
 func _prune_tasks() -> void:
@@ -295,3 +294,13 @@ func _wait_and_drain() -> void:
 		_drain_results()
 		if _task_ids.is_empty():
 			break
+
+
+## Stops the streamer: waits for every in-flight task and discards pending results. Safe to call twice.
+func _shutdown() -> void:
+	if _closing or _runner == null:
+		_closing = true
+		return
+	_closing = true
+	_wait_and_drain()
+	_ready_meshes.clear()

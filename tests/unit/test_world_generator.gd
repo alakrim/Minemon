@@ -1,5 +1,5 @@
 extends GutTest
-## Unit tests for TerrainGenerator: determinism, seed sensitivity and surface_height.
+## Unit tests for TerrainGenerator: determinism, seed sensitivity, surface_height and top_y.
 
 const SAMPLE_POINTS: Array[Vector2i] = [
 	Vector2i(0, 0),
@@ -41,3 +41,14 @@ func test_surface_height_matches_top_solid_block_at_sample_points() -> void:
 			expected,
 			"surface_height mismatch at column %s" % str(point)
 		)
+
+
+func test_generated_chunk_top_y_matches_highest_non_air_block() -> void:
+	var chunk: Chunk = TerrainGenerator.new(1).generate(Vector2i(1, 1))
+	var highest: int = -1
+	for y: int in Chunk.HEIGHT:
+		for z: int in Chunk.SIZE:
+			for x: int in Chunk.SIZE:
+				if chunk.get_block(Vector3i(x, y, z)) != 0:
+					highest = maxi(highest, y)
+	assert_eq(chunk.top_y, highest)

@@ -3,7 +3,14 @@ extends RefCounted
 ## Immutable copy of a chunk plus the border slices of its 4 neighbours.
 ## Built on the main thread and read on worker threads. Neighbour directions:
 ## north = z-1, south = z+1, east = x+1, west = x-1. A null neighbour counts as air.
+##
+## padded_blocks() is the same data laid out with a 1-block air ring on every side (x, z and y),
+## so the mesher can look up neighbours with plain index arithmetic:
+## index = (x+1) + (z+1)*PAD_ROW + (y+1)*PAD_LAYER.
 
+const PAD_ROW: int = Chunk.SIZE + 2
+const PAD_LAYER: int = PAD_ROW * PAD_ROW
+const PAD_VOLUME: int = PAD_LAYER * (Chunk.HEIGHT + 2)
 const _SLICE_SIZE: int = Chunk.SIZE * Chunk.HEIGHT
 
 var _blocks: PackedByteArray
@@ -11,6 +18,8 @@ var _north: PackedByteArray
 var _south: PackedByteArray
 var _east: PackedByteArray
 var _west: PackedByteArray
+var _padded: PackedByteArray
+var _top_y: int = -1
 
 
 func _init(c: Chunk, north: Chunk, south: Chunk, east: Chunk, west: Chunk) -> void:
@@ -19,6 +28,19 @@ func _init(c: Chunk, north: Chunk, south: Chunk, east: Chunk, west: Chunk) -> vo
 	_south = _slice_south(south)
 	_east = _slice_east(east)
 	_west = _slice_west(west)
+	_top_y = maxi(
+		_top_of(c), maxi(_top_of(north), maxi(_top_of(south), maxi(_top_of(east), _top_of(west))))
+	)
+	_padded = _build_padded()
+
+
+## Highest non-air y over the column and its 4 neighbours (-1 when all are air).
+func top_y() -> int:
+	return _top_y
+
+
+func padded_blocks() -> PackedByteArray:
+	return _padded
 
 
 ## Returns the block at p. Valid for x and z in -1..16 (the border ring).
@@ -42,6 +64,32 @@ func _border_block(p: Vector3i, inside_x: bool, inside_z: bool) -> int:
 	if inside_z and p.x == -1:
 		return _west[p.z + p.y * Chunk.SIZE]
 	return 0
+
+
+func _build_padded() -> PackedByteArray:
+	var pad := PackedByteArray()
+	pad.resize(PAD_VOLUME)
+	for y: int in Chunk.HEIGHT:
+		var pad_base: int = (y + 1) * PAD_LAYER
+		var src_base: int = y * Chunk.SIZE * Chunk.SIZE
+		var slice_base: int = y * Chunk.SIZE
+		for z: int in Chunk.SIZE:
+			var pad_row: int = pad_base + (z + 1) * PAD_ROW + 1
+			var src_row: int = src_base + z * Chunk.SIZE
+			for x: int in Chunk.SIZE:
+				pad[pad_row + x] = _blocks[src_row + x]
+		for a: int in Chunk.SIZE:
+			pad[pad_base + 1 + a] = _north[slice_base + a]
+			pad[pad_base + (Chunk.SIZE + 1) * PAD_ROW + 1 + a] = _south[slice_base + a]
+			pad[pad_base + (a + 1) * PAD_ROW] = _west[slice_base + a]
+			pad[pad_base + (a + 1) * PAD_ROW + Chunk.SIZE + 1] = _east[slice_base + a]
+	return pad
+
+
+static func _top_of(c: Chunk) -> int:
+	if c == null:
+		return -1
+	return c.top_y
 
 
 static func _slice_north(n: Chunk) -> PackedByteArray:

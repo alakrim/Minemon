@@ -92,3 +92,35 @@ func test_snapshot_is_a_copy_of_the_chunk() -> void:
 	assert_eq(
 		snap.get_block(Vector3i(5, 5, 5)), STONE, "snapshot must not change when the chunk changes"
 	)
+
+
+func test_block_at_top_of_column_has_six_faces() -> void:
+	var data: ChunkMeshData = _mesh_alone(_chunk_with([[Vector3i(5, Chunk.HEIGHT - 1, 5), STONE]]))
+	assert_eq(data.face_count, 6)
+
+
+func _winding_dots(
+	verts: PackedVector3Array, normals: PackedVector3Array, indices: PackedInt32Array
+) -> Array[float]:
+	var dots: Array[float] = []
+	for t: int in range(0, indices.size(), 3):
+		var v0: Vector3 = verts[indices[t]]
+		var v1: Vector3 = verts[indices[t + 1]]
+		var v2: Vector3 = verts[indices[t + 2]]
+		var normal: Vector3 = normals[indices[t]]
+		dots.append((v1 - v0).cross(v2 - v0).dot(normal))
+	return dots
+
+
+func test_triangles_wind_like_godot_box_mesh() -> void:
+	var box: Array = BoxMesh.new().get_mesh_arrays()
+	var box_indices: PackedInt32Array = box[Mesh.ARRAY_INDEX]
+	assert_gt(box_indices.size(), 0, "BoxMesh must have indices to compare against")
+	for dot: float in _winding_dots(box[Mesh.ARRAY_VERTEX], box[Mesh.ARRAY_NORMAL], box_indices):
+		assert_lt(dot, 0.0, "BoxMesh reference triangle is not wound opposite to its normal")
+
+	var data: ChunkMeshData = _mesh_alone(_chunk_with([[Vector3i(5, 5, 5), STONE]]))
+	var dots: Array[float] = _winding_dots(data.vertices, data.normals, data.indices)
+	assert_eq(dots.size(), 12, "one block is 6 faces, 2 triangles each")
+	for dot: float in dots:
+		assert_lt(dot, 0.0, "mesher triangle is wound the wrong way for Godot front faces")

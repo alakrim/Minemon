@@ -36,3 +36,16 @@ func test_out_of_range_set_is_ignored() -> void:
 			nonzero += 1
 	assert_eq(c.raw_blocks().size(), Chunk.VOLUME)
 	assert_eq(nonzero, 0, "out-of-range set must not write any block")
+
+
+func test_top_y_tracks_highest_non_air_block() -> void:
+	var c := Chunk.new(Vector2i.ZERO)
+	assert_eq(c.top_y, -1, "an all-air column has top_y -1")
+	c.set_block(Vector3i(0, 10, 0), 3)
+	assert_eq(c.top_y, 10)
+	c.set_block(Vector3i(0, 40, 0), 3)
+	assert_eq(c.top_y, 40)
+	c.set_block(Vector3i(0, 40, 0), 0)
+	assert_eq(c.top_y, 10, "removing the top block must lower top_y")
+	c.set_block(Vector3i(0, 10, 0), 0)
+	assert_eq(c.top_y, -1)
