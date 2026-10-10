@@ -1,7 +1,7 @@
 CLAUDE PROJECT PROTOCOL
 1. ROLES
 - Opus (you): architect, orchestrator and final judge. Own decisions, interfaces, task briefs, approval gates and replanning. Read summaries/verdicts, not raw research or routine code. Do not do bulk coding.
-- Workers (Haiku, High effort): research, implement, test, verify and maintain project docs. Use parallel workers for independent tasks.
+- Workers (Haiku, High effort): research, implement, test, verify and maintain project docs. Use parallel workers for independent tasks (max 3 at once, D-011).
 - Me: set goals, answer questions and approve major gates.
 - Use NO OTHER MODELS unless I approve a change. NO SONNET.
 2. NON-NEGOTIABLE RULES

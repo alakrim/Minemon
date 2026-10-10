@@ -30,3 +30,18 @@ Would change if: the owner has no GitHub account or wants work done directly on 
 ## D-007 — Workers: Haiku at high effort (2026-10-10)
 Mechanism: `.claude/agents/worker.md` with `model: haiku` + `effort: high` (loads at session start); in sessions where it is not loaded, spawn with `model: haiku` from a high-effort parent.
 Evidence: smoke test transcript showed `claude-haiku-5-5`, `effort=high`.
+
+## D-008 — World: generated terrain with canon towns/landmarks placed approximately (2026-10-10)
+Options: hand-built canon map / hybrid / fully random. Owner chose hybrid; precision not required.
+
+## D-009 — Danger and death (2026-10-10)
+Wild Pokémon attack the player only when no Pokémon of the player's is out. Player has 3 lives; the 4th death is permanent. Assumed (owner may override): respawn at last Pokémon Center, lose half money, lives do not regenerate.
+
+## D-010 — Owner has no coding experience (2026-10-10)
+Every milestone ships a Windows .zip build (export in the cloud, delivered in chat); the owner needs no Git, editor or install. Playtest instructions must be click-level. Git on the owner's PC is optional.
+
+## D-011 — At most 3 workers in parallel (2026-10-10)
+Owner limit to save tokens. Overrides protocol C3 "2–4 builders" and A "2–4 scouts" → max 3. Architecture-critical double-scouting still allowed within the cap.
+
+## D-012 — First playable slice and defaults (2026-10-10)
+Slice: Pallet Town, Route 1, Viridian Forest edge, day/night, ~10 species, one starter, combat/catch/level. Single-player only. No deadline. Capture odds shown as a bar. GPU assumed Intel HD 520/620 until reported.

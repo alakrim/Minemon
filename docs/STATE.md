@@ -1,6 +1,6 @@
 # STATE
 
-- **Phase:** A — Discovery (round 1 answered; scouts done; round 2 asked)
+- **Phase:** A — Discovery (round 2 answered; Gate 1 brief proposed — awaiting owner approval)
 - **Milestone:** none yet (M0 defined at Gate 2)
 - **Last session:** 2026-10-10
 
@@ -12,8 +12,9 @@
 
 ## Decisions needed from owner
 - GitHub repo name/owner (see above)
-- Discovery round 2: map approach, death rules, first playable slice, exact GPU + owner playtests, owner time/deadline
+- Gate 1: approve brief in docs/PLAN.md
+- Optional: exact GPU model (dxdiag)
 
 ## Next action
 1. Owner creates repo → attach with push access, push this skeleton.
-2. Read scout digests, run Discovery round 2, draft brief for Gate 1.
+2. On Gate 1 approval: Phase B — 3 approaches, architecture, M0 plan (max 3 parallel workers).
