@@ -8,3 +8,4 @@
 - 2026-10-10: check.sh must exclude .claude/worktrees/ when parallel worktree builds exist.
 - 2026-10-10: Headless benchmarks using engine delta hide spikes; always measure wall-clock (Time.get_ticks_usec). Profile main-thread costs before shipping a perf build.
 - 2026-10-10: Pushing git tags is refused by the session proxy (403). Milestones are marked in docs/milestones and PROGRESS; tags stay local.
+- 2026-10-10: A worker's `git rm -r` of archived files was refused by the auto-mode safety check. Briefs should avoid bulk deletions; prefer leaving files or overwriting them, or get explicit owner approval.
