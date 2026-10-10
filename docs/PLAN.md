@@ -81,3 +81,14 @@ All APIs hang off the global `minemon` table created by `minemon_core`.
 **minemon_combat:**
 - `minemon.combat.use_move(user_obj, target_obj, move_id)` returns true on success; it applies damage and status through the formulas.
 - Move archetypes are implemented once each: projectile, beam, melee_arc, area_burst, aura, status_cloud.
+
+### M1 contract addendum (D-027): creature runtime hooks, owned by T-24
+In `minemon_creatures`:
+- **Brains:** `minemon.creatures.register_brain(name, fn(self, dtime) -> bool handled)`. Brains run in `do_custom`, in registration order, every step. Each brain throttles itself; the first one returning true stops the chain, and mcl_mobs default states still run unless a brain returns the string "skip_states". T-24 dispatches; T-21b registers "wild", T-22 registers "owned".
+- **Damage:** `minemon.creatures.damage(obj, amount, attacker_obj, info)` lowers `self.health` and `_mm.hp` together (clamped at 0), shows a damage tint, plays the hurt sound, fires `events.fire("creature_hurt", obj, amount, attacker_obj, info)`. At 0 HP it calls `on_zero_hp(obj, attacker_obj)`:
+  - wild creatures enter **exhausted**: `_mm_exhausted = true`, sit animation, no attacking, harmless, a nametag suffix " (exhausted)"; after 20 s they recover 25% HP and flee;
+  - owned creatures **faint**: fire `creature_fainted(obj, owner)`, after which T-22 recalls them with hp 0.
+
+  `info` = `{move_id?, effectiveness?, crit?}`.
+- Every other damage path (player punches through mcl_mobs `do_punch`/`deal_damage`, falls, fire) also goes through `minemon.creatures.damage`, so health never desyncs. Hook mcl_mobs' `deal_damage` def field (S-12 §1).
+- Also: `is_exhausted(obj)`, `heal(obj, amount)`, `is_owned(obj)`, `owner_name(obj)`.

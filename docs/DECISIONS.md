@@ -189,3 +189,6 @@ Trade-off: it is heavier than Minetest Game. Fallback: Minetest Game plus Mobs R
 - **Vanilla mobs:** hostile VoxeLibre mobs are disabled by per-entity settings in the preset (night danger comes from Ghost/Dark Pokémon); passive farm animals stay.
 - **Player's Pokémon:** the starter is chosen on first join from the 6 Kanto + Johto starters. A "Party Ball" item sends out and recalls the Pokémon (place key). Punching a creature with the ball in hand orders an attack. Moves are chosen by AI in M1; manual move choice comes in M2.
 - **Stand-in visuals:** our procedural .glb per body_plan, plus a per-type texture with eyes (tools/gen_standins.py).
+
+## D-027 — Creature runtime hooks are a single choke point (2026-10-10)
+All damage goes through `minemon.creatures.damage`, and all behaviour through registered brains in `minemon_creatures`. This prevents parallel tasks (party, wild AI, combat) from editing the same do_custom and health code, and keeps instance HP and entity HP in sync. Owned by T-24 (high risk; Opus reviews the diff).

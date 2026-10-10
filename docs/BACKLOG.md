@@ -12,3 +12,4 @@
 - Delivery: builds over 30 MB can't go through chat. Make export_windows.sh also produce 25 MB parts plus a JUNTAR-JOIN .bat, and write them to the owner's Downloads\Minemon folder (M0 was split by hand).
 - Lives: the stale banner timer can cut a new banner short after rejoin (minemon_lives/init.lua:116-126). Also drop `luacheck: globals minemon` in minemon_lives (T-15 verifier).
 - Controls: the inventory key is I in Luanti (E is aux1). Consider remapping to E for Minecraft familiarity after the owner's feedback.
+- Stand-ins look too cheerful for the horror tone. Give aggressive species angry brows, slit pupils or glowing eyes at night (T-18 follow-up, M3 dread).
