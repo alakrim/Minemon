@@ -58,3 +58,18 @@ Options: Godot (own voxel) / Luanti game / Minecraft+Cobblemon add-on (see PLAN)
 
 ## D-016 — Gameplay model (2026-10-10)
 Action-combat model (owner commands their Pokémon's moves 1–4 in real time; the Pokémon follows under its own AI); capture only after a wild Pokémon is defeated (exhausted window); Gen-style formulas; bond = friendship-style; blocks are mineable and placeable; crafting later. Assumed without asking (owner asked for no unnecessary questions).
+
+## D-017 — Architecture revisions after critic review (2026-10-10)
+Source: docs/research/CRITIC-architecture.md and CRITIC-briefs-M0.md. Accepted:
+- **Chunks:** chunks are 16×128×16 columns, so terrain costs 1 draw call per column (81 at radius 4). Meshing works from immutable snapshots on worker threads and returns packed arrays. The main thread builds meshes; collision is built only within 2 columns of the player.
+- **Gen 2 rules:**
+  - 17 types (no Fairy);
+  - evolution conditions are AND-combined, covering level, item, held item, time of day, bond and stat relation, and trade (replaced by a "link_cable" item in single-player);
+  - move category is stored per move but filled by the Gen 2 rule (category follows from type);
+  - stat experience is dropped and bond replaces it;
+  - the move-effect schema now covers fixed damage, one-hit KO, multi-hit, drain, recoil, recharge, flinch, healing and weather.
+- **New contracts:** CreatureInstance, CombatantView, DamageResult, TypeChart, items.json, the save v1 format with migrations, and exp_for_level.
+- **Performance gate:** fixed at 720p, radius 4. Pass is an average of at least 30 fps and a 1% low of at least 20 on either renderer; the better renderer becomes the default.
+- **Parallel builds:** builders in a parallel wave run in separate git worktrees. T-01 owns all of project.godot (autoloads, InputMap) and main.tscn's structure.
+- **Checkpoints:** respawn goes to the last checkpoint; Pokémon Centers become checkpoints in M3.
+Rejected or deferred: missions and region formats are defined in M3's briefs (not needed earlier). Pack loading stays in M2, with the runtime-loading APIs now named in the contract.

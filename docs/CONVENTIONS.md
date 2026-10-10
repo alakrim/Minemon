@@ -11,7 +11,7 @@
 
 ## Tests
 - Use GUT. Put tests in `tests/unit/`, `tests/contract/` and `tests/smoke/`, named `test_<thing>.gd`, with each test as `func test_<behaviour>() -> void`.
-- Tests must be deterministic: use a fixed `Rng` seed and no wall-clock time.
+- Tests must be deterministic: use a fixed `Rng` seed and no wall-clock time. Benchmarks go in `tools/`, never in `tests/`.
 - Every acceptance criterion in a brief maps to at least one test, or to a stated command whose output is checked.
 
 ## Commands
@@ -21,7 +21,7 @@
 
 ## Files and assets
 - Never commit `.tools/`, `.godot/`, `builds/` or `packs/*` (except `packs/README.md`).
-- Every committed asset needs a line in `ASSETS_LICENSES.md` giving file, source URL, author and licence. Only CC0, CC-BY or OFL licences are allowed.
+- Every committed asset or vendored code needs a line in `ASSETS_LICENSES.md` giving file, source URL, author and licence. Assets: CC0, CC-BY or OFL only. Code: MIT, BSD or Apache-2.0 only.
 - Never create, draw, model or download official Pokémon art, models, sprites or sounds.
 
 ## Workflow
