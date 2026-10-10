@@ -282,6 +282,8 @@ func _prune_tasks() -> void:
 	for id: int in _task_ids:
 		if not WorkerThreadPool.is_task_completed(id):
 			still_running.append(id)
+		else:
+			WorkerThreadPool.wait_for_task_completion(id)
 	_task_ids = still_running
 
 
