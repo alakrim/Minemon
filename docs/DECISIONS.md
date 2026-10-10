@@ -52,3 +52,9 @@ Would change if: the spike shows driver problems (then: owner updates AMD driver
 
 ## D-014 — Pokémon visuals come from an owner-supplied asset pack (2026-10-10)
 Owner wants real Pokémon visuals for a private game with a friend. Claude and workers do not create or fetch Pokémon art/models (Claude's content policy, not a legal judgement). Instead the engine loads per-species models/sprites/sounds from `packs/<pack>/` by species ID with a documented format; any species without pack assets uses a stand-in. The owner supplies the pack.
+
+## D-015 — Engine: Godot 4.7.2, statically typed GDScript, own voxel world (2026-10-10)
+Options: Godot (own voxel) / Luanti game / Minecraft+Cobblemon add-on (see PLAN). Evidence: two independent scouts agreed; Godot 4.7.2 verified running headless in the workspace; Windows export templates downloadable (1.3 GB). C# rejected (Android export). Strongest alternative: Luanti. Would change if: the M0 spike gives under 30 fps at 720p on the Vega 8 with a 4-chunk view radius.
+
+## D-016 — Gameplay model (2026-10-10)
+Action-combat model (owner commands their Pokémon's moves 1–4 in real time; the Pokémon follows under its own AI); capture only after a wild Pokémon is defeated (exhausted window); Gen-style formulas; bond = friendship-style; blocks are mineable and placeable; crafting later. Assumed without asking (owner asked for no unnecessary questions).
