@@ -4,6 +4,9 @@ extends RefCounted
 ## never a Node, so queued WorkerThreadPool tasks do not lock the streamer and it can be freed
 ## at any time (the streamer waits for its tasks first).
 
+const RESULT_CHUNK: int = 0
+const RESULT_MESH: int = 1
+
 var _generator: TerrainGenerator
 var _mutex: Mutex = Mutex.new()
 var _done: Array[Dictionary] = []
@@ -16,13 +19,13 @@ func _init(generator: TerrainGenerator) -> void:
 ## Worker thread: generates the chunk for a column and reports it.
 func run_generate(col: Vector2i, serial: int) -> void:
 	var chunk: Chunk = _generator.generate(col)
-	_push({"kind": WorldStreamer.RESULT_CHUNK, "pos": col, "serial": serial, "payload": chunk})
+	_push({"kind": RESULT_CHUNK, "pos": col, "serial": serial, "payload": chunk})
 
 
 ## Worker thread: meshes an immutable snapshot and reports the packed arrays.
 func run_mesh(col: Vector2i, serial: int, snap: ChunkSnapshot, blocks: BlockRegistry) -> void:
 	var data: ChunkMeshData = ChunkMesher.build(snap, blocks)
-	_push({"kind": WorldStreamer.RESULT_MESH, "pos": col, "serial": serial, "payload": data})
+	_push({"kind": RESULT_MESH, "pos": col, "serial": serial, "payload": data})
 
 
 ## Main thread: takes every finished result and clears the queue.

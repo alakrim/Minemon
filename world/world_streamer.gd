@@ -8,8 +8,8 @@ extends Node3D
 const COLUMN_SIZE: int = Chunk.SIZE
 const APPLY_PER_FRAME: int = 4
 const BLOCKS_PATH: String = "res://data/blocks.json"
-const RESULT_CHUNK: int = 0
-const RESULT_MESH: int = 1
+const RESULT_CHUNK: int = ColumnJobs.RESULT_CHUNK
+const RESULT_MESH: int = ColumnJobs.RESULT_MESH
 const NEIGHBOUR_OFFSETS: Array[Vector2i] = [
 	Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)
 ]
