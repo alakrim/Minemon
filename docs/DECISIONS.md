@@ -98,3 +98,27 @@ Chosen: a Python tool (`tools/gen_textures.py`, Pillow, dev-time only) generates
 The engine must also accept an owner texture pack (16×16 PNGs by block texture name) later via packs/ (M2), so any pack the owner downloads can replace it.
 Rejected: ProgrammerArt (ugly); CC BY-SA packs (licence rule; can be reconsidered for private use if the owner supplies one).
 Visual review loop: screenshots rendered in the container (Xvfb + gl_compatibility), reviewed by Opus before each owner build.
+
+## D-022 — PIVOT: build on Cobblemon (Minecraft Java) instead of a custom Godot engine (2026-10-10)
+Owner request: use existing open work (Cobblemon) for significant shortcuts, with 95% of the work done by Haiku workers. Opus decides on the owner's behalf from now on.
+Options considered:
+- (a) continue Godot;
+- (b) a Fabric/NeoForge Java add-on mod;
+- (c) **an existing Cobblemon modpack as the base, plus our "Minemon layer" of datapacks, resource packs, configs, scripts and quests, all text with no compiling.**
+
+Chosen: (c), falling back to (b) only where text cannot do the job.
+Evidence:
+- the cloud workspace cannot reach Maven, Gradle, Modrinth or Mojang (proxy policy), so compiling Java mods here is impossible;
+- text content can be written and statically validated here, and delivered straight into the owner's game folder through the linked PC.
+
+What this gives us for free:
+- every Pokémon with models and animations, battles, balls and catch rates, levels and evolutions, move animations;
+- a Minecraft world with beautiful shader options;
+- multiplayer with the owner's friend.
+
+Consequences:
+- Each player needs Minecraft Java Edition.
+- Battles become Cobblemon's turn-based in-world battles. Real-time danger stays in the form of wild Pokémon attacking the player when no Pokémon is out (D-009), which supersedes D-003.
+- Android goes through Java-launcher apps (unofficial) and drops from guaranteed scope.
+- The Godot prototype is archived on branch `godot-prototype`. Godot-specific decisions (D-015..D-021) are superseded, but the Gen 2 data work and the lessons are kept.
+Would change if: the base modpack cannot be customised enough with text (then a small Java add-on is built on the owner's PC).
