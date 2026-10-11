@@ -50,6 +50,18 @@ local SPECIES = {
 		size_class = "small", temperament = "aggressive", eldritch = false, catch_rate = 75,
 		habitats = { "forest" }, evolutions = {},
 		base_stats = { hp = 60, atk = 90, def = 55, spa = 90, spd = 80, spe = 110 } },
+	{ id = 92, name = "gastly", types = { "ghost", "poison" }, body_plan = "other",
+		size_class = "medium", temperament = "territorial", eldritch = true, catch_rate = 190,
+		habitats = { "cave", "swamp" }, evolutions = { { to = 93 } },
+		base_stats = { hp = 30, atk = 35, def = 30, spa = 100, spd = 35, spe = 80 } },
+	{ id = 131, name = "lapras", types = { "water", "ice" }, body_plan = "fish",
+		size_class = "large", temperament = "peaceful", eldritch = true, catch_rate = 45,
+		habitats = { "sea", "snow", "water" }, evolutions = {},
+		base_stats = { hp = 130, atk = 85, def = 80, spa = 85, spd = 95, spe = 60 } },
+	{ id = 143, name = "snorlax", types = { "normal" }, body_plan = "biped",
+		size_class = "large", temperament = "peaceful", eldritch = true, catch_rate = 25,
+		habitats = { "mountain" }, evolutions = {},
+		base_stats = { hp = 160, atk = 110, def = 65, spa = 65, spd = 110, spe = 30 } },
 	{ id = 95, name = "onix", types = { "rock", "ground" }, body_plan = "serpent",
 		size_class = "colossal", temperament = "peaceful", eldritch = true, catch_rate = 45,
 		habitats = { "cave", "desert" }, evolutions = { { to = 208 } },
@@ -145,10 +157,23 @@ describe("creatures_defs key and names", function()
 	it("key_for lowercases and turns non-alphanumerics into underscores", function()
 		assert.equals("mr_mime", D.key_for("Mr. Mime"))
 		assert.equals("mr_mime", D.key_for("mr_mime"))
-		assert.equals("farfetch_d", D.key_for("Farfetch'd"))
 		assert.equals("ho_oh", D.key_for("Ho-Oh"))
 		assert.equals("nidoran_f", D.key_for("nidoran_f"))
 		assert.equals("rattata", D.key_for({ name = "rattata" }))
+	end)
+
+	it("key_for gives the data's canonical names for display names (T-21b)", function()
+		assert.equals("farfetchd", D.key_for("Farfetch'd"))
+		assert.equals("nidoran_f", D.key_for("Nidoran♀"))
+		assert.equals("nidoran_m", D.key_for("Nidoran♂"))
+		assert.equals("mr_mime", D.key_for("Mr. Mime"))
+		assert.equals("farfetchd", D.key_for({ name = "farfetchd" }))
+		assert.equals("nidoran_f", D.key_for({ name = "nidoran_f" }))
+	end)
+
+	it("key_for of a display name matches the entity name of the species", function()
+		assert.equals("minemon_creatures:farfetchd", D.entity_name({ name = D.key_for("Farfetch'd") }))
+		assert.equals("minemon_creatures:nidoran_m", D.entity_name({ name = D.key_for("Nidoran♂") }))
 	end)
 
 	it("entity_name adds the minemon_creatures prefix", function()
@@ -215,7 +240,18 @@ describe("creatures_defs.build_def", function()
 		assert.equals(2.5, d.reach)
 		assert.are.same({}, d.drops)
 		assert.is_true(d.can_despawn)
-		assert.equals(3, d.spawn_in_group)
+		assert.equals(2, d.spawn_in_group)
+		assert.equals(2, d.spawn_in_group_min)
+	end)
+
+	it("Rattata is in a group of 2 or 3 (aggressive, tiny); Pidgey (skittish) and Gyarados (colossal) are not", function()
+		local rattata = D.build_def(by_id(19))
+		assert.equals(2, rattata.spawn_in_group)
+		assert.equals(2, rattata.spawn_in_group_min)
+		assert.equals(0, D.build_def(by_id(16)).spawn_in_group)
+		assert.is_nil(D.build_def(by_id(16)).spawn_in_group_min)
+		assert.equals(0, D.build_def(by_id(130)).spawn_in_group)
+		assert.equals(0, D.build_def(by_id(25)).spawn_in_group)
 	end)
 
 	it("Rattata walk and run speeds follow spe", function()
@@ -330,10 +366,13 @@ describe("creatures_defs.spawn_plan exclusions", function()
 		end
 	end)
 
-	it("eldritch species never spawn", function()
-		local plan, reason = D.spawn_plan(by_id(95), 1)
-		assert.is_nil(plan)
-		assert.equals("eldritch", reason)
+	it("eldritch species spawn normally: Onix, Gastly, Gyarados, Lapras, Snorlax (T-21b)", function()
+		for _, id in ipairs({ 95, 92, 130, 131, 143 }) do
+			local plan, reason = D.spawn_plan(by_id(id), 1)
+			assert.is_not_nil(plan, by_id(id).name .. " should spawn, got " .. tostring(reason))
+		end
+		assert.are.same({ "cave", "desert" }, D.spawn_plan(by_id(95), 1).habitats)
+		assert.are.same({ "cave", "swamp" }, D.spawn_plan(by_id(92), 1).habitats)
 	end)
 
 	it("a species with only the rare habitat does not spawn", function()

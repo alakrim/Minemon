@@ -7,6 +7,7 @@ local MODPATH = core.get_modpath("minemon_creatures")
 local defs = dofile(MODPATH .. "/defs.lua")
 local spawning = dofile(MODPATH .. "/spawning.lua")
 local runtime = dofile(MODPATH .. "/runtime.lua")
+local wild_brain = dofile(MODPATH .. "/wild_brain.lua")
 
 minemon.creatures = minemon.creatures or {}
 local API = minemon.creatures
@@ -121,6 +122,12 @@ end
 -- Brains run in do_custom in registration order. Return true to stop the chain (mcl default states still run),
 -- "skip_states" to stop the chain and skip the default states, or nil to continue.
 API.register_brain = runtime.register_brain
+
+-- Wild brain (T-21b, D-009, D-026): aggressive, territorial, skittish and peaceful temperaments. It runs in the
+-- brain chain and hears every hit on a wild creature. The rules are in wild_logic.lua; wild_brain.lua is the glue.
+API.wild = wild_brain
+API.register_brain("wild", wild_brain.think)
+minemon.events.register("creature_hurt", wild_brain.on_hurt)
 
 -- A wild creature (owner_name nil) despawns through the sweep in spawning.lua. An owned one is tamed,
 -- persistent and never despawns.

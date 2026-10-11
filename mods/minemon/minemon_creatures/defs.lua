@@ -28,6 +28,9 @@ M.FISH_FLY_IN = { "mcl_core:water_source", "mclx_core:river_water_source" }
 
 M.STAGE_MIN_LEVEL = { [1] = 2, [2] = 16, [3] = 30 }
 
+-- Group size for small aggressive species: mcl_mobs spawns GROUP_SIZE, plus one more with a chance (2 or 3).
+M.GROUP_SIZE = 2
+
 -- Legendary and mythical species, and Unown, never spawn naturally (D-026, T-21a brief).
 M.NO_SPAWN_NAMES = {
 	articuno = true, zapdos = true, moltres = true, mewtwo = true, mew = true, raikou = true,
@@ -44,10 +47,18 @@ M.STARTER_IDS = {
 local HOSTILE_TEMPERAMENTS = { aggressive = true, territorial = true }
 local KNOWN_TEMPERAMENTS = { aggressive = true, territorial = true, skittish = true, peaceful = true }
 
--- Lowercase name, every run of non-alphanumerics becomes "_": "Mr. Mime" -> "mr_mime".
+-- UTF-8 for the female and male signs (U+2640, U+2642), as in the display names "Nidoran♀" and "Nidoran♂".
+local FEMALE_SIGN = "\226\153\128"
+local MALE_SIGN = "\226\153\130"
+
+-- Canonical lowercase key: the sexes become _f and _m, apostrophes go, and every other run of non-alphanumerics
+-- becomes "_". "Mr. Mime" -> "mr_mime", "Farfetch'd" -> "farfetchd", "Nidoran♀" -> "nidoran_f" (the data's names).
 function M.key_for(species)
 	local name = type(species) == "table" and species.name or tostring(species)
 	local key = string.lower(name)
+	key = key:gsub(FEMALE_SIGN, "_f")
+	key = key:gsub(MALE_SIGN, "_m")
+	key = key:gsub("'", "")
 	key = key:gsub("[^%w]+", "_")
 	key = key:gsub("^_+", "")
 	key = key:gsub("_+$", "")
@@ -106,6 +117,7 @@ function M.build_def(species)
 	local fish = species.body_plan == "fish"
 	local walk = 0.8 + species.base_stats.spe / 150
 	local small = species.size_class == "tiny" or species.size_class == "small"
+	local group = aggressive and small -- small aggressive species come in groups of 2 or 3 (T-21b)
 	local box = scaled_box(scale)
 
 	local animation = {}
@@ -138,7 +150,9 @@ function M.build_def(species)
 		animation = animation,
 		drops = {},
 		can_despawn = true,
-		spawn_in_group = small and 3 or 0,
+		-- mcl_mobs spawns spawn_in_group_min, plus one more with a chance: 2 or 3 creatures.
+		spawn_in_group = group and M.GROUP_SIZE or 0,
+		spawn_in_group_min = group and M.GROUP_SIZE or nil,
 	}
 end
 
@@ -170,14 +184,12 @@ end
 
 -- Spawn plan for a species, or nil and a reason. Evolved stages spawn 4x rarer (chance divided by 4 per stage).
 -- chance is a selection weight for mcl_mobs: higher means more common, so it follows catch_rate.
+-- The eldritch flag does not exclude a species: eldritch species spawn normally (T-21b; it only marks titans, M5).
 function M.spawn_plan(species, stage)
 	local key = M.key_for(species)
 	stage = stage or 1
 	if M.NO_SPAWN_NAMES[key] then
 		return nil, "legendary_or_unown"
-	end
-	if species.eldritch then
-		return nil, "eldritch"
 	end
 	if M.STARTER_IDS[species.id] then
 		return nil, "starter"
