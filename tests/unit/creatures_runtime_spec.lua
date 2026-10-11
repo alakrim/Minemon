@@ -371,3 +371,29 @@ describe("runtime_logic exhaustion timeline (pure)", function()
 		assert.equals(40, frames)
 	end)
 end)
+
+describe("runtime_logic enraged state (D-030, T-26)", function()
+	it("lasts 30 seconds", function()
+		assert.equals(30, R.ENRAGE_SECONDS)
+	end)
+
+	it("counts down and reports when the rage is over", function()
+		local left, done = R.tick_enraged(30, 10)
+		assert.equals(20, left)
+		assert.is_false(done)
+		left, done = R.tick_enraged(0.5, 0.5)
+		assert.equals(0, left)
+		assert.is_true(done)
+	end)
+
+	it("runs out in whole steps, the same way as exhaustion", function()
+		local rem = R.ENRAGE_SECONDS
+		local frames = 0
+		local done = false
+		while not done do
+			rem, done = R.tick_enraged(rem, 0.5)
+			frames = frames + 1
+		end
+		assert.equals(60, frames)
+	end)
+end)

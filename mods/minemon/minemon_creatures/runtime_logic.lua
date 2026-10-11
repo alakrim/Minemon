@@ -7,6 +7,7 @@
 local M = {}
 
 M.EXHAUST_SECONDS = 20 -- wild creatures stay exhausted this long (PLAN D-027)
+M.ENRAGE_SECONDS = 30 -- a creature that breaks free of a ball turns on the thrower this long (D-030)
 M.RECOVER_FRACTION = 0.25 -- HP after exhaustion ends, as a fraction of max HP
 M.HIT_THRESHOLD = 0.1 -- raw damage below this is no hit (mirrors mcl_mobs on_punch, combat.lua:617-618)
 M.LOG_INTERVAL = 60 -- seconds between two log lines from the same brain
@@ -111,6 +112,12 @@ end
 
 -- Seconds left in exhaustion after dtime. Returns the new value and whether exhaustion is over.
 function M.tick_exhausted(remaining, dtime)
+	local left = remaining - dtime
+	return left, left <= 0
+end
+
+-- Seconds left in the enraged state after dtime. Returns the new value and whether the rage is over.
+function M.tick_enraged(remaining, dtime)
 	local left = remaining - dtime
 	return left, left <= 0
 end

@@ -143,6 +143,9 @@ API.heal = runtime.heal
 -- Called when a creature's HP reaches 0: wild creatures become exhausted, owned creatures faint.
 API.on_zero_hp = runtime.on_zero_hp
 
+-- A failed capture (D-030, T-26): the exhausted creature breaks free and turns on the aggressor for 30 s.
+API.break_free = runtime.break_free
+
 function API.is_exhausted(obj)
 	return runtime.is_exhausted(obj)
 end

@@ -131,6 +131,15 @@ local function exhausted_step(le, dtime)
 	le:set_animation("sit")
 end
 
+-- Enraged over (after break_free): the temperament's passive state again. The brains run from the next step.
+local function calm(le)
+	le._mm_enraged_t = nil
+	local species = minemon.data.get_species(le._mm.species_id)
+	le.passive = not (species ~= nil and defs.is_hostile(species.temperament))
+	le.attack = nil
+	le.state = "stand"
+end
+
 -- Faint: an owned creature at 0 HP. The creature_fainted handler (T-22) recalls it; if it is still there
 -- after FAINT_GRACE seconds, it is removed here and a warning is logged.
 local function faint(le)
@@ -201,7 +210,8 @@ function M.heal(obj, amount)
 end
 
 -- Called once when HP reaches 0 from above 0. Wild creatures become exhausted; owned creatures faint.
-function M.on_zero_hp(obj, _attacker)
+-- A wild creature that becomes exhausted fires creature_defeated(le, attacker) (D-030); attacker may be nil.
+function M.on_zero_hp(obj, attacker)
 	local le = ours(obj)
 	if not le then
 		return
@@ -210,7 +220,26 @@ function M.on_zero_hp(obj, _attacker)
 		faint(le)
 	else
 		enter_exhausted(le)
+		minemon.events.fire("creature_defeated", le, type(attacker) == "userdata" and attacker or nil)
 	end
+end
+
+-- A failed capture (D-030): exhaustion ends as recover does (25% HP, suffix removed), then the creature does not flee.
+-- It turns on the aggressor (mcl's attack state) for LOGIC.ENRAGE_SECONDS. Returns true, or false for a non-creature.
+function M.break_free(obj, aggressor)
+	local le = ours(obj)
+	if le == nil then
+		return false
+	end
+	if le._mm_exhausted then
+		recover(le)
+	end
+	le.passive = false
+	le._mm_enraged_t = LOGIC.ENRAGE_SECONDS
+	if type(aggressor) == "userdata" and aggressor:is_valid() then
+		le:do_attack(aggressor)
+	end
+	return true
 end
 
 function M.is_exhausted(obj)
@@ -249,8 +278,9 @@ local function log_brain_error(name, message)
 	end
 end
 
--- mcl_mobs do_custom hook. Syncs HP, then either runs the exhausted state (no brains, no default states) or
--- the brain chain. Returns false to skip mcl's do_states, or nil.
+-- mcl_mobs do_custom hook. Syncs HP, then either runs the exhausted state (no brains, no default states), the
+-- enraged state (no brains: mcl's default states run the attack set by break_free), or the brain chain.
+-- Returns false to skip mcl's do_states, or nil.
 function M.do_custom(self, dtime)
 	if self._mm == nil then
 		return nil
@@ -259,6 +289,14 @@ function M.do_custom(self, dtime)
 	if self._mm_exhausted then
 		exhausted_step(self, dtime)
 		return false
+	end
+	if self._mm_enraged_t ~= nil then
+		local left, done = LOGIC.tick_enraged(self._mm_enraged_t, dtime)
+		if not done then
+			self._mm_enraged_t = left
+			return nil
+		end
+		calm(self)
 	end
 	return LOGIC.run_chain(brains, self, dtime, log_brain_error)
 end
