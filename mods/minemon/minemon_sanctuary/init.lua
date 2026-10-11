@@ -20,6 +20,7 @@ local KEY_CENTRES = "centres"
 local KEY_SPAWN = "spawn_placed"
 local KEY_KIT = "minemon:sanctuary:kit"
 local KIT_CHECK_S = 2 -- the starter kit is checked this often
+local FOUNDATION_DEPTH = 48 -- the last-resort foundation reaches this far down for solid ground, else a platform
 local CHIME = "mcl_bells_bell_stroke" -- VoxeLibre's bell, the chime of the altar
 local SPARK = "minemon_sanctuary_spark.png"
 local mcl_sounds = rawget(_G, "mcl_sounds")
@@ -83,16 +84,23 @@ function API.place(floor_pos)
 	return altar
 end
 
--- Places the spawn sanctuary once per world: about SPAWN_OFFSET nodes from the world spawn, on dry solid ground.
--- Returns true and the altar position when it was placed now; false otherwise.
-function API.ensure_spawn()
+-- One placement attempt for the spawn sanctuary, near the world spawn, on solid dry ground. The attempt number counts
+-- from 0; it sets the search radii (STRUCT.radii_for). From STRUCT.LAST_RESORT_ATTEMPT on, a search that finds nothing
+-- is followed by a stone foundation under the spawn (STRUCT.foundation). Returns true and the altar position when the
+-- sanctuary is placed now; false otherwise (already placed, or not loaded or usable yet: the caller tries again).
+function API.spawn_attempt(attempt)
 	if STORE:get_string(KEY_SPAWN) == "1" then
 		return false
 	end
 	local ws = STRUCT.world_spawn()
-	local floor = STRUCT.find_ground(ws.x, ws.z, LOGIC.ring_points)
+	local floor = STRUCT.find_ground(ws.x, ws.z, LOGIC.ring_points, STRUCT.radii_for(attempt))
+	if floor == nil and attempt >= STRUCT.LAST_RESORT_ATTEMPT then
+		local site = { x = ws.x, y = ws.y - 1, z = ws.z }
+		if STRUCT.foundation(site, FOUNDATION_DEPTH) ~= nil then
+			floor = site
+		end
+	end
 	if floor == nil then
-		core.log("warning", "[minemon_sanctuary] no ground for the spawn sanctuary near the spawn point")
 		return false
 	end
 	local altar = API.place(floor)
@@ -100,10 +108,14 @@ function API.ensure_spawn()
 		return false
 	end
 	STORE:set_string(KEY_SPAWN, "1")
-	core.log("action", string.format("[minemon_sanctuary] spawn sanctuary placed at %d %d %d", altar.x, altar.y,
-		altar.z))
+	core.log("action", string.format("[minemon_sanctuary] spawn sanctuary placed at %d %d %d (attempt %d)", altar.x,
+		altar.y, altar.z, attempt))
 	return true, altar
 end
+
+-- The search radii of an attempt, and the foundation (for the integration test).
+API.spawn_radii = STRUCT.radii_for
+API.foundation = STRUCT.foundation
 
 -- Nodes --------------------------------------------------------------------------------------------------------------
 
@@ -245,16 +257,15 @@ core.register_globalstep(function(dtime)
 end)
 
 -- The spawn sanctuary needs the ground around the world spawn loaded, which is not so yet when the first player joins.
--- So the placement is tried every SPAWN_RETRY_S seconds while a player is online, up to SPAWN_TRIES times; between the
--- tries the area is asked to load (core.emerge_area, asynchronous).
+-- So the placement is retried every SPAWN_RETRY_S seconds while a player is online, and it keeps going until the
+-- sanctuary stands: each attempt searches wider (STRUCT.radii_for), and from the last resort on it lays a foundation.
+-- A failed attempt asks the area to load (core.emerge_area, asynchronous) out to the widest radius it searched.
 local SPAWN_RETRY_S = 5
-local SPAWN_TRIES = 12
-local SPAWN_EMERGE_R = 24
 local spawn_timer = 0
-local spawn_tries = 0
+local spawn_attempt_no = 0
 
 core.register_globalstep(function(dtime)
-	if spawn_tries >= SPAWN_TRIES or STORE:get_string(KEY_SPAWN) == "1" then
+	if STORE:get_string(KEY_SPAWN) == "1" then
 		return
 	end
 	if #core.get_connected_players() == 0 then
@@ -265,10 +276,12 @@ core.register_globalstep(function(dtime)
 		return
 	end
 	spawn_timer = 0
-	spawn_tries = spawn_tries + 1
-	if not API.ensure_spawn() then
+	local attempt = spawn_attempt_no
+	spawn_attempt_no = spawn_attempt_no + 1
+	if not API.spawn_attempt(attempt) then
 		local ws = STRUCT.world_spawn()
-		local r = SPAWN_EMERGE_R
+		local radii = STRUCT.radii_for(attempt)
+		local r = radii[#radii]
 		core.emerge_area(vector.new(ws.x - r, ws.y - 16, ws.z - r), vector.new(ws.x + r, ws.y + 16, ws.z + r))
 	end
 end)

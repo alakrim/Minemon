@@ -5,7 +5,11 @@
 --   frame      stonebrick beams along the edges at y0 + 4, between the pillars
 --   altar      the centre, at y0 + 1 (the sanctuary centre); its air above is the respawn point
 --   PC         west side, at (x - 2, y0 + 1, z); the keeper's counter on the east side, at (x + 2, y0 + 1, z)
--- Pure: nothing here reads the world except core.get_spawn_level, core.get_node and mcl_spawn's world spawn.
+-- Ground: the search reads the real nodes (core.get_node_or_nil), never the mapgen estimate, so a world that was
+-- changed by players or by another mod is searched as it is. A shrine is never built over water, air or an
+-- unloaded node. When no ground is usable, foundation() builds its own stone support (a pillar, or a 3 x 3 platform).
+-- Pure: nothing here reads the world except core.get_node_or_nil, core.set_node, core.registered_nodes and mcl_spawn's
+-- world spawn.
 -- luacheck: read_globals core mcl_spawn
 
 local M = {}
@@ -18,6 +22,7 @@ local NODE = {
 	floor = "mcl_core:stonebrick",
 }
 M.NODE = NODE
+local FOUNDATION = "mcl_core:stone" -- the plain stone of the foundation (pillar or platform)
 
 local HALF = 4 -- the floor is 9 x 9: offsets -4 .. 4
 local PILLAR = 3 -- the corner pillars stand at offsets +-3
@@ -65,17 +70,42 @@ function M.place(floor_pos)
 	return altar
 end
 
--- Ground for a sanctuary near (cx, cz): the first candidate whose 9 x 9 floor is solid and dry. Returns the floor
--- node position, or nil. Candidates are scanned at radii 8, 12 and 16 (8 angles each).
-local function is_dry_solid(node_name)
-	local def = core.registered_nodes[node_name]
-	return def ~= nil and (def.liquidtype or "none") == "none" and node_name ~= "air" and node_name ~= "ignore"
+-- Ground ------------------------------------------------------------------------------------------------------------
+
+-- The search radii, in nodes, from the world spawn. Attempt 0 searches the first three rings; each later attempt
+-- widens the search by one ring, up to the widest one. Attempts from LAST_RESORT_ATTEMPT on fall back to foundation().
+M.RADII = { 8, 12, 16, 24, 32, 48 }
+M.LAST_RESORT_ATTEMPT = 6
+
+-- Pure: the radii searched by a placement attempt (0 based), nearest first.
+function M.radii_for(attempt)
+	local reach = math.min(attempt + 3, #M.RADII)
+	local out = {}
+	for i = 1, reach do
+		out[i] = M.RADII[i]
+	end
+	return out
 end
 
+local SCAN_TOP = 96
+local SCAN_BOTTOM = -48
+
+local function node_at(x, y, z)
+	return core.get_node_or_nil({ x = x, y = y, z = z })
+end
+
+-- A node that can carry a floor: a registered, walkable, non-liquid node that is not air.
+local function is_dry_solid(node_name)
+	local def = core.registered_nodes[node_name]
+	return def ~= nil and (def.liquidtype or "none") == "none" and def.walkable ~= false and node_name ~= "air"
+		and node_name ~= "ignore"
+end
+
+-- True when the whole 9 x 9 floor centred on (x, y0, z) stands on dry solid nodes. An unloaded node fails the check.
 local function floor_ok(x, y0, z)
-	for _, dx in ipairs({ -HALF, 0, HALF }) do
-		for _, dz in ipairs({ -HALF, 0, HALF }) do
-			local node = core.get_node_or_nil({ x = x + dx, y = y0, z = z + dz })
+	for dx = -HALF, HALF do
+		for dz = -HALF, HALF do
+			local node = node_at(x + dx, y0, z + dz)
 			if node == nil or not is_dry_solid(node.name) then
 				return false
 			end
@@ -84,38 +114,83 @@ local function floor_ok(x, y0, z)
 	return true
 end
 
--- The first solid dry node with air above it, scanning down one column through the loaded area. Nil when none.
-local SCAN_TOP = 96
-local SCAN_BOTTOM = -48
-local function scan_column(x, z)
+-- The highest floor in the column (x, z): a dry solid node with air above it, whose 9 x 9 floor passes floor_ok.
+-- Scans the loaded nodes from SCAN_TOP down. Nil when the column has none (or none is loaded).
+local function column_floor(x, z)
+	local above = node_at(x, SCAN_TOP + 1, z)
 	for y = SCAN_TOP, SCAN_BOTTOM, -1 do
-		local node = core.get_node_or_nil({ x = x, y = y, z = z })
-		local above = core.get_node_or_nil({ x = x, y = y + 1, z = z })
-		if node ~= nil and above ~= nil and above.name == "air" and is_dry_solid(node.name) then
+		local node = node_at(x, y, z)
+		if node ~= nil and above ~= nil and above.name == "air" and is_dry_solid(node.name) and floor_ok(x, y, z) then
 			return { x = x, y = y, z = z }
 		end
+		above = node
 	end
 	return nil
 end
 
--- The floor node for a sanctuary near the point (cx, cz), or nil. The spawn level is one above the ground.
--- Candidates come from core.get_spawn_level at radii 8, 12 and 16; when none is dry and solid, the centre column
--- is scanned.
-function M.find_ground(cx, cz, ring_points)
-	for _, radius in ipairs({ 8, 12, 16 }) do
+-- The floor node for a sanctuary near the point (cx, cz), or nil. The rings of the given radii are searched nearest
+-- first, then the centre column. A floor is returned only when it passes floor_ok: an unchecked floor could build over
+-- water or air.
+function M.find_ground(cx, cz, ring_points, radii)
+	for _, radius in ipairs(radii) do
 		for _, p in ipairs(ring_points(cx, cz, radius, 8)) do
-			local level = core.get_spawn_level(p.x, p.z)
-			if level ~= nil and floor_ok(p.x, level - 1, p.z) then
-				return { x = p.x, y = level - 1, z = p.z }
+			local floor = column_floor(p.x, p.z)
+			if floor ~= nil then
+				return floor
 			end
 		end
 	end
-	-- Only a floor that passes floor_ok is used: an unchecked fallback could build over water or air.
-	local col = scan_column(math.floor(cx + 0.5), math.floor(cz + 0.5))
-	if col ~= nil and floor_ok(col.x, col.y, col.z) then
-		return col
+	return column_floor(math.floor(cx + 0.5), math.floor(cz + 0.5))
+end
+
+-- Last resort: a stone foundation under the floor node, so the shrine stands on solid ground it has made itself.
+-- Walks down the centre column from the node under the floor, at most max_depth nodes. On solid ground, a 3 x 3 stone
+-- pillar fills the nodes between that ground and the floor. With no ground in reach, a 3 x 3 stone platform is laid
+-- under the floor instead. Returns "ground" (the floor was already supported, nothing is built), "pillar" or
+-- "platform"; nil when the nodes involved are not loaded yet (nothing is built, the caller retries later).
+function M.foundation(floor_pos, max_depth)
+	local x, y0, z = floor_pos.x, floor_pos.y, floor_pos.z
+	local top = y0 - 1
+	-- Every node of the floor must be loaded, or the floor would be placed into nothing.
+	for dx = -HALF, HALF do
+		for dz = -HALF, HALF do
+			if node_at(x + dx, y0, z + dz) == nil then
+				return nil
+			end
+		end
 	end
-	return nil
+	local ground = nil
+	for y = top, top - max_depth + 1, -1 do
+		local node = node_at(x, y, z)
+		if node == nil then
+			return nil
+		end
+		if is_dry_solid(node.name) then
+			ground = y
+			break
+		end
+	end
+	if ground == top then
+		return "ground"
+	end
+	local from = ground ~= nil and ground + 1 or top
+	for y = from, top do
+		for dx = -1, 1 do
+			for dz = -1, 1 do
+				if node_at(x + dx, y, z + dz) == nil then
+					return nil
+				end
+			end
+		end
+	end
+	for y = from, top do
+		for dx = -1, 1 do
+			for dz = -1, 1 do
+				core.set_node({ x = x + dx, y = y, z = z + dz }, { name = FOUNDATION })
+			end
+		end
+	end
+	return ground ~= nil and "pillar" or "platform"
 end
 
 -- The world spawn point (the static spawn, mcl_spawn's world spawn, or the origin).

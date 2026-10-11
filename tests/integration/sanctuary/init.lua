@@ -13,7 +13,9 @@
 --   creature_defeated (fired here) drops coins at the creature's position, in the band for its level;
 --   the Keeper's counter: a purchase takes coins and gives the item, a short purse is refused;
 --   a potion heals the first hurt member and is used up;
---   ensure_spawn places the spawn sanctuary once and reports it.
+--   spawn_attempt drives the spawn search on the real nodes and places the spawn sanctuary once;
+--   the search radii widen per attempt (8..16, then 24, 32, 48), and foundation() lays a stone pillar down to
+--   solid ground, a 3 x 3 platform when no ground is in reach, and builds nothing on unloaded nodes.
 -- Writes PASS n or FAIL <reason> to test_result.txt, then shuts down.
 -- luacheck: read_globals core minemon vector ItemStack
 -- luacheck: globals mcl_spawn
@@ -361,12 +363,40 @@ local function run()
 	check(stack ~= nil and stack:get_count() == 1, "the potion was not used up")
 	check(m1.hp > 3, "the potion did not heal the hurt member")
 
-	-- (9) the spawn sanctuary: placed once, near the world spawn (the flag is kept in mod storage)
-	-- The world spawn of a test world can lie on this platform, so the spawn check reads the altar ensure_spawn returns.
-	local placed, spawn_altar = minemon.sanctuary.ensure_spawn()
-	check(placed == true and spawn_altar ~= nil, "ensure_spawn did not place the spawn sanctuary")
+	-- (9) the last resort: a stone foundation under a floor (a pillar down to the platform, a 3 x 3 platform when the
+	-- ground is out of reach, nothing where the nodes are not loaded)
+	check(minemon.sanctuary.foundation(vector.new(-10, 10, 10), 48) == "pillar", "no pillar down to the platform")
+	check(node_name(vector.new(-10, 9, 10)) == "mcl_core:stone" and node_name(vector.new(-10, 5, 10)) == "mcl_core:stone",
+		"the foundation pillar is missing")
+	check(node_name(vector.new(-11, 6, 9)) == "mcl_core:stone", "the foundation pillar is not 3 x 3")
+	check(node_name(vector.new(-10, 4, 10)) == "mcl_core:stone", "the foundation disturbed the ground")
+	check(minemon.sanctuary.foundation(vector.new(10, 10, -10), 2) == "platform",
+		"no 3 x 3 platform when the ground is out of reach")
+	check(node_name(vector.new(9, 9, -11)) == "mcl_core:stone" and node_name(vector.new(11, 9, -9)) == "mcl_core:stone",
+		"the foundation platform is not 3 x 3")
+	check(node_name(vector.new(10, 8, -10)) == "air", "the foundation platform went below its depth")
+	check(minemon.sanctuary.foundation(vector.new(-12, 5, -12), 48) == "ground", "a supported floor was not seen as such")
+	check(minemon.sanctuary.foundation(vector.new(200, 10, 200), 48) == nil, "a floor on unloaded nodes was built")
+
+	-- (10) the spawn sanctuary: the attempts drive the search on the real nodes. The first usable floor is taken (the
+	-- platform, or the mapgen ground of this random world, both pass the 9 x 9 check). The placement is kept once.
+	check(#minemon.sanctuary.spawn_radii(0) == 3 and minemon.sanctuary.spawn_radii(0)[3] == 16,
+		"attempt 0 does not search the rings 8 to 16")
+	check(minemon.sanctuary.spawn_radii(1)[4] == 24, "attempt 1 does not widen to 24")
+	local widest = minemon.sanctuary.spawn_radii(99)
+	check(#widest == 6 and widest[6] == 48, "the widest search is not 48")
+	local placed, spawn_altar = false, nil
+	for attempt = 0, 3 do
+		placed, spawn_altar = minemon.sanctuary.spawn_attempt(attempt)
+		if placed then
+			break
+		end
+	end
+	check(placed == true and spawn_altar ~= nil, "spawn_attempt did not place the spawn sanctuary")
 	check(node_name(spawn_altar) == "minemon_sanctuary:altar", "the spawn centre is not an altar")
-	check(minemon.sanctuary.ensure_spawn() == false, "ensure_spawn placed a second spawn sanctuary")
+	check(node_name(vector.new(spawn_altar.x, spawn_altar.y - 1, spawn_altar.z)) == "mcl_core:stonebrick",
+		"the spawn sanctuary has no floor under its altar")
+	check(minemon.sanctuary.spawn_attempt(0) == false, "spawn_attempt placed a second spawn sanctuary")
 	return checks
 end
 

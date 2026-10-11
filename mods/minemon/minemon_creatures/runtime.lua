@@ -213,7 +213,7 @@ end
 -- A wild creature that becomes exhausted fires creature_defeated(le, attacker) (D-030); attacker may be nil.
 function M.on_zero_hp(obj, attacker)
 	local le = ours(obj)
-	if not le then
+	if not le or le._mm_exhausted then -- already exhausted: no second defeat (W1 verdict)
 		return
 	end
 	if LOGIC.zero_outcome(owned(le)) == "faint" then

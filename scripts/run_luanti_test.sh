@@ -48,13 +48,24 @@ printf '%s\n' "gameid = $GAMEID" "backend = sqlite3" "player_backend = sqlite3" 
 printf '%s\n' "ipv6_server = false" "bind_address = 127.0.0.1" "enable_mod_channels = false" \
 	"secure.trusted_mods = $MOD_NAME" > "$RUN_DIR/luanti.conf"
 
-# First free port in 30000-30999 (Luanti binds UDP; check both UDP and TCP listeners).
-PORT=""
-for p in $(seq 30000 30999); do
-	hex=$(printf ':%04X ' "$p")
-	if ! cat /proc/net/udp /proc/net/udp6 2>/dev/null | awk '{print $2}' | grep -q "${hex% }$" \
-		&& ! (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null; then PORT=$p; break; fi
-done
+# A random free port in 30000-39999, so runs in parallel (other worktrees) do not collide. Free means a UDP bind on
+# 127.0.0.1 succeeds (Luanti serves UDP only; the container has no IPv6).
+PORT=$(python3 -I -c '
+import random, socket, sys
+rng = random.SystemRandom()
+for _ in range(400):
+    port = rng.randint(30000, 39999)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sock.bind(("127.0.0.1", port))
+    except OSError:
+        continue
+    finally:
+        sock.close()
+    print(port)
+    sys.exit(0)
+sys.exit(1)
+' 2>/dev/null) || PORT=""
 [ -n "$PORT" ] || { echo "FAIL: no free port"; exit 1; }
 
 START=$(date +%s.%N)

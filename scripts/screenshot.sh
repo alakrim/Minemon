@@ -129,16 +129,30 @@ for EXTRA in ${MINEMON_SHOT_EXTRA_MODS:-}; do
 	printf '%s\n' "load_mod_$EXTRA_NAME = true" >> "$WORLD/world.mt"
 done
 
-# First free TCP port in 30000-30999 (the container has no IPv6).
-PORT=""
-for p in $(seq 30000 30999); do
-	# Luanti serves the game on UDP, so a port is free only if both TCP connect and UDP bind fail.
-	if ! (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null \
-		&& python3 -I -c 'import socket, sys; s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.bind(("127.0.0.1", int(sys.argv[1])))' "$p" 2>/dev/null; then
-		PORT=$p
-		break
-	fi
-done
+# A random free port in 30000-39999, so runs in parallel (other worktrees) do not collide. Luanti serves the game on
+# UDP, so a port is free only when a UDP bind on 127.0.0.1 succeeds and no TCP listener holds it.
+PORT=$(python3 -I -c '
+import random, socket, sys
+rng = random.SystemRandom()
+for _ in range(400):
+    port = rng.randint(30000, 39999)
+    udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        udp.bind(("127.0.0.1", port))
+    except OSError:
+        continue
+    finally:
+        udp.close()
+    tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        if tcp.connect_ex(("127.0.0.1", port)) == 0:
+            continue
+    finally:
+        tcp.close()
+    print(port)
+    sys.exit(0)
+sys.exit(1)
+' 2>/dev/null) || PORT=""
 [ -n "$PORT" ] || fail "no free port"
 
 # Client config: the repo preset, copied so Luanti cannot rewrite the tracked file on exit, plus run overrides.
