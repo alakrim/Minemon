@@ -8,6 +8,8 @@
 -- The shot helper teleports the player but cannot make them fly, so gravity is off and the height is snapped here.
 --
 -- Depends on minemon_pack_cobblemon (the generated pack): the pack's init.lua defines minemon_pack.models[dex].
+-- T-25b: every display is frozen at SHOT_FRAME (set_animation with speed 0), so a shot shows one pose of the
+-- baked clip: 5 is the stand clip (0-20), 30 the walk clip (21-41). Edit the constant for the walk shots.
 
 -- luacheck: globals VoxelArea
 local DISPLAY = "minemon_pack_lineup:display"
@@ -30,6 +32,8 @@ local FLOOR_ABOVE_GROUND = 30
 local FLOOR_MIN_Y = 80
 local CLEAR_ABOVE = 6
 local POLL_S = 0.25
+-- The frame every display is frozen at (T-25b): stand 0-20, walk 21-41.
+local SHOT_FRAME = 5
 
 local displays = {}
 local built = false
@@ -79,6 +83,7 @@ local function spawn_display(x, z, dex, shiny)
 			textures = { shiny and model.texture_shiny or model.texture },
 			visual_size = { x = 1, y = 1, z = 1 },
 		})
+		obj:set_animation({ x = SHOT_FRAME, y = SHOT_FRAME }, 0, 0, false)
 		obj:set_yaw(0)
 		table.insert(displays, obj)
 	end
