@@ -11,8 +11,8 @@ M.TICK_DIVISOR = 16 -- 1/16 of max HP per tick
 M.PARALYSIS_FAIL = 0.25
 M.PARALYSIS_SPEED = 0.5
 M.THAW_PER_SECOND = 0.10
-M.SLEEP_MIN_S = 2
-M.SLEEP_MAX_S = 5
+M.SLEEP_MIN_S = 3 -- T-31: sleep lasts 3 to 7 s
+M.SLEEP_MAX_S = 7
 M.REGISTRY_CAP = 256
 
 function M.is_minimal(kind)
@@ -52,10 +52,11 @@ function M.sleep_duration(rng)
 	return M.SLEEP_MIN_S + (M.SLEEP_MAX_S - M.SLEEP_MIN_S) * rng:float()
 end
 
-function M.new_record(kind, rng)
+-- A new record. A sleep takes the duration given (rest: 5 s) or a random one from 3 to 7 s.
+function M.new_record(kind, rng, duration)
 	local left = nil
 	if kind == "sleep" then
-		left = M.sleep_duration(rng)
+		left = duration or M.sleep_duration(rng)
 	elseif kind == "burn" or kind == "poison" or kind == "paralysis" then
 		left = M.DURATION_S
 	end

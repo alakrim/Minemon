@@ -16,8 +16,12 @@ M.CATEGORIES = { physical = true, special = true, status = true }
 M.STAT_KEYS = { atk = true, def = true, spa = true, spd = true, spe = true, acc = true, eva = true }
 M.TARGETS = { user = true, target = true }
 
--- The minimal status set (T-23 brief). Other statuses in moves.json (confusion, trap, ...) are ignored.
-M.STATUSES = { burn = true, poison = true, paralysis = true, sleep = true, freeze = true }
+-- The statuses named in moves.json that the status pass models (T-31; effects_logic.DATA_STATUS maps them). Others
+-- (disable, perish-song, no-type-immunity) are reported by effects_logic.gaps.
+M.STATUSES = {
+	burn = true, poison = true, paralysis = true, sleep = true, freeze = true,
+	confusion = true, trap = true, ["leech-seed"] = true, protect = true,
+}
 
 M.STAGE_MIN = -6
 M.STAGE_MAX = 6
@@ -126,11 +130,8 @@ function M.warnings(move)
 	if effect.status ~= nil and not M.STATUSES[effect.status] then
 		out[#out + 1] = "status " .. effect.status .. " is outside the minimal set: ignored"
 	end
-	if effect.flinch_chance ~= nil then
-		out[#out + 1] = "flinch is not implemented: ignored"
-	end
 	if move.category == "status" and effect.status == nil and effect.stat_changes == nil then
-		out[#out + 1] = "status move with no implemented effect: does nothing"
+		out[#out + 1] = "status move with no effect in its data (see effects_logic.gaps)"
 	end
 	return out
 end

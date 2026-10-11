@@ -50,11 +50,20 @@ describe("combat status_logic maths", function()
 		assert.is_true(math.abs(S.thaw_chance(0.5) - 0.0513) < 1e-3)
 	end)
 
-	it("sleep lasts 2 to 5 s", function()
-		for seed = 1, 100 do
-			local t = S.sleep_duration(RNG.new(seed))
-			assert.is_true(t >= 2 and t <= 5, "sleep " .. t)
+	it("sleep lasts 3 to 7 s (T-31), and both ends are reached", function()
+		local lo, hi = math.huge, -math.huge
+		for seed = 1, 2000 do
+			-- Spread seeds: the first draw of a small seed is near 0 (see combat_choose_spec).
+			local t = S.sleep_duration(RNG.new(seed * 1000003))
+			assert.is_true(t >= 3 and t <= 7, "sleep " .. t)
+			lo, hi = math.min(lo, t), math.max(hi, t)
 		end
+		assert.is_true(lo < 3.1 and hi > 6.9, "range " .. lo .. " .. " .. hi)
+	end)
+
+	it("a rest sleep takes the duration given (T-31: 5 s)", function()
+		local rec = S.new_record("sleep", RNG.new(1), 5)
+		assert.equals(5, rec.left)
 	end)
 
 	it("sleep and freeze block moves, paralysis halves speed", function()

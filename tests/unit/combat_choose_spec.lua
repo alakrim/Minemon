@@ -24,7 +24,8 @@ local MOVES = {
 	tackle = { type = "normal", category = "physical", power = 35, accuracy = 95, archetype = "melee_arc" },
 	vine_whip = { type = "grass", category = "special", power = 35, accuracy = 100, archetype = "projectile" },
 	ember = { type = "fire", category = "special", power = 40, accuracy = 100, archetype = "projectile" },
-	growl = { type = "normal", category = "status", power = nil, accuracy = 100, archetype = "status_cloud" },
+	growl = { type = "normal", category = "status", power = nil, accuracy = 100, archetype = "status_cloud",
+		effect = { stat_changes = { { stat = "atk", stages = -1, target = "target" } } } },
 	seismic = { type = "normal", category = "physical", power = nil, accuracy = 100, archetype = "melee_arc" },
 }
 

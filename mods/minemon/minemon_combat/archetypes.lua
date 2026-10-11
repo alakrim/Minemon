@@ -2,7 +2,12 @@
 -- G is the context that init.lua builds (creature and player views, damage, stages, feedback, rng).
 -- luacheck: read_globals core vector vl_projectile mcl_util
 
+local EFX = dofile(core.get_modpath("minemon_combat") .. "/effects_logic.lua")
+
 local M = {}
+
+local GREY_TEXT = 0xA0A0A0
+local GREEN_TEXT = 0x33DD55
 
 M.ORB = "minemon_combat:orb"
 M.ORB_SPEED = 14 -- metres per second
@@ -35,12 +40,13 @@ local function feedback(G, pos, eff, res, move)
 end
 
 -- Applies the status and stat effects of a move that hit one victim. Status chance is per hit; stat changes use
--- stat_chance (100 when absent). Targets that are immune to the type take no status.
+-- stat_chance (100 when absent). Targets that are immune to the type take no status. Statuses go through G.apply_kind
+-- (primary or volatile).
 local function apply_effects(G, user, victim, move, eff)
 	local effect = move.effect or {}
 	if effect.status ~= nil and eff > 0 then
 		if roll_chance(G, effect.status_chance or 100) then
-			G.status.apply(victim, effect.status, G.rng)
+			G.apply_kind(victim, effect.status, { hurts = move.power ~= nil, seeder = user })
 		end
 	end
 	local changes = effect.stat_changes or {}
@@ -52,28 +58,62 @@ local function apply_effects(G, user, victim, move, eff)
 	end
 end
 
--- Shared resolution for one victim: Gen 2 damage (formulas.damage), then the effects if the move hit.
--- scale multiplies the damage (area falloff). Returns the damage result, or nil when a view is missing.
+local BLOCKED_RESULT = { amount = 0, crit = false, effectiveness = 1.0, missed = true }
+
+-- Shared resolution for one victim: the victim's protect blocks everything. Otherwise the damage (Gen 2 formulas, with
+-- the mechanics of effects_logic: power by moment, fixed, one-hit KO, half HP, psywave), the screens and endure, then
+-- the effects if the move hit. scale multiplies the damage (area falloff). Returns the damage result, or nil when a
+-- view is missing.
 function M.resolve(G, user, victim, move_id, move, scale)
 	local atk = G.view_of(user)
 	local def = G.view_of(victim)
 	if not atk or not def then
 		return nil
 	end
-	local res = G.formulas.damage(atk, def, move, G.type_mult, G.rng)
+	local pos = victim:get_pos()
+	if G.has_volatile(victim, "protect") then
+		G.feedback_near(pos, EFX.TEXT.blocked, GREY_TEXT)
+		return BLOCKED_RESULT
+	end
+	local mv, heal = EFX.prepare(move, move.mech, atk, G.rng)
+	if G.has_volatile(user, "focus") then
+		mv = EFX.with_high_crit(mv)
+	end
+	local res = G.formulas.damage(atk, def, mv, G.type_mult, G.rng)
+	if res.missed then
+		return res
+	end
+	if heal then
+		local added = G.heal_obj(victim, EFX.heal_amount(def.stats.hp, 0.25))
+		if added > 0 then
+			G.feedback_near(pos, EFX.TEXT.healed, GREEN_TEXT)
+		end
+		return res
+	end
+	res = EFX.post_damage(move.mech, res, atk, def, G.rng)
 	if res.missed then
 		return res
 	end
 	local eff = res.effectiveness
-	local pos = victim:get_pos()
 	local amount = res.amount
 	if amount > 0 and scale then
 		amount = math.max(1, math.floor(amount * scale))
 	end
 	if amount > 0 then
+		amount = EFX.screened(amount, move.category, G.has_volatile(victim, "light_screen"),
+			G.has_volatile(victim, "reflect"))
+	end
+	if amount > 0 and G.has_volatile(victim, "endure") then
+		amount = EFX.endured(amount, def.hp)
+	end
+	if amount > 0 then
 		G.apply_damage(victim, amount, user, { move_id = move_id, effectiveness = eff, crit = res.crit })
 		if move.type == "fire" then
 			G.status.thaw_on_fire(victim)
+		end
+		local flinch = (move.effect or {}).flinch_chance
+		if flinch ~= nil and roll_chance(G, flinch) then
+			G.apply_kind(victim, "flinch", { refresh = true })
 		end
 	end
 	if eff > 0 then
@@ -235,7 +275,9 @@ local function tick_cloud(G, cloud, dt)
 	end
 	local effect = cloud.move.effect or {}
 	for _, obj in ipairs(core.get_objects_inside_radius(cloud.pos, M.CLOUD_RADIUS)) do
-		if G.is_combatant(obj) and G.guid(obj) ~= G.guid(cloud.user) and not G.is_friend(cloud.user, obj) then
+		-- A protected victim is not touched, and is checked again on a later tick.
+		if G.is_combatant(obj) and G.guid(obj) ~= G.guid(cloud.user) and not G.is_friend(cloud.user, obj)
+			and not G.has_volatile(obj, "protect") then
 			local key = G.guid(obj)
 			local seen = cloud.seen[key]
 			if not seen then
@@ -249,7 +291,8 @@ local function tick_cloud(G, cloud, dt)
 			end
 			local immune = G.type_mult(cloud.move.type, G.types_of(obj)) <= 0
 			if not seen.statused and effect.status ~= nil and not immune then
-				if roll_chance(G, effect.status_chance or 100) and G.status.apply(obj, effect.status, G.rng) then
+				if roll_chance(G, effect.status_chance or 100)
+					and G.apply_kind(obj, effect.status, { hurts = cloud.move.power ~= nil, seeder = cloud.user }) then
 					seen.statused = true
 				end
 			end

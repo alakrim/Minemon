@@ -13,12 +13,19 @@
 --   (i) a frozen creature, round-tripped through its staticdata, is either frozen again with speed 0, or has status
 --       none and its walk speed back to the original value;
 --   (j) a melee attack from a creature turned 180 degrees away from the target still hits (it turns first);
---   (k) every move in moves.json passes validate(). The warnings (valid moves that do not work fully) are written
+--   (k) every move in moves.json passes validate(). The gaps (moves that do not work fully, EFX.gaps) are written
 --       to moves_report.txt in the world directory.
+-- T-31 status pass:
+--   (l) a sleeping creature cannot cast; a hit does not wake it;
+--   (m) leech seed moves HP from the seeded creature to its seeder; a grass type cannot be seeded;
+--   (n) protect blocks an incoming hit;
+--   (o) a user at atk -6 deals much less damage than the same user at 0 stages;
+--   (p) recover heals a hurt creature.
 -- Writes PASS n or FAIL <reason> to test_result.txt, then shuts down.
 -- luacheck: read_globals core minemon vector VoxelManip VoxelArea mcl_util
 
 local LOGIC = dofile(core.get_modpath("minemon_combat") .. "/moves_logic.lua")
+local EFX = dofile(core.get_modpath("minemon_combat") .. "/effects_logic.lua")
 
 local X0, X1 = -16, 100
 local Z0, Z1 = -16, 16
@@ -139,6 +146,12 @@ local function stage_of(obj, stat)
 	return (le._mm_stages and le._mm_stages[stat]) or 0
 end
 
+local function hp_max(obj)
+	local inst = minemon.creatures.get_instance(obj)
+	local sp = minemon.data.get_species(inst.species_id)
+	return minemon.instance.stats(inst, sp).hp
+end
+
 local function remove_all(list)
 	for _, obj in ipairs(list) do
 		if obj:get_pos() then
@@ -167,7 +180,7 @@ local function validate_all_moves()
 		if reason then
 			bad[#bad + 1] = id .. ": " .. reason
 		end
-		for _, w in ipairs(LOGIC.warnings(moves[id])) do
+		for _, w in ipairs(EFX.gaps(id, moves[id])) do
 			lines[#lines + 1] = id .. " (" .. moves[id].archetype .. "): " .. w
 		end
 	end
@@ -366,6 +379,106 @@ local function scenario_clouds(done)
 	end)
 end
 
+
+-- (l): a sleeping creature cannot cast, and a hit does not wake it.
+local function scenario_sleep(done)
+	local bulb = make(66, 0, 1, 20, nil, { "tackle" })
+	local cyn = make(69, 0, 155, 20, "tester", { "ember" })
+	face(cyn, bulb)
+	face(bulb, cyn)
+	check(minemon.combat.apply_status(bulb, "sleep") == true, "(l) sleep should apply")
+	local r, why = minemon.combat.use_move(bulb, cyn, "tackle")
+	check(r == false and why == "asleep", "(l) a sleeping creature should not cast, got " .. tostring(why))
+	local hp_before = hp_of(bulb)
+	check(minemon.combat.use_move(cyn, bulb, "ember") == true, "(l) ember should start")
+	wait(FLIGHT_WAIT_S, function()
+		check(hp_of(bulb) < hp_before, "(l) ember should hurt the sleeper")
+		check(minemon.combat.status_of(bulb) == "sleep", "(l) damage must not wake a sleeper, status is "
+			.. minemon.combat.status_of(bulb))
+		remove_all({ bulb, cyn })
+		done()
+	end)
+end
+
+-- (m): Bulbasaur (grass) seeds Cyndaquil. The drain comes every 2 s; the seeder must gain what the victim loses.
+local function scenario_leech(done)
+	local seeder = make(72, 0, 1, 20, nil, { "tackle" })
+	local victim = make(75, 0, 155, 20, nil, { "tackle" })
+	minemon.creatures.get_instance(seeder).hp = hp_max(seeder) - 40
+	local seeder_hp, victim_hp = hp_of(seeder), hp_of(victim)
+	check(minemon.combat.apply_status(victim, "leech", seeder) == true, "(m) leech seed should apply to a fire type")
+	wait(2.5, function()
+		check(hp_of(victim) < victim_hp, "(m) the seeded creature should lose HP: " .. victim_hp .. " -> "
+			.. hp_of(victim))
+		check(hp_of(seeder) > seeder_hp, "(m) the seeder should gain HP: " .. seeder_hp .. " -> " .. hp_of(seeder))
+		local grass = make(78, 0, 1, 20, nil, { "tackle" })
+		check(minemon.combat.apply_status(grass, "leech", seeder) == false, "(m) a grass type cannot be seeded")
+		remove_all({ seeder, victim, grass })
+		done()
+	end)
+end
+
+-- (n): Bulbasaur protects itself; Cyndaquil's ember, cast right after, does not hurt it (protect lasts 1.5 s).
+local function scenario_protect(done)
+	local bulb = make(81, 0, 1, 20, nil, { "protect", "tackle" })
+	local cyn = make(84, 0, 155, 20, "tester", { "ember" })
+	face(cyn, bulb)
+	face(bulb, cyn)
+	check(minemon.combat.use_move(bulb, nil, "protect") == true, "(n) protect should start")
+	wait(0.6, function()
+		check(minemon.combat.has_volatile(bulb, "protect"), "(n) protect should be up after its cast")
+		local hp_before = hp_of(bulb)
+		check(minemon.combat.use_move(cyn, bulb, "ember") == true, "(n) ember should start")
+		wait(FLIGHT_WAIT_S, function()
+			check(hp_of(bulb) == hp_before, "(n) protect should block ember: " .. hp_before .. " -> "
+				.. hp_of(bulb))
+			remove_all({ bulb, cyn })
+			done()
+		end)
+	end)
+end
+
+-- (o): scratch from an attacker at 0 stages, then from one at atk -6 (stage multiplier 0.25).
+local function scenario_stat_drop(done)
+	local a = make(92, 0, 155, 20, nil, { "scratch" })
+	local t1 = make(94.5, 0, 1, 20, nil, { "tackle" })
+	face(a, t1)
+	face(t1, a)
+	local hp1 = hp_of(t1)
+	check(minemon.combat.use_move(a, t1, "scratch") == true, "(o) scratch should start")
+	wait(MELEE_WAIT_S, function()
+		local normal = hp1 - hp_of(t1)
+		check(normal > 0, "(o) scratch at 0 stages should hurt")
+		remove_all({ a, t1 })
+		local b = make(96, 0, 155, 20, nil, { "scratch" })
+		local t2 = make(97.5, 0, 1, 20, nil, { "tackle" })
+		face(b, t2)
+		face(t2, b)
+		b:get_luaentity()._mm_stages = { atk = -6 }
+		local hp2 = hp_of(t2)
+		check(minemon.combat.use_move(b, t2, "scratch") == true, "(o) scratch at atk -6 should start")
+		wait(MELEE_WAIT_S, function()
+			local weak = hp2 - hp_of(t2)
+			check(weak * 1.5 < normal, "(o) atk -6 should cut the damage: normal " .. normal .. ", weak " .. weak)
+			remove_all({ b, t2 })
+			done()
+		end)
+	end)
+end
+
+-- (p): recover (aura) heals half of max HP, from a creature that is hurt.
+local function scenario_recover(done)
+	local bulb = make(-6, 0, 1, 20, nil, { "recover" })
+	minemon.creatures.get_instance(bulb).hp = math.floor(hp_max(bulb) / 3)
+	local before = hp_of(bulb)
+	check(minemon.combat.use_move(bulb, nil, "recover") == true, "(p) recover should start")
+	wait(0.8, function()
+		check(hp_of(bulb) > before, "(p) recover should heal: " .. before .. " -> " .. hp_of(bulb))
+		remove_all({ bulb })
+		done()
+	end)
+end
+
 core.after(1, function()
 	guard(function()
 		local ground = core.get_spawn_level(0, 0) or 40
@@ -388,8 +501,19 @@ core.after(1, function()
 										scenario_area(function()
 											scenario_aura(function()
 												scenario_clouds(function()
-													finish(string.format("PASS %d checks; moves=%d warnings=%d "
-														.. "(see moves_report.txt)", checks, moves, warned))
+													scenario_sleep(function()
+														scenario_leech(function()
+															scenario_protect(function()
+																scenario_stat_drop(function()
+																	scenario_recover(function()
+																		finish(string.format("PASS %d checks; moves=%d "
+																			.. "gaps=%d (see moves_report.txt)",
+																			checks, moves, warned))
+																	end)
+																end)
+															end)
+														end)
+													end)
 												end)
 											end)
 										end)

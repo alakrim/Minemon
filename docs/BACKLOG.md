@@ -14,6 +14,6 @@
 - Controls: the inventory key is I in Luanti (E is aux1). Consider remapping to E for Minecraft familiarity after the owner's feedback.
 - Stand-ins look too cheerful for the horror tone. Give aggressive species angry brows, slit pupils or glowing eyes at night (T-18 follow-up, M3 dread).
 - Creature do_punch skips mcl knockback, crits, tool wear and hunger. Restore knockback and crits for player hits on creatures (T-24 deviation).
-- 43 status moves have no effect yet; flinch, confusion, trap, protect, leech seed and similar are ignored (T-23). M2 status pass.
+- 28 status moves and 3 damage moves still have no effect (T-31 status pass; list in the combat integration report `moves_report.txt`, or `effects_logic.gaps`): transform, mimic, metronome, substitute, spite, encore, perish song, destiny bond, weather moves, and similar. Wild creatures' run speed is written by the creatures brain each think, so paralysis halves walking only (a fix belongs in minemon_creatures).
 - Combat rng is clock-seeded; tests pin accuracy. Consider a seeded rng per encounter.
 - An unexplained 4/60 creature vanish at dedicated_server_step 0.0 (T-21a verifier, not reproduced). Low priority.
