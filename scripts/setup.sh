@@ -105,3 +105,31 @@ else
 	git clone --depth 1 --branch "$VOXELIBRE_TAG" https://github.com/VoxeLibre/VoxeLibre "$VOX_DIR"
 fi
 
+# Cobblemon Bedrock models (T-25a, D-029): the clone is fetched at COBBLEMON_BEDROCK_COMMIT, then the converter
+# writes the generated pack mod to .tools/pack_cobblemon. Both live in .tools/ and are never committed.
+: "${COBBLEMON_BEDROCK_COMMIT:?COBBLEMON_BEDROCK_COMMIT is not set in scripts/versions.env}"
+CBR_DIR=.tools/cobblemon-bedrock
+if [ -d "$CBR_DIR/development_resource_packs/cobblemon/models/entity" ] \
+	&& [ "$(git -C "$CBR_DIR" rev-parse HEAD 2>/dev/null || true)" = "$COBBLEMON_BEDROCK_COMMIT" ]; then
+	: # already present at the pinned commit
+else
+	echo "[setup] cloning cobblemon-bedrock at ${COBBLEMON_BEDROCK_COMMIT:0:12}"
+	rm -rf "$CBR_DIR"
+	git init -q "$CBR_DIR"
+	git -C "$CBR_DIR" remote add origin https://github.com/kirbycope/cobblemon-bedrock
+	git -C "$CBR_DIR" fetch -q --depth 1 origin "$COBBLEMON_BEDROCK_COMMIT"
+	git -C "$CBR_DIR" checkout -q FETCH_HEAD
+fi
+
+# Conversion is skipped while the stamp (source commit plus converter sources) is unchanged.
+PACK_DIR=.tools/pack_cobblemon
+CONV_HASH=$(cat tools/cobblemon_import.py tools/gen_standins.py | sha256sum | cut -d' ' -f1)
+PACK_STAMP="$COBBLEMON_BEDROCK_COMMIT $CONV_HASH"
+if [ -f "$PACK_DIR/minemon_pack_cobblemon/init.lua" ] && [ "$(cat "$PACK_DIR/.stamp" 2>/dev/null || true)" = "$PACK_STAMP" ]; then
+	: # pack is current
+else
+	echo "[setup] converting Cobblemon models into $PACK_DIR"
+	python3 tools/cobblemon_import.py --src "$CBR_DIR" --out "$PACK_DIR" --commit "$COBBLEMON_BEDROCK_COMMIT"
+	printf '%s\n' "$PACK_STAMP" > "$PACK_DIR/.stamp"
+fi
+
