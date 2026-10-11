@@ -115,6 +115,12 @@ return function(S)
 				local mark = m.uid == active_uid and "▶ " or ""
 				local title = string.format("%s%s Lv%d (%s)", mark, LOGIC.member_name(m, sp.name), m.level,
 					LOGIC.status_text(m.status))
+				-- Bond hook (T-27): minemon_growth sets minemon.party.bond_text to a short string, e.g. hearts.
+				local hook = minemon.party and minemon.party.bond_text
+				local bond = hook and hook(m) or ""
+				if bond ~= "" then
+					title = title .. "  " .. bond
+				end
 				fs[#fs + 1] = string.format("label[0.4,%.2f;%s]", y + 0.25, esc(title))
 				fs[#fs + 1] = string.format("box[3.4,%.2f;2.6,0.45;#333333]", y)
 				if frac > 0 then

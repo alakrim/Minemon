@@ -28,7 +28,7 @@
   "link_cable": {
     "kind": "evo",
     "name": "Link Cable",
-    "price": 0
+    "price": 2100
   },
   "master_ball": {
     "catch_mult": 255.0,

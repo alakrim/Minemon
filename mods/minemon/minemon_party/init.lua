@@ -501,6 +501,19 @@ function API.set(player, list)
 	S.set(player, list)
 end
 
+-- Changes one member, found by uid (growth, T-27): fn(m) edits it in place, then the list is written back through
+-- S.set, which rebinds the active entity (its _mm is the same table). Returns true when the member was found.
+function API.update_member(player, uid, fn)
+	local list = S.list(player)
+	local i = LOGIC.index_of(list, uid)
+	if i == nil then
+		return false
+	end
+	fn(list[i])
+	S.set(player, list)
+	return true
+end
+
 -- The ObjectRef of the active creature, or nil.
 function API.get_active(player)
 	local rec = S.active_rec(name_of(player))
