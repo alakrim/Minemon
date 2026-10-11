@@ -192,3 +192,14 @@ Trade-off: it is heavier than Minetest Game. Fallback: Minetest Game plus Mobs R
 
 ## D-027 — Creature runtime hooks are a single choke point (2026-10-10)
 All damage goes through `minemon.creatures.damage`, and all behaviour through registered brains in `minemon_creatures`. This prevents parallel tasks (party, wild AI, combat) from editing the same do_custom and health code, and keeps instance HP and entity HP in sync. Owned by T-24 (high risk; Opus reviews the diff).
+
+## D-028 — Ownership scope and attacker facing (2026-10-10)
+- The owned brain manages only creatures sent out by the party system (`_mm_party = true` on the entity). Owned creatures created by other means (tests, future NPC trainers) are left to their own brains.
+- The party treats an active creature that vanished without a faint event (for example void removal, mcl_void_damage/init.lua:45) as recalled, using the last write-back.
+- Attackers turn to face their target at cast start and at execution: a creature never whiffs a valid melee because of idle turning.
+- Brains do not run while a creature is exhausted (T-24 behaviour accepted; the exhausted state is a pause).
+
+## D-029 — Use Cobblemon's Pokémon models via an automatic converter (owner directive, 2026-10-10)
+The owner directs converting the Cobblemon assets for this private, non-commercial game. Source: github.com/kirbycope/cobblemon-bedrock (repo MIT; each model folder carries its own Creative Commons licence (non-commercial, attribution)). It covers 247 of 251 species: Bedrock geo.json, PNG textures and animation.json.
+How: `tools/cobblemon_import.py` converts them into Luanti glTF at setup or build time from a pinned clone in `.tools/`, into a generated pack mod `minemon_pack_cobblemon`. **Third-party art is never committed to the repo**; credits ship in the build. Creatures use the pack model when present, and the stand-in otherwise. This supersedes the "owner supplies pack" part of D-014.
+Process rule (owner): every wave starts with a Haiku shortcut scout before building.

@@ -62,6 +62,18 @@ function M.new_record(kind, rng)
 	return { kind = kind, left = left, tick = 0 }
 end
 
+-- Fresh durations for a status restored after an unload or reload (T-23b): sleep and freeze 3 s, the rest 12 s.
+M.RESTORE_SHORT_S = 3
+function M.restore_record(kind)
+	local left = nil
+	if kind == "sleep" or kind == "freeze" then
+		left = M.RESTORE_SHORT_S
+	elseif kind == "burn" or kind == "poison" or kind == "paralysis" then
+		left = M.DURATION_S
+	end
+	return { kind = kind, left = left, tick = 0 }
+end
+
 -- Advances a record by dt seconds. Returns {damage = n, cured = bool}. Burn and poison deal 1/16 max HP every
 -- TICK_S seconds. rng is used only by freeze (the thaw roll).
 function M.advance(record, dt, rng, max_hp)
