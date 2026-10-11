@@ -162,6 +162,35 @@ local function flee(self, pos, ctx)
 	self.runaway_timer = 0
 end
 
+-- Sanctuary wards (D-030, minemon_sanctuary). A target inside a ward is dropped; the ward centre it was in is
+-- returned so the creature can walk away from it. Returns nil when no target was in a ward.
+local function drop_warded(ctx, sanct)
+	local centre = nil
+	if ctx.player ~= nil and sanct.ward_centre(ctx.player:get_pos()) ~= nil then
+		centre = sanct.ward_centre(ctx.player:get_pos())
+		ctx.player, ctx.player_distance = nil, nil
+	end
+	if ctx.creature ~= nil and sanct.ward_centre(ctx.creature:get_pos()) ~= nil then
+		centre = centre or sanct.ward_centre(ctx.creature:get_pos())
+		ctx.creature, ctx.creature_distance = nil, nil
+	end
+	if ctx.attacker ~= nil and sanct.ward_centre(ctx.attacker:get_pos()) ~= nil then
+		centre = centre or sanct.ward_centre(ctx.attacker:get_pos())
+		ctx.attacker, ctx.attacker_distance = nil, nil
+	end
+	return centre
+end
+
+-- Walks away from a ward centre: the same runaway as flee(), turned away from the centre.
+local function walk_away(self, pos, centre)
+	self:turn_in_direction(pos.x - centre.x, pos.z - centre.z, 1)
+	if self.state == "attack" then
+		self.attack = nil
+	end
+	self.state = "runaway"
+	self.runaway_timer = 0
+end
+
 local function perform(self, pos, dec, ctx, t)
 	local base = self._mm_run_base
 	local action = dec.action
@@ -219,6 +248,25 @@ local function think(self, dtime)
 		self._mm_run_base = self.run_velocity
 	end
 	local ctx = build_ctx(self, pos, species, inst, stats, t)
+	-- Sanctuary wards (D-030): a creature inside a ward is never aggressive and walks out of it; a target inside a
+	-- ward is dropped, and a creature that was hunting or fighting it walks away from the ward.
+	local sanct = minemon.sanctuary
+	if sanct ~= nil and sanct.ward_centre ~= nil then
+		local home = sanct.ward_centre(pos)
+		if home ~= nil then
+			walk_away(self, pos, home)
+			self.run_velocity = self._mm_run_base
+			t.action = "flee"
+			return nil
+		end
+		local centre = drop_warded(ctx, sanct)
+		if centre ~= nil and (t.action == "hunt" or t.action == "fight") then
+			walk_away(self, pos, centre)
+			self.run_velocity = self._mm_run_base
+			t.action = "flee"
+			return nil
+		end
+	end
 	return perform(self, pos, LOGIC.decide(ctx), ctx, t)
 end
 
