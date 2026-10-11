@@ -1,6 +1,7 @@
--- Integration test (T-21a, T-21b): minemon_creatures registers all 251 species; spawn() gives the requested level,
--- health and nametag; owned spawns are tamed and never despawn; a wild creature survives 5 s; and the server step
--- interval is measured with no creatures, then with 40 creatures on a flat stone platform in a forceloaded 64x64 area.
+-- Integration test (T-21a, T-21b, T-25c): minemon_creatures registers all 251 species; spawn() gives the requested
+-- level, health, nametag and, when the pack is loaded, the pack's model and texture (T-25c); owned spawns are tamed
+-- and never despawn; a wild creature survives 5 s; and the server step interval is measured with no creatures,
+-- then with 40 creatures on a flat stone platform in a forceloaded 64x64 area.
 -- Natural spawns need players, so the creatures are spawned directly. T-21b: the platform is built with set_node at
 -- a fixed height, so the test no longer depends on the world seed (the old centre search failed 1 run in 4).
 -- Writes PASS n or FAIL <reason> to test_result.txt, then shuts down.
@@ -66,8 +67,25 @@ local function spawn_checks(pos)
 	else
 		check(string.upper(tostring(c)):find("FF3030", 1, true), "Rattata nametag colour should be #FF3030")
 	end
-	local box = obj:get_properties().collisionbox
-	check(box and math.abs(box[5] - 0.25) < 1e-3, "Rattata (tiny) collision box height should be 0.25")
+	-- T-25c: with the Cobblemon pack the model, texture and collision box are the pack's; without it, the stand-in's.
+	local props = obj:get_properties()
+	local pack = rawget(_G, "minemon_pack")
+	local entry = pack and pack.models and pack.models[19]
+	local want_h = 0.25
+	core.log("action", "[creatures_test] T-25c visuals: pack entry for Rattata " .. (entry and "present" or "absent"))
+	if entry then
+		want_h = math.min(4, math.max(0.3, entry.height))
+		check(props.mesh == entry.mesh, "Rattata mesh should be " .. entry.mesh .. ", got " .. tostring(props.mesh))
+		local want_tex = inst.shiny and entry.texture_shiny or entry.texture
+		check(props.textures[1] == want_tex,
+			"Rattata texture should be " .. want_tex .. ", got " .. tostring(props.textures[1]))
+		check(props.visual_size.x == 1 and props.visual_size.y == 1, "pack models have visual_size 1")
+	else
+		check(props.mesh == "mm_quadruped.glb", "stand-in Rattata mesh should be mm_quadruped.glb")
+	end
+	check(type(inst.shiny) == "boolean", "a wild spawn must carry a shiny flag")
+	local box = props.collisionbox
+	check(box and math.abs(box[5] - want_h) < 1e-3, "Rattata collision box height should be " .. want_h)
 	check(minemon.creatures.is_exhausted(obj) == false, "is_exhausted must be false in T-21a")
 	check(minemon.creatures.spawn(pos, 99999, 5, nil) == nil, "unknown species should return nil")
 
