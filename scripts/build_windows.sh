@@ -20,7 +20,8 @@ ZIP_CACHE=$CACHE_DIR/$ZIP_TOP.zip
 ZIP_URL=https://github.com/luanti-org/luanti/releases/download/$LUANTI_TAG/$ZIP_TOP.zip
 BUILDS=$ROOT/builds
 BUILD=$BUILDS/Minemon
-PACKAGE=Minemon-M0-windows
+VERSION=${MINEMON_VERSION:-M1}
+PACKAGE=Minemon-${VERSION}-windows
 PART_BYTES=25000000
 MENU_GAME=minemon
 JOIN_BAT="JUNTAR-JOIN Minemon.bat"
@@ -112,15 +113,15 @@ rem Starts Minemon straight in the world "Minemon". The world is created on the 
 start "" "%~dp0bin\luanti.exe" --go --world "%~dp0worlds\Minemon" --gameid minemon
 EOF
 
-write_crlf "$BUILD/LEIA-ME README.txt" <<'EOF'
-MINEMON - M0 (Windows)
-======================
+write_crlf "$BUILD/LEIA-ME README.txt" <<EOF
+MINEMON - (Windows)
+===================
 
 Como começar
 ------------
 1. If you received the zip in parts (.zip.001, .zip.002, ...), double-click
-   "JUNTAR-JOIN Minemon.bat" in the same folder first. It makes Minemon-M0-windows.zip.
-2. Right-click Minemon-M0-windows.zip and choose "Extrair Tudo" (Extract All).
+   "JUNTAR-JOIN Minemon.bat" in the same folder first. It makes the Minemon zip.
+2. Right-click the Minemon zip and choose "Extrair Tudo" (Extract All).
 3. Open the new "Minemon" folder.
 4. Double-click "Play Minemon.bat". The main menu opens with Minemon selected.
 5. Or double-click "Quick Play.bat" to go straight into the world "Minemon".
@@ -153,15 +154,33 @@ If FPS is below 30, replace minetest.conf with presets\low.conf.
    (replace the old one).
 4. Start the game again and do the FPS test.
 
+Como jogar / How to play
+------------------------
+- On your first visit you choose a partner Pokemon (6 starters). You also get the Party Ball.
+- Party Ball in hand:
+    Right click         send out / call back your Pokemon
+    Left click a wild   order your Pokemon to attack it
+    Shift + right click party screen (choose the lead)
+- Your Pokemon follows you and fights in real time. The party is shown at the top-right.
+- The wild is dangerous. Aggressive Pokemon (red names) hunt YOU when your Pokemon
+  is not out. Even a Rattata can kill you early on. Pokemon get stronger the further
+  you go from the start, and at night.
+- A defeated wild Pokemon becomes "exhausted" for 20 seconds (capture arrives in the
+  next update).
+- Fainted partners revive after 10 minutes. Called-back Pokemon heal slowly.
+- Chat commands: /party, /lives, /starter
+
 Regra das vidas / The rule
 --------------------------
-You have 3 lives. After the 3rd life is lost, permadeath applies.
+You have 3 lives. On the 4th death your journey ends forever (ghost mode).
 Type /lives in the chat to check how many lives you have.
 
 Sobre / About
 -------------
 Private use only. Please do not share or upload this build.
-Luanti 5.17.0 + VoxeLibre 0.92.3 + Minemon M0.
+Luanti 5.17.0 + VoxeLibre 0.92.3 + Minemon ${VERSION}.
+Pokemon models and textures: Cobblemon (cobblemon.com) via kirbycope/cobblemon-bedrock,
+CC BY-NC, converted for Minemon. See games/minemon/mods/minemon_pack_cobblemon/CREDITS.txt.
 EOF
 echo "launchers and README written"
 
@@ -189,7 +208,7 @@ FIRST_PART=$(basename "${PART_PATHS[0]}")
 
 write_crlf "$BUILDS/$JOIN_BAT" <<EOF
 @echo off
-rem Joins the Minemon zip parts in this folder into Minemon-M0-windows.zip. Keep all the .zip.0xx files here.
+rem Joins the Minemon zip parts in this folder into the Minemon zip. Keep all the .zip.0xx files here.
 cd /d "%~dp0"
 if not exist "$FIRST_PART" (
 	echo Nao encontrei as partes do zip nesta pasta.

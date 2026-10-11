@@ -17,4 +17,4 @@
 | T-23b | M1 / w3 | high | DONE | combat fixes (crash, facing, status persistence) |
 | T-25a | M1 / w4 | high | DONE (Opus visual review) | Cobblemon → glTF converter (geometry, textures) |
 | T-25b | M1 / w5 | high | DONE (Opus visual review) | bake Cobblemon animations |
-| T-25c | M1 / w6 | medium | BUILDING | creatures use pack models |
+| T-25c | M1 / w6 | medium | DONE (Opus visual review) | creatures use pack models |
