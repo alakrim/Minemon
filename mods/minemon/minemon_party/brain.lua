@@ -1,7 +1,8 @@
 -- The owned brain (T-22, D-027): what a creature that belongs to a player does. Registered as "owned" in
 -- minemon_creatures. It returns "skip_states" for owned creatures, so mcl_mobs' wander and melee do not run: this
 -- brain moves the creature itself (go_to_pos, teleport) and fights with the move system (minemon_combat).
--- The distances and the target rule are in party_logic.lua. Wild creatures are not touched (it returns nil).
+-- The distances and the target rule are in party_logic.lua. Wild creatures, and owned creatures the party did not send
+-- out, are not touched (it returns nil).
 -- Loaded as dofile(...)(S): S is the party state of init.lua. Returns the brain function.
 -- luacheck: read_globals core minemon mcl_util vector
 
@@ -135,9 +136,27 @@ local function step(self, S, rec)
 	fight(self, target, tpos, d)
 end
 
+-- Only creatures the party manages are this brain's (D-028): the ones sent out by the party (_mm_party). After a
+-- restart the flag is gone, so an owned creature whose uid is in its owner's party list (owner online) is adopted;
+-- the rest are left alone (returns false).
+local function managed(S, self)
+	if self._mm_party then
+		return true
+	end
+	local p = core.get_player_by_name(self.owner or "")
+	if p ~= nil and self._mm ~= nil and LOGIC.index_of(S.list(p), self._mm.uid) ~= nil then
+		self._mm_party = true
+		return true
+	end
+	return false
+end
+
 return function(S)
 	return function(self, dtime)
 		if not minemon.creatures.is_owned(self.object) then
+			return nil
+		end
+		if not managed(S, self) then
 			return nil
 		end
 		if self._party_fainted then

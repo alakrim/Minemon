@@ -102,7 +102,8 @@ function S.save(player)
 	player:get_meta():set_string(KEY, core.write_json(LOGIC.save(list, minemon.instance.serialize)))
 end
 
--- The active record of a player, if its entity still exists. Otherwise the record is dropped.
+-- The active record of a player, if its entity still exists. An entity that vanished without a faint event (for
+-- example removed by mcl_void_damage) counts as recalled: the member is written back as it was last synced.
 function S.active_rec(name)
 	local rec = S.active[name]
 	if rec == nil then
@@ -110,8 +111,8 @@ function S.active_rec(name)
 	end
 	local le = rec.obj:is_valid() and rec.obj:get_luaentity() or nil
 	if le == nil or le._removed then
-		S.active[name] = nil
-		S.mark(name)
+		core.log("action", "[minemon_party] active creature of " .. tostring(name) .. " vanished; recalled")
+		S.recall(name, true)
 		return nil
 	end
 	return rec
@@ -196,6 +197,7 @@ function S.send_out(player, index)
 	local le = obj:get_luaentity()
 	m.owner = name
 	le._mm = m
+	le._mm_party = true -- only creatures sent out by the party are managed by the owned brain (D-028)
 	le.owner = name
 	le.tamed = true
 	refresh_entity(le, m, species)
