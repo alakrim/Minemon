@@ -3,7 +3,8 @@
 --
 -- Protocol with scripts/screenshot.sh (<world>/minemon_shots.json holds the shot list):
 --   1. The player joins; for each shot the mod teleports the player, sets yaw and pitch and the time of day,
---      grants fly and noclip, hides the HUD, waits wait_s, then writes <world>/shot_<name>.ready.
+--      grants fly and noclip, hides the HUD (unless the shot sets keep_hud: true), waits wait_s, then writes
+--      <world>/shot_<name>.ready.
 --   2. The shell script captures the X display and deletes that marker.
 --   3. The mod sees the marker is gone and starts the next shot. After the last shot it does nothing,
 --      and the shell script stops the client.
@@ -111,13 +112,17 @@ local function run_shot(player, shots, index)
 	player:set_look_horizontal(math.rad(shot.yaw_deg or 0))
 	player:set_look_vertical(-math.rad(shot.pitch_deg or 0))
 	core.set_timeofday(shot.time_of_day or 0.5)
-	clear_hud(player)
+	if not shot.keep_hud then
+		clear_hud(player)
+	end
 	core.set_player_privs(player:get_player_name(), { fly = true, noclip = true, fast = true, interact = true })
 
 	local marker = worldpath .. "/shot_" .. name .. ".ready"
 	core.after(shot.wait_s or 10, function()
 		-- HUD again just before the marker: VoxeLibre may have re-added elements during the wait.
-		clear_hud(player)
+		if not shot.keep_hud then
+			clear_hud(player)
+		end
 		core.after(1, function()
 			log("ready " .. name)
 			write_marker(marker, name)
