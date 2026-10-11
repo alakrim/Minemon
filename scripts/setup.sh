@@ -121,6 +121,9 @@ else
 	git -C "$CBR_DIR" checkout -q FETCH_HEAD
 fi
 
+# Converter dev dependency (D-029, T-25b): the molang evaluator.
+python3 -c "import molang" 2>/dev/null || pip install -q --break-system-packages molang
+
 # Conversion is skipped while the stamp (source commit plus converter sources) is unchanged.
 PACK_DIR=.tools/pack_cobblemon
 CONV_HASH=$(cat tools/cobblemon_import.py tools/gen_standins.py | sha256sum | cut -d' ' -f1)
