@@ -5,6 +5,8 @@ Pure stdlib (zlib, struct), so it runs anywhere Python 3 does. The art is drawn 
 copied from any game. Outputs (relative to the repo root, unless paths are given):
   mods/minemon/minemon_party/textures/minemon_party_ball.png        the Party Ball, a red and white sphere
   mods/minemon/minemon_capture/textures/minemon_capture_<id>.png    poke_ball, great_ball, ultra_ball, master_ball
+  mods/minemon/minemon_dread/textures/minemon_dread_shard.png       the Dread Shard (T-30)
+  mods/minemon/minemon_dread/textures/minemon_capture_umbral_ball.png  the Umbral Ball (T-30)
 
 Usage: python3 tools/gen_icons.py [party_output_dir] [capture_output_dir]
 """
@@ -267,6 +269,75 @@ def write_evolution_icons(out_dir):
     return paths
 
 
+DREAD_BODY = (34, 14, 48)  # the shard: a black-violet crystal
+DREAD_FACET = (112, 52, 164)  # the lit facet on the left
+DREAD_HIGHLIGHT = (176, 124, 224)
+DREAD_GLINT = (200, 22, 52)  # the deep red glints (T-30)
+DREAD_EDGE = (10, 4, 16)
+UMBRAL_TOP = (26, 18, 36)
+UMBRAL_BOTTOM = (16, 12, 22)
+UMBRAL_BAND = (130, 60, 190)  # the violet band of the Umbral Ball
+UMBRAL_BUTTON = (150, 80, 210)
+
+
+def dread_shard_pixel(x, y):
+    """RGBA for pixel (x, y) of the Dread Shard (T-30): a tall jagged crystal, black-violet, with red glints."""
+    t = (y - 1) / 13.0
+    if t < 0.0 or t > 1.0:
+        return TRANSPARENT
+    # Jagged edges: the half width follows a sine profile, with a sawtooth of one pixel on the rows.
+    jag = (0.0, 0.9, 0.2, -0.7, 0.5, -0.4, 0.8, -0.2, 0.3, -0.8, 0.1, 0.6, -0.5, 0.2)[y - 1]
+    half = 4.6 * math.sin(math.pi * t) ** 0.8 + jag * 0.5
+    dx = x - 7.5
+    if abs(dx) > half:
+        return TRANSPARENT
+    if abs(dx) > half - 1.0:
+        return DREAD_EDGE + (255,)
+    if (x, y) in ((9, 6), (10, 8), (8, 11)):
+        return DREAD_GLINT + (255,)
+    if (x, y) in ((6, 3), (6, 4), (5, 5)):
+        return DREAD_HIGHLIGHT + (255,)
+    if dx < -half * 0.3:
+        return DREAD_FACET + (255,)
+    return DREAD_BODY + (255,)
+
+
+def umbral_pixel(x, y):
+    """RGBA for pixel (x, y) of the Umbral Ball (T-30): black, with a violet band across the middle."""
+    dx = x - CENTRE
+    dy = y - CENTRE
+    dist = (dx * dx + dy * dy) ** 0.5
+    if dist > RADIUS:
+        return TRANSPARENT
+    if dist > RADIUS - 1.0:
+        return DREAD_EDGE + (255,)
+    if abs(dy) < 1.0:
+        return UMBRAL_BAND + (255,)
+    if dist < 2.3:
+        return (DREAD_EDGE if dist > 1.3 else UMBRAL_BUTTON) + (255,)
+    if dy < 0:
+        if dist > RADIUS - 2.2 and dx < 0:
+            return (60, 30, 90, 255)  # a rim highlight on the upper left
+        return UMBRAL_TOP + (255,)
+    return UMBRAL_BOTTOM + (255,)
+
+
+def write_dread_icons(out_dir):
+    """Writes minemon_dread_shard.png and minemon_capture_umbral_ball.png (T-30). Returns the paths."""
+    os.makedirs(out_dir, exist_ok=True)
+    jobs = [
+        ("minemon_dread_shard.png", [[dread_shard_pixel(x, y) for x in range(SIZE)] for y in range(SIZE)]),
+        ("minemon_capture_umbral_ball.png", [[umbral_pixel(x, y) for x in range(SIZE)] for y in range(SIZE)]),
+    ]
+    paths = []
+    for name, rows in jobs:
+        path = os.path.join(out_dir, name)
+        with open(path, "wb") as f:
+            f.write(png_bytes(SIZE, SIZE, rows))
+        paths.append(os.path.normpath(path))
+    return paths
+
+
 def _write(path, rows):
     with open(path, "wb") as f:
         f.write(png_bytes(SIZE, SIZE, rows))
@@ -287,6 +358,9 @@ def main(argv):
     evo_dir = os.path.join(here, "..", "mods", "minemon", "minemon_growth", "textures")
     for evo_path in write_evolution_icons(evo_dir):
         print("wrote " + evo_path)
+    dread_dir = os.path.join(here, "..", "mods", "minemon", "minemon_dread", "textures")
+    for dread_path in write_dread_icons(dread_dir):
+        print("wrote " + dread_path)
     return 0
 
 

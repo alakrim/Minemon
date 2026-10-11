@@ -9,8 +9,14 @@ M.DEFAULT_BALL = "poke_ball"
 M.DEFAULT_STATUS = "none"
 M.IV_KEYS = { "hp", "atk", "def", "spa", "spd", "spe" }
 
+-- Dread variants (T-30, D-031): a corrupted creature has x1.25 on hp, atk, spa and spe while wild, and x1.10 once
+-- owned. Defence and special defence are not changed.
+M.DREAD_KEYS = { "hp", "atk", "spa", "spe" }
+M.DREAD_MULT_WILD = 1.25
+M.DREAD_MULT_OWNED = 1.10
+
 -- Scalar fields copied by serialize and deserialize.
-local SCALARS = { "uid", "species_id", "nickname", "level", "exp", "bond", "hp", "status", "ball", "shiny" }
+local SCALARS = { "uid", "species_id", "nickname", "level", "exp", "bond", "hp", "status", "ball", "shiny", "dread" }
 
 function M.create(formulas, data)
 	local I = {}
@@ -60,12 +66,22 @@ function M.create(formulas, data)
 			moves = starting_moves(species, level),
 			ball = M.DEFAULT_BALL,
 			shiny = false,
+			dread = false,
 			owner = nil,
 		}
 	end
 
+	-- The stats of an instance. A Dread creature gets the Dread multiplier on four stats (see DREAD_KEYS).
 	function I.stats(instance, species)
-		return formulas.calc_stats(species.base_stats, instance.level, instance.ivs, instance.bond)
+		local st = formulas.calc_stats(species.base_stats, instance.level, instance.ivs, instance.bond)
+		if instance.dread == true then
+			local owned = instance.owner ~= nil and instance.owner ~= ""
+			local mult = owned and M.DREAD_MULT_OWNED or M.DREAD_MULT_WILD
+			for _, key in ipairs(M.DREAD_KEYS) do
+				st[key] = math.floor(st[key] * mult)
+			end
+		end
+		return st
 	end
 
 	-- A JSON-safe copy: plain strings, numbers, booleans and tables with string keys or array parts.
@@ -109,6 +125,7 @@ function M.create(formulas, data)
 			moves = moves,
 			ball = t.ball or M.DEFAULT_BALL,
 			shiny = t.shiny == true,
+			dread = t.dread == true,
 			owner = t.owner,
 		}
 	end

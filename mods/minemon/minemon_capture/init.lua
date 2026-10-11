@@ -190,7 +190,8 @@ for _, id in ipairs(L.BALLS) do
 	local item = minemon.data.get_item(id)
 	assert(item ~= nil and L.catch_mult(item) ~= nil, "minemon_capture: items.json has no ball " .. id)
 	core.register_craftitem(":" .. L.item_name(id), {
-		description = item.name .. "\n" .. L.tooltip_line(L.catch_mult(item)),
+		description = item.name .. "\n" .. L.tooltip_line(L.catch_mult(item))
+			.. (id == "umbral_ball" and "\nCatch rate ×3 against Dread creatures" or ""),
 		_doc_items_longdesc = "A ball that catches exhausted wild creatures.",
 		_doc_items_usagehelp = "Left click: throw at an exhausted creature. Hold it to see the catch odds.",
 		inventory_image = ICON_PREFIX .. id .. ".png",
@@ -221,6 +222,13 @@ core.register_craft({
 	output = L.item_name("ultra_ball"),
 	recipe = { L.item_name("poke_ball"), "mcl_core:gold_ingot", "mcl_core:obsidian" },
 })
+-- The Umbral Ball (T-30, D-031): an Ultra Ball and four Dread Shards (minemon_dread registers the shard).
+core.register_craft({
+	type = "shapeless",
+	output = L.item_name("umbral_ball"),
+	recipe = { L.item_name("ultra_ball"), "minemon:dread_shard", "minemon:dread_shard", "minemon:dread_shard",
+		"minemon:dread_shard" },
+})
 
 -- The odds for a wild creature hit by a ball, as a percent: nil when the creature is not an exhausted wild one.
 local function odds_for(obj, ball_id)
@@ -229,10 +237,11 @@ local function odds_for(obj, ball_id)
 	end
 	local inst = minemon.creatures.get_instance(obj)
 	local sp = inst and species_of(inst)
-	local mult = L.catch_mult(minemon.data.get_item(ball_id))
-	if sp == nil or mult == nil then
+	local base = L.catch_mult(minemon.data.get_item(ball_id))
+	if sp == nil or base == nil then
 		return nil
 	end
+	local mult = L.ball_mult(ball_id, inst, base)
 	local max = minemon.instance.stats(inst, sp).hp
 	local frac = max > 0 and inst.hp / max or 0
 	local p = L.effective_p(ball_id, minemon.formulas.catch_chance(sp.catch_rate, frac, mult, inst.status))
@@ -391,7 +400,7 @@ local function catch(ctx)
 	local before = { owner = inst.owner, ball = inst.ball, bond = inst.bond, hp = inst.hp }
 	inst.owner = ctx.name
 	inst.ball = ctx.ball_id
-	inst.bond = L.CAUGHT_BOND
+	inst.bond = L.caught_bond(inst) -- a Dread creature starts with a low bond (T-30)
 	inst.hp = math.max(1, inst.hp) -- an exhausted creature is at 0 HP; a caught one joins at least at 1 HP
 	local placed = false
 	local list = minemon.party.get(player)
@@ -455,10 +464,11 @@ local function begin(player, obj, ball_id, rng)
 	end
 	local inst = le._mm
 	local sp = species_of(inst)
-	local mult = L.catch_mult(minemon.data.get_item(ball_id))
-	if sp == nil or mult == nil then
+	local base = L.catch_mult(minemon.data.get_item(ball_id))
+	if sp == nil or base == nil then
 		return nil, "unknown ball"
 	end
+	local mult = L.ball_mult(ball_id, inst, base)
 	local max = minemon.instance.stats(inst, sp).hp
 	local frac = max > 0 and inst.hp / max or 0
 	local p = L.effective_p(ball_id, minemon.formulas.catch_chance(sp.catch_rate, frac, mult, inst.status))
