@@ -12,6 +12,30 @@ local wild_brain = dofile(MODPATH .. "/wild_brain.lua")
 minemon.creatures = minemon.creatures or {}
 local API = minemon.creatures
 
+-- The generated Cobblemon pack's entry for a dex number, or nil (T-25c, D-029). The pack defines a global.
+local function pack_entry(dex)
+	local pack = rawget(_G, "minemon_pack")
+	local models = pack and pack.models
+	return models and models[dex] or nil
+end
+
+-- Sets the model, texture and collision box for the instance's shiny state (T-25c). mcl_mobs picks its own
+-- texture at activation, so this runs from on_spawn and after_activate.
+local function apply_visual(self, species)
+	local inst = self._mm
+	if inst == nil then
+		return
+	end
+	local vis = defs.visual_for(species, pack_entry(species.id), inst.shiny == true)
+	self.object:set_properties({
+		mesh = vis.mesh,
+		textures = vis.textures[1], -- the engine takes one flat list of texture names
+		visual_size = vis.visual_size,
+		collisionbox = vis.collisionbox,
+		selectionbox = vis.selectionbox,
+	})
+end
+
 -- Sets the instance's stats on the entity: HP, damage, nametag (and the object HP, which the engine ignores).
 local function apply(self, species)
 	local inst = self._mm
@@ -32,15 +56,27 @@ end
 
 -- on_spawn runs once per entity, after activation. A natural spawn has no instance yet: its level comes from
 -- the position and is at least the stage's minimum (the spawn gate checks the same level at the spawn node).
+-- A natural spawn is wild, so it rolls for shiny (T-25c).
 local function make_on_spawn(species, min_level)
 	return function(self)
 		if self._mm == nil then
 			local pos = self.object:get_pos()
 			local level = math.max(spawning.level_at(pos), min_level)
-			self._mm = minemon.instance.new(species, level, spawning.rng_at(pos))
+			local rng = spawning.rng_at(pos)
+			self._mm = minemon.instance.new(species, level, rng)
+			self._mm.shiny = defs.roll_shiny(rng)
 		end
 		apply(self, species)
+		apply_visual(self, species)
 		return true
+	end
+end
+
+-- after_activate runs on every activation, after on_spawn: the runtime hook first, then the visuals (T-25c).
+local function make_after_activate(species)
+	return function(self, staticdata, def, dtime)
+		runtime.after_activate(self, staticdata, def, dtime)
+		apply_visual(self, species)
 	end
 end
 
@@ -58,13 +94,13 @@ local function register_all()
 	for _, sp in ipairs(list) do
 		local stage = stages[sp.id]
 		local name = defs.entity_name(sp)
-		local def = defs.build_def(sp)
+		local def = defs.build_def(sp, pack_entry(sp.id))
 		def.on_spawn = make_on_spawn(sp, defs.min_spawn_level(stage))
 		-- Runtime hooks (T-24): brains, the single damage path, punches, death safety net.
 		def.do_custom = runtime.do_custom
 		def.do_punch = runtime.do_punch
 		def.deal_damage = runtime.deal_damage
-		def.after_activate = runtime.after_activate
+		def.after_activate = make_after_activate(sp)
 		def.on_die = runtime.on_die
 		mcl_mobs.register_mob(name, def)
 		local plan = defs.spawn_plan(sp, stage)
@@ -137,13 +173,17 @@ function API.spawn(pos, species_id, level, owner_name)
 		return nil
 	end
 	level = level or spawning.level_at(pos)
-	local inst = minemon.instance.new(species, level, spawning.rng_at(pos))
+	local rng = spawning.rng_at(pos)
+	local inst = minemon.instance.new(species, level, rng)
 	local staticdata = { _mm = inst }
 	if owner_name and owner_name ~= "" then
 		staticdata.owner = owner_name
 		staticdata.tamed = true
 		staticdata.persistent = true
 		staticdata.can_despawn = false
+	else
+		-- A wild spawn rolls for shiny (T-25c). Owned spawns (captures) keep the instance's own flag.
+		inst.shiny = defs.roll_shiny(rng)
 	end
 	return core.add_entity(pos, defs.entity_name(species), core.serialize(staticdata))
 end

@@ -415,3 +415,142 @@ describe("creatures_defs minimum spawn level", function()
 		assert.equals(2, p3.chance)
 	end)
 end)
+
+-- T-25c: visual_for (pack and stand-in paths), the animation table, the shiny roll.
+local PACK_RATTATA = {
+	mesh = "mmp_0019.glb", texture = "mmp_0019.png", texture_shiny = "mmp_0019_s.png",
+	height = 0.6, width = 1.6, scale_hint = 1.6,
+	anims = { stand = { 0, 20 }, walk = { 21, 41 }, run = { 42, 52 }, punch = { 53, 63 }, die = { 64, 74 },
+		sit = { 75, 85 } },
+}
+
+describe("creatures_defs.visual_for without a pack entry (stand-ins)", function()
+	it("Pikachu (small) uses the quadruped stand-in, its electric texture and the 0.8 scale", function()
+		local v = D.visual_for(by_id(25), nil, false)
+		assert.equals("mm_quadruped.glb", v.mesh)
+		assert.are.same({ { "mm_type_electric.png" } }, v.textures)
+		assert.is_true(close(v.visual_size.x, 0.8))
+		assert.is_true(close(v.visual_size.y, 0.8))
+		assert.is_true(close(v.visual_size.z, 0.8))
+		assert.is_true(close(v.collisionbox[1], -0.2))
+		assert.is_true(close(v.collisionbox[5], 0.4))
+		assert.are.same(v.collisionbox, v.selectionbox)
+	end)
+
+	it("a nil shiny flag is not shiny; a shiny stand-in takes the shiny type texture", function()
+		assert.are.same({ { "mm_type_electric.png" } }, D.visual_for(by_id(25), nil).textures)
+		assert.are.same({ { "mm_type_electric_shiny.png" } }, D.visual_for(by_id(25), nil, true).textures)
+	end)
+
+	it("the stand-in collision box and visual size follow the size class", function()
+		local v = D.visual_for(by_id(130), nil, false) -- colossal
+		assert.is_true(close(v.visual_size.x, 3.5))
+		assert.is_true(close(v.collisionbox[5], 1.75))
+	end)
+end)
+
+describe("creatures_defs.visual_for with a pack entry", function()
+	it("uses the pack mesh and texture at visual_size 1", function()
+		local v = D.visual_for(by_id(19), PACK_RATTATA, false)
+		assert.equals("mmp_0019.glb", v.mesh)
+		assert.are.same({ { "mmp_0019.png" } }, v.textures)
+		assert.is_true(close(v.visual_size.x, 1))
+		assert.is_true(close(v.visual_size.y, 1))
+		assert.is_true(close(v.visual_size.z, 1))
+	end)
+
+	it("the collision box is half the pack width each way, and the pack height up", function()
+		local v = D.visual_for(by_id(19), PACK_RATTATA, false)
+		assert.is_true(close(v.collisionbox[1], -0.8))
+		assert.is_true(close(v.collisionbox[2], 0))
+		assert.is_true(close(v.collisionbox[3], -0.8))
+		assert.is_true(close(v.collisionbox[4], 0.8))
+		assert.is_true(close(v.collisionbox[5], 0.6))
+		assert.is_true(close(v.collisionbox[6], 0.8))
+		assert.are.same(v.collisionbox, v.selectionbox)
+	end)
+
+	it("clamps the collision width to 0.3-3.0 and the height to 0.3-4.0", function()
+		local wide = D.visual_for(by_id(1), { mesh = "a.glb", texture = "a.png", width = 4.331, height = 0.9 }, false)
+		assert.is_true(close(wide.collisionbox[4], 1.5)) -- width 3.0 -> half 1.5
+		local narrow = D.visual_for(by_id(1), { mesh = "a.glb", texture = "a.png", width = 0.1, height = 0.9 }, false)
+		assert.is_true(close(narrow.collisionbox[4], 0.15)) -- width 0.3 -> half 0.15
+		local tall = D.visual_for(by_id(1), { mesh = "a.glb", texture = "a.png", width = 1, height = 9 }, false)
+		assert.is_true(close(tall.collisionbox[5], 4.0))
+		local short = D.visual_for(by_id(1), { mesh = "a.glb", texture = "a.png", width = 1, height = 0.01 }, false)
+		assert.is_true(close(short.collisionbox[5], 0.3))
+	end)
+
+	it("a shiny pack creature takes texture_shiny; a normal one takes texture", function()
+		assert.are.same({ { "mmp_0019_s.png" } }, D.visual_for(by_id(19), PACK_RATTATA, true).textures)
+		assert.are.same({ { "mmp_0019.png" } }, D.visual_for(by_id(19), PACK_RATTATA, false).textures)
+	end)
+
+	it("build_def with a pack entry takes the pack mesh, texture and size", function()
+		local d = D.build_def(by_id(19), PACK_RATTATA)
+		assert.equals("mmp_0019.glb", d.mesh)
+		assert.are.same({ { "mmp_0019.png" } }, d.textures)
+		assert.is_true(close(d.visual_size.x, 1))
+		assert.is_true(close(d.collisionbox[5], 0.6))
+		assert.is_true(close(d.initial_properties.collisionbox[5], 0.6))
+		assert.equals("hostile", d.spawn_class) -- the temperament rules are unchanged
+	end)
+
+	it("build_def without a pack entry is the stand-in definition", function()
+		local d = D.build_def(by_id(19), nil)
+		assert.equals("mm_quadruped.glb", d.mesh)
+		assert.is_true(close(d.visual_size.x, 0.5))
+		assert.is_true(close(d.collisionbox[5], 0.25))
+	end)
+end)
+
+describe("creatures_defs animation table", function()
+	it("has the shared frame ranges, the T-18 speeds and no loop on punch, die and sit", function()
+		local a = D.visual_for(by_id(25), nil, false).animation
+		assert.equals(0, a.stand_start)
+		assert.equals(85, a.sit_end)
+		assert.equals(4, a.stand_speed)
+		assert.equals(20, a.walk_speed)
+		assert.equals(30, a.run_speed)
+		assert.equals(14, a.punch_speed)
+		assert.equals(10, a.die_speed)
+		assert.equals(6, a.sit_speed)
+		assert.is_false(a.punch_loop)
+		assert.is_false(a.die_loop)
+		assert.is_false(a.sit_loop)
+		assert.is_nil(a.stand_loop)
+		assert.is_nil(a.walk_loop)
+		assert.is_nil(a.run_loop)
+	end)
+
+	it("the same ranges and speeds for a pack creature", function()
+		local a = D.visual_for(by_id(19), PACK_RATTATA, false).animation
+		assert.equals(21, a.walk_start)
+		assert.equals(41, a.walk_end)
+		assert.equals(20, a.walk_speed)
+	end)
+
+	it("each call returns a fresh table, so the glue can change one without touching another", function()
+		local a = D.animation_table()
+		a.walk_speed = 99
+		assert.equals(20, D.animation_table().walk_speed)
+	end)
+end)
+
+describe("creatures_defs shiny roll", function()
+	it("rolls int(1, 512) and is shiny only on a 1", function()
+		local seen = {}
+		local rng = { int = function(_, a, b)
+			seen[#seen + 1] = { a, b }
+			return 1
+		end }
+		assert.is_true(D.roll_shiny(rng))
+		assert.are.same({ 1, 512 }, seen[1])
+		rng = { int = function() return 2 end }
+		assert.is_false(D.roll_shiny(rng))
+	end)
+
+	it("the odds are 1 in 512", function()
+		assert.equals(512, D.SHINY_ODDS)
+	end)
+end)
