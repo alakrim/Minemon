@@ -18,6 +18,9 @@
 | T-25a | M1 / w4 | high | DONE (Opus visual review) | Cobblemon → glTF converter (geometry, textures) |
 | T-25b | M1 / w5 | high | DONE (Opus visual review) | bake Cobblemon animations |
 | T-25c | M1 / w6 | medium | DONE (Opus visual review) | creatures use pack models |
-| T-26 | M2 / w1 | high | BUILDING | capture: thrown balls, odds HUD, shakes, break-free, creature_defeated |
-| T-27 | M2 / w1 | high | BUILDING | growth: exp, levels, moves, bond, evolution, Link Cable |
-| T-28 | M2 / w1 | medium | BUILDING | Sanctuary: altar heal + respawn, ward, PC, shop, coins, potions |
+| T-26 | M2 / w1 | high | DONE (W1 verified) | capture: thrown balls, odds HUD, shakes, break-free, creature_defeated |
+| T-27 | M2 / w1 | high | DONE (W1 verified) | growth: exp, levels, moves, bond, evolution, Link Cable |
+| T-28 | M2 / w1 | medium | DONE (W1 verified; T-28b fix) | Sanctuary: altar heal + respawn, ward, PC, shop, coins, potions |
+| T-29 | M2 / w2 | medium | BUILDING | move command bar (Z cycles, ordered moves) |
+| T-30 | M2 / w2 | high | BUILDING | Dread variants, shards, Umbral Ball |
+| T-31 | M2 / w2 | medium | BUILDING | status-move pass |

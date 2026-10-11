@@ -214,3 +214,16 @@ Evidence: S-14. Opus decision under the owner's standing directives (AAA feel, h
 - **Evolution schema:** keep the current `conditions` dict (every key must hold). It already covers all 122 evolutions in our data (min_level, item, min_bond, time_of_day, stat_relation, trade, held_item). There is no `requirements` list migration (supersedes the S-14 suggestion). **Trade = the Link Cable item**, used on your active creature. For held_item+trade, the held item must also be in the inventory, and both are consumed. Real trading comes with multiplayer (M6).
 - **Pokémon Centers are Sanctuaries:** ancient lantern shrines, and the only places the night will not enter. Inside one, wild creatures neither spawn nor attack (warding radius). Its altar heals the party and sets the respawn point (`mcl_spawn.set_player_spawn_pos`). Each Sanctuary has a PC (box storage) and a keeper's counter (shop). In M2, one Sanctuary is generated near world spawn; towns (M4) add more.
 - **Currency:** physical `minemon:coin` items ("₽ Coin"), dropped by defeated wild creatures. Because they are items, the player loses them on death like any inventory, which is Souls-like and fits the grind.
+
+## D-031 — M2 wave 2: move command bar, Dread variants, status pass; cries pending (2026-10-11)
+Evidence: S-15.
+- **Move command bar:** while a party creature is out, a HUD bar shows its 4 moves (type colour, PP, cooldown). **Z (zoom) cycles the selected move.** Aux1 (E) is VoxeLibre's sprint, so it is not used. Sneak plus left click on air also cycles. Left click on a target with the Party Ball orders the selected move now; the AI keeps choosing between orders. Hotbar slots are not used as a selector (items live there).
+- **Dread variants (night horror):** at night, rarely, and more often far from spawn, a wild creature spawns **Dread**: a corrupted, eldritch form.
+  - Look: dark tint and glow, trailing smoke, nametag "Dread <Name>" in deep red.
+  - Power: higher level and stats; always aggressive.
+  - Dawn: if not captured, it dissolves into smoke at dawn.
+  - Rewards: more coins and a **Dread Shard**. Shards craft the **Umbral Ball**, which is strong against Dread creatures.
+  - Captured Dread creatures keep the `dread` flag (tint and stat bonus) and start with low bond.
+  - This is the shiny-hunt grind loop, recast as horror.
+- **Status-move pass:** implement the status moves listed as no-ops in BACKLOG, inside minemon_combat.
+- **Cobblemon cries and ball models/sounds:** S-15 found them in the pinned clone (cries 247/251, mono). D-029's text covers creature models, and CLAUDE.md forbids Pokémon sounds, so **this is pending an owner decision**. Until then, ball and evolution sounds use VoxeLibre sounds.
