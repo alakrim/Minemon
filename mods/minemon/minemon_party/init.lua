@@ -367,8 +367,9 @@ function S.heal_all(player)
 	S.mark(name)
 end
 
--- Orders the active creature to attack target. Returns true when the order was given.
-function S.order(player, target)
+-- Orders the active creature to attack target. move_name (T-29, optional): the order names the move, "<Name>, use
+-- <Move>!", as the command bar does. Returns true when the order was given.
+function S.order(player, target, move_name)
 	local name = name_of(player)
 	local rec = S.active_rec(name)
 	if rec == nil or target == nil or not target:is_valid() or target:is_player() then
@@ -378,7 +379,12 @@ function S.order(player, target)
 		return false
 	end
 	rec.target = target
-	S.say(name, S.member_display(rec.obj:get_luaentity()._mm) .. ", attack!")
+	local who = S.member_display(rec.obj:get_luaentity()._mm)
+	if move_name then
+		S.say(name, who .. ", use " .. move_name .. "!")
+	else
+		S.say(name, who .. ", attack!")
+	end
 	return true
 end
 
@@ -503,6 +509,8 @@ end)
 -- UI (HUD, formspecs, the Party Ball, chat commands) and the owned brain.
 UI = dofile(MODPATH .. "/ui.lua")(S)
 minemon.creatures.register_brain("owned", dofile(MODPATH .. "/brain.lua")(S))
+-- The move command bar (T-29). After ui.lua: it replaces the Party Ball's on_use.
+local COMMAND = dofile(MODPATH .. "/command.lua")(S)
 
 -- Public API (PLAN.md M1 contract, plus the admin and test helpers in T-22).
 
@@ -560,5 +568,8 @@ end
 function API.open_chooser(player)
 	UI.show_chooser(player)
 end
+
+-- The move command bar (T-29): draw, cycle, self_cast, order, selected (the selected slot, or nil) and queued.
+API.command = COMMAND
 
 return API
