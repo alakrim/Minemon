@@ -21,6 +21,6 @@
 | T-26 | M2 / w1 | high | DONE (W1 verified) | capture: thrown balls, odds HUD, shakes, break-free, creature_defeated |
 | T-27 | M2 / w1 | high | DONE (W1 verified) | growth: exp, levels, moves, bond, evolution, Link Cable |
 | T-28 | M2 / w1 | medium | DONE (W1 verified; T-28b fix) | Sanctuary: altar heal + respawn, ward, PC, shop, coins, potions |
-| T-29 | M2 / w2 | medium | BUILDING | move command bar (Z cycles, ordered moves) |
-| T-30 | M2 / w2 | high | BUILDING | Dread variants, shards, Umbral Ball |
-| T-31 | M2 / w2 | medium | BUILDING | status-move pass |
+| T-29 | M2 / w2 | medium | DONE | move command bar (Z cycles, ordered moves) |
+| T-30 | M2 / w2 | high | DONE | Dread variants, shards, Umbral Ball |
+| T-31 | M2 / w2 | medium | DONE | status-move pass |

@@ -17,3 +17,8 @@
 - 28 status moves and 3 damage moves still have no effect (T-31 status pass; list in the combat integration report `moves_report.txt`, or `effects_logic.gaps`): transform, mimic, metronome, substitute, spite, encore, perish song, destiny bond, weather moves, and similar. Wild creatures' run speed is written by the creatures brain each think, so paralysis halves walking only (a fix belongs in minemon_creatures).
 - Combat rng is clock-seeded; tests pin accuracy. Consider a seeded rng per encounter.
 - An unexplained 4/60 creature vanish at dedicated_server_step 0.0 (T-21a verifier, not reproduced). Low priority.
+- Owner decision: Cobblemon cries, ball sounds and ball models (in the pinned clone; D-031). If approved: extend cobblemon_import.py to copy them into the pack, plus an audio hook mod listening to events.
+- Combat: trap is not enforced at recall (party recall should check minemon.combat.can_recall). Paralysis halves wild walking only (the wild brain rewrites run speed). 31 moves still have no effect (effects_logic.gaps; T-31 report).
+- Visual: Ivysaur pack model looked mis-textured in the evolve screenshot (teal blocks); check the converter for that species. Evolution particles linger after the cinematic. The wielded ball icon is large in first person.
+- Dread: the skull glyph in the party HUD needs a client font check; Dread look persistence after send-out is not screenshot-verified.
+- Exp: a defeat with no attacker (fall, fire) gives coins but no exp (W1 verdict).

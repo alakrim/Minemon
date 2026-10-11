@@ -11,3 +11,6 @@
 - 2026-10-10: A worker's `git rm -r` of archived files was refused by the auto-mode safety check. Briefs should avoid bulk deletions; prefer leaving files or overwriting them, or get explicit owner approval.
 - 2026-10-10: Parallel worktrees shared .tools/games through the .tools symlink, so check.sh runs overwrote each other's assembled game. The games dir is now per-checkout (.games/).
 - 2026-10-11: Owner feedback: too slow. Run fewer verification loops for low and medium risk, take shortcuts first (a scout per wave), and deliver playable builds early.
+- 2026-10-11: Workers follow the harness attribution reminder (Haiku trailer) over the brief's trailer. Briefs should not dictate the Co-Authored-By line.
+- 2026-10-11: Wave 1 (3 high/medium tasks) to a merged, verified build took about 1 hour: briefs that fix file ownership, plus one cross-mod verifier instead of per-task verifiers, worked well. Keep this shape.
+- 2026-10-11: Parallel worktree test runs collided on ports; the runners now pick random free ports (T-28b).

@@ -156,19 +156,31 @@ If FPS is below 30, replace minetest.conf with presets\low.conf.
 
 Como jogar / How to play
 ------------------------
-- On your first visit you choose a partner Pokemon (6 starters). You also get the Party Ball.
+- On your first visit you choose a partner Pokemon (6 starters). You also get the Party Ball,
+  5 Poke Balls, 3 Potions and 10 coins.
 - Party Ball in hand:
-    Right click         send out / call back your Pokemon
-    Left click a wild   order your Pokemon to attack it
-    Shift + right click party screen (choose the lead)
-- Your Pokemon follows you and fights in real time. The party is shown at the top-right.
-- The wild is dangerous. Aggressive Pokemon (red names) hunt YOU when your Pokemon
-  is not out. Even a Rattata can kill you early on. Pokemon get stronger the further
-  you go from the start, and at night.
-- A defeated wild Pokemon becomes "exhausted" for 20 seconds (capture arrives in the
-  next update).
-- Fainted partners revive after 10 minutes. Called-back Pokemon heal slowly.
-- Chat commands: /party, /lives, /starter
+    Right click           send out / call back your Pokemon
+    Left click a wild     order your Pokemon to attack it with the SELECTED move
+    Z                     cycle the selected move (the move bar sits above the hotbar)
+    Shift + left click    (on air) also cycles the move
+    Shift + right click   party screen (choose the lead)
+- CAPTURE: beat a wild Pokemon until it is "exhausted" (it sits for 20 s). Then hold a
+  Poke Ball, look at it (the catch chance shows near the crosshair) and LEFT CLICK to throw.
+  If it breaks free it comes for YOU, enraged, for 30 seconds.
+  Balls are crafted: Poke Ball = gold nugget / redstone / gold nugget (column), gives 2.
+  Great Ball = Poke Ball + lapis. Ultra Ball = Poke Ball + gold ingot + obsidian.
+- GROWTH: your Pokemon out gets exp from every defeat, levels up, learns moves and evolves.
+  Stones and the Link Cable (trade evolutions) are used with right click while it is out.
+- SANCTUARIES (Pokemon Centers): lantern shrines. One stands near the start. The altar heals
+  your party and becomes your respawn point. Wild Pokemon will not enter. Inside: a PC to
+  store Pokemon and a counter that sells items for coins.
+- COINS drop from defeated wild Pokemon (double at night). They are items: you lose them
+  when you die.
+- THE NIGHT: rarely, a DREAD Pokemon walks in the dark. Corrupted, stronger, red eyes, it
+  hunts you. It drops Dread Shards (Ultra Ball + 4 shards = Umbral Ball, made to catch them)
+  and melts away at dawn.
+- Fainted partners revive after 10 minutes, or at a Sanctuary altar.
+- Chat commands: /party, /lives, /starter, /exp
 
 Regra das vidas / The rule
 --------------------------
