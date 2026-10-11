@@ -1,8 +1,9 @@
--- Integration test (T-21a): minemon_creatures registers all 251 species; spawn() gives the requested level,
+-- Integration test (T-21a, T-21b): minemon_creatures registers all 251 species; spawn() gives the requested level,
 -- health and nametag; owned spawns are tamed and never despawn; a wild creature survives 5 s; and the server step
--- interval is measured with no creatures, then with 40 creatures on dry ground in a forceloaded 64x64 area.
--- Natural spawns need players, so the creatures are spawned directly. The world seed changes every run, so the
--- test looks for a centre with enough dry ground. Writes PASS n or FAIL <reason> to test_result.txt, then shuts down.
+-- interval is measured with no creatures, then with 40 creatures on a flat stone platform in a forceloaded 64x64 area.
+-- Natural spawns need players, so the creatures are spawned directly. T-21b: the platform is built with set_node at
+-- a fixed height, so the test no longer depends on the world seed (the old centre search failed 1 run in 4).
+-- Writes PASS n or FAIL <reason> to test_result.txt, then shuts down.
 -- luacheck: read_globals core minemon vector
 
 local BASE_WINDOW_S = 8 -- step interval with no creatures
@@ -10,9 +11,8 @@ local LOAD_WINDOW_S = 75 -- step interval with PERF_COUNT creatures (the run sta
 local SKIP_STEPS = 20 -- samples right after a phase change are skipped
 local PERF_COUNT = 40
 local HALF = 32 -- the perf area is 64x64 around the centre
-local TOP, BOTTOM = 80, -8 -- vertical search and forceload range around the centre height
-local CENTRES = { { 0, 0 }, { 96, 0 }, { -96, 0 }, { 0, 96 }, { 0, -96 } }
-local MIN_DRY = 10
+local PLATFORM_Y = 5 -- stone top at y = 5; creatures stand at y = 6
+local TOP, BOTTOM = 12, -4 -- vertical extent of the platform, the emerge box and the forceload range
 
 local finished = false
 local function finish(line)
@@ -80,67 +80,6 @@ local function spawn_checks(pos)
 	check(ole.owner == "tester", "owner is " .. tostring(ole.owner))
 	check(minemon.creatures.get_instance(owned).level == 12, "owned level is wrong")
 	return 16
-end
-
--- Walkable full-cube top in column x, z, scanning down from TOP. Returns the standing position, or nil when the
--- column is water, has a partial block (stairs, slabs, fences) or has no two free nodes above it. A creature
--- placed on a partial block or under a low ceiling sinks into it and suffocates.
-local function is_solid(name)
-	local def = core.registered_nodes[name]
-	return def ~= nil and def.walkable == true
-end
-
-local function surface_at(x, z)
-	for y = TOP, BOTTOM, -1 do
-		local node = core.get_node({ x = x, y = y, z = z })
-		if is_solid(node.name) and node.name ~= "ignore" then
-			local def = core.registered_nodes[node.name]
-			if def.drawtype ~= nil and def.drawtype ~= "normal" then
-				return nil
-			end
-			local a1 = core.get_node({ x = x, y = y + 1, z = z }).name
-			local a2 = core.get_node({ x = x, y = y + 2, z = z }).name
-			local above = core.registered_nodes[a1]
-			if above and above.liquidtype and above.liquidtype ~= "none" then
-				return nil
-			end
-			if is_solid(a1) or is_solid(a2) then
-				return nil
-			end
-			return { x = x, y = y + 1, z = z }
-		end
-	end
-	return nil
-end
-
--- True when the eight neighbouring columns stand within one node of this height. A creature next to a steep wall
--- can walk into it and suffocate, which would make the survival check fail for the terrain, not for the mod.
-local function is_flat(p)
-	for dx = -1, 1 do
-		for dz = -1, 1 do
-			if not (dx == 0 and dz == 0) then
-				local q = surface_at(p.x + dx, p.z + dz)
-				if not q or math.abs(q.y - p.y) > 1 then
-					return false
-				end
-			end
-		end
-	end
-	return true
-end
-
--- Flat, dry standing positions in the 64x64 area around centre (cx, cz), one per column on a 4-node grid.
-local function dry_positions(cx, cz)
-	local out = {}
-	for dx = -HALF, HALF - 1, 4 do
-		for dz = -HALF, HALF - 1, 4 do
-			local p = surface_at(cx + dx, cz + dz)
-			if p and is_flat(p) then
-				out[#out + 1] = p
-			end
-		end
-	end
-	return out
 end
 
 -- Step interval measurement. Registered at load time (globalsteps cannot be added later).
@@ -215,10 +154,10 @@ core.register_globalstep(perf_step)
 
 -- Forceloads every mapblock that covers the 64x64 area between BOTTOM and TOP, so the creatures stay active.
 -- Returns the number of blocks forceloaded.
-local function forceload_area(cx, cy, cz)
+local function forceload_area(cx, cz)
 	local blocks = 0
-	local lo = math.floor((cy + BOTTOM) / 16) * 16
-	local hi = math.floor((cy + TOP) / 16) * 16
+	local lo = math.floor((PLATFORM_Y + BOTTOM) / 16) * 16
+	local hi = math.floor((PLATFORM_Y + TOP) / 16) * 16
 	for y = lo, hi, 16 do
 		for x = cx - HALF, cx + HALF - 1, 16 do
 			for z = cz - HALF, cz + HALF - 1, 16 do
@@ -231,9 +170,27 @@ local function forceload_area(cx, cy, cz)
 	return blocks
 end
 
+-- Builds the platform over the 64x64 area: stone at PLATFORM_Y, air above it up to TOP, so the creatures always
+-- stand on flat ground whatever the world seed. Returns the standing positions on a 4-node grid.
+local function build_platform(cx, cz)
+	local positions = {}
+	for x = cx - HALF, cx + HALF - 1 do
+		for z = cz - HALF, cz + HALF - 1 do
+			core.set_node(vector.new(x, PLATFORM_Y, z), { name = "mcl_core:stone" })
+			for y = PLATFORM_Y + 1, TOP do
+				core.set_node(vector.new(x, y, z), { name = "air" })
+			end
+			if (x - cx) % 4 == 0 and (z - cz) % 4 == 0 then
+				positions[#positions + 1] = vector.new(x, PLATFORM_Y + 1, z)
+			end
+		end
+	end
+	return positions
+end
+
 local function run(positions, checks)
-	-- The probe stands on another dry position, not on the perf area's first one.
-	local probe_pos = positions[#positions]
+	-- The probe stands near the platform centre, away from the perf creatures and the platform edge.
+	local probe_pos = vector.new(8, PLATFORM_Y + 1, 8)
 	local probe = minemon.creatures.spawn(probe_pos, 19, 3, nil)
 	if not probe then
 		finish("FAIL probe spawn failed")
@@ -254,34 +211,19 @@ local function run(positions, checks)
 	end)
 end
 
--- Emerges the box around centre index i, then uses it if it has enough dry ground; otherwise tries the next.
-local function try_centre(i, checks)
-	if i > #CENTRES then
-		finish("FAIL no centre with " .. MIN_DRY .. " dry columns in the perf area")
-		return
-	end
-	local cx, cz = CENTRES[i][1], CENTRES[i][2]
-	core.emerge_area(vector.new(cx - HALF, BOTTOM, cz - HALF), vector.new(cx + HALF, TOP, cz + HALF),
+-- Emerges the box, builds the platform, forceloads it, and runs the checks at the platform centre.
+local function setup_and_run()
+	core.emerge_area(vector.new(-HALF, BOTTOM, -HALF), vector.new(HALF, TOP, HALF),
 		function(_, _, calls_remaining)
 			if calls_remaining ~= 0 then
 				return
 			end
 			local ok, err = pcall(function()
-				local positions = dry_positions(cx, cz)
-				if #positions < MIN_DRY then
-					try_centre(i + 1, checks)
-					return
-				end
-				-- The centre is the first dry position; the probe and the perf creatures stand on the same ground.
-				local centre = positions[1]
-				local ys = {}
-				for _, p in ipairs(positions) do
-					ys[#ys + 1] = p.y
-				end
-				table.sort(ys)
-				local mid = { x = centre.x, y = ys[math.floor(#ys / 2) + 1], z = centre.z }
-				check(forceload_area(cx, mid.y, cz) >= 16, "forceload failed")
-				local n = checks + registration_check()
+				local positions = build_platform(0, 0)
+				check(#positions >= PERF_COUNT, "platform has " .. #positions .. " positions")
+				check(forceload_area(0, 0) >= 16, "forceload failed")
+				local n = registration_check()
+				local centre = vector.new(0, PLATFORM_Y + 1, 0)
 				n = n + spawn_checks(centre)
 				run(positions, n)
 			end)
@@ -291,6 +233,4 @@ local function try_centre(i, checks)
 		end)
 end
 
-core.after(1, function()
-	try_centre(1, 0)
-end)
+core.after(1, setup_and_run)
