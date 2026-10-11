@@ -56,6 +56,10 @@ end
 -- check_position for mcl_mobs:spawn_setup: the level gate (S-12 section 2), then the local cap.
 local function gate(min_level)
 	return function(pos)
+		-- Sanctuary wards (D-030): no wild spawn within 24 nodes of a sanctuary centre.
+		if minemon.sanctuary and minemon.sanctuary.blocks_spawn and minemon.sanctuary.blocks_spawn(pos) then
+			return false
+		end
 		if M.level_at(pos) < min_level then
 			return false
 		end
@@ -63,8 +67,12 @@ local function gate(min_level)
 	end
 end
 
+local gates = {} -- mob name -> the check_position it was registered with
+
 -- One spawn_setup call per habitat entry (surface tags merged, see habitats.plan).
 function M.register(name, plan)
+	local check = gate(plan.min_level)
+	gates[name] = check
 	for _, entry in ipairs(habitats.plan(plan.habitats)) do
 		mcl_mobs:spawn_setup({
 			name = name,
@@ -72,10 +80,21 @@ function M.register(name, plan)
 			biomes = entry.biomes,
 			max_height = entry.max_height,
 			chance = plan.chance,
-			check_position = gate(plan.min_level),
+			check_position = check,
 		})
 	end
 end
+
+-- True when the spawn gate of a registered mob passes at pos (the level gate, the local cap and the Sanctuary
+-- ward). Integration tests use it, so a refused spawn is checked through the same gate mcl_mobs runs (T-28).
+function M.gate_passes(name, pos)
+	local check = gates[name]
+	return check ~= nil and check(pos) == true
+end
+
+-- luacheck: globals minemon
+minemon.creatures = minemon.creatures or {}
+minemon.creatures.gate_passes = M.gate_passes
 
 local function near_any(pos, players)
 	for _, p in ipairs(players) do

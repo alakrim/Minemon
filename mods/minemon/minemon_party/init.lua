@@ -334,7 +334,19 @@ function S.choose_starter(player, species_id)
 	return true, m
 end
 
--- Heals every member; the active one through the creature API, so its entity agrees.
+-- Clears the status and refills the PP of every move (T-28: the Sanctuary altar). PP maxima come from the move data.
+local function refill(m)
+	m.status = "none"
+	for _, mv in ipairs(m.moves or {}) do
+		local move = minemon.data.get_move(mv.id)
+		if move ~= nil and type(move.pp) == "number" then
+			mv.pp = move.pp
+		end
+	end
+end
+
+-- Heals every member: HP to max, status cleared, PP refilled. The active one is healed through the creature API, so
+-- its entity agrees.
 function S.heal_all(player)
 	local name = name_of(player)
 	local list = S.list(player)
@@ -348,6 +360,7 @@ function S.heal_all(player)
 				m.hp = minemon.instance.stats(m, sp).hp
 			end
 			m.faint_s = 0
+			refill(m)
 		end
 	end
 	S.save(player)
