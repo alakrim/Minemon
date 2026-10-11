@@ -19,7 +19,11 @@ M.PARTY_MAX = 6 -- mirrors minemon_party's party_logic.MAX
 M.PAUSED_TIMER = 1000000 -- the exhausted timer while a capture runs (stays a finite number, so it serializes)
 
 -- Ball ids, in order of strength. Item names are "minemon:<id>" (registered with a leading colon, D-030).
-M.BALLS = { "poke_ball", "great_ball", "ultra_ball", "master_ball" }
+-- The Umbral Ball (T-30, D-031) is made from Dread Shards and is strong only against Dread creatures.
+M.BALLS = { "poke_ball", "great_ball", "ultra_ball", "master_ball", "umbral_ball" }
+M.UMBRAL_DREAD_MULT = 3.0 -- Umbral Ball catch multiplier against a Dread creature (its base is 0.5 otherwise)
+M.DREAD_OTHER_FACTOR = 0.75 -- every other ball is weaker against a Dread creature (x0.75)
+M.DREAD_CAUGHT_BOND = 20 -- bond of a caught Dread creature (a normal catch starts at CAUGHT_BOND)
 local BALL_SET = {}
 for _, id in ipairs(M.BALLS) do
 	BALL_SET[id] = true
@@ -47,6 +51,27 @@ function M.catch_mult(item)
 		return nil
 	end
 	return tonumber(item.catch_mult)
+end
+
+-- The catch multiplier of a ball against one creature (T-30). base is the items.json catch_mult of the ball. A Dread
+-- creature (inst.dread) takes the Umbral Ball at UMBRAL_DREAD_MULT and the other balls at base x DREAD_OTHER_FACTOR.
+-- Any other creature gets base.
+function M.ball_mult(ball_id, inst, base)
+	if inst == nil or inst.dread ~= true then
+		return base
+	end
+	if ball_id == "umbral_ball" then
+		return M.UMBRAL_DREAD_MULT
+	end
+	return base * M.DREAD_OTHER_FACTOR
+end
+
+-- The bond a caught creature starts with: DREAD_CAUGHT_BOND for a Dread creature, else CAUGHT_BOND.
+function M.caught_bond(inst)
+	if inst ~= nil and inst.dread == true then
+		return M.DREAD_CAUGHT_BOND
+	end
+	return M.CAUGHT_BOND
 end
 
 -- The Master Ball always catches; any other ball uses the catch chance as it is.

@@ -90,8 +90,11 @@ end
 
 -- The decision context (see wild_logic.lua).
 local function build_ctx(self, pos, species, inst, stats, t)
+	-- A Dread creature is aggressive whatever its species temperament (T-30, D-031).
+	local is_dread = inst.dread == true
 	local ctx = {
-		temperament = species.temperament,
+		temperament = is_dread and "aggressive" or species.temperament,
+		dread = is_dread,
 		types = species.types,
 		hp_frac = stats.hp > 0 and inst.hp / stats.hp or 0,
 		is_night = LOGIC.is_night(core.get_timeofday()),

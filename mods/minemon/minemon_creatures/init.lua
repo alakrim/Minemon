@@ -8,9 +8,14 @@ local defs = dofile(MODPATH .. "/defs.lua")
 local spawning = dofile(MODPATH .. "/spawning.lua")
 local runtime = dofile(MODPATH .. "/runtime.lua")
 local wild_brain = dofile(MODPATH .. "/wild_brain.lua")
+local dread = dofile(MODPATH .. "/dread_logic.lua") -- Dread variants (T-30, D-031)
+local dread_fx = dofile(MODPATH .. "/dread_fx.lua")
 
 minemon.creatures = minemon.creatures or {}
 local API = minemon.creatures
+
+-- The pure Dread rules (T-30), for minemon_dread: the spawn roll, shard counts, the dawn and sting ranges.
+API.dread_rules = dread
 
 -- The generated Cobblemon pack's entry for a dex number, or nil (T-25c, D-029). The pack defines a global.
 local function pack_entry(dex)
@@ -19,17 +24,24 @@ local function pack_entry(dex)
 	return models and models[dex] or nil
 end
 
+-- A wild creature is one without an owner and not tamed (T-30 uses it for the Dread hostility).
+local function wild_entity(self)
+	return (self.owner == nil or self.owner == "") and self.tamed ~= true
+end
+
 -- Sets the model, texture and collision box for the instance's shiny state (T-25c). mcl_mobs picks its own
--- texture at activation, so this runs from on_spawn and after_activate.
+-- texture at activation, so this runs from on_spawn and after_activate. The base texture is kept for the Dread look.
 local function apply_visual(self, species)
 	local inst = self._mm
 	if inst == nil then
 		return
 	end
 	local vis = defs.visual_for(species, pack_entry(species.id), inst.shiny == true)
+	local base = vis.textures[1][1]
+	self._mm_base_texture = base
 	self.object:set_properties({
 		mesh = vis.mesh,
-		textures = vis.textures[1], -- the engine takes one flat list of texture names
+		textures = { dread_fx.texture_for(base, inst.dread == true) }, -- the engine takes one flat list of names
 		visual_size = vis.visual_size,
 		collisionbox = vis.collisionbox,
 		selectionbox = vis.selectionbox,
@@ -40,18 +52,32 @@ end
 local function apply(self, species)
 	local inst = self._mm
 	local st = minemon.instance.stats(inst, species)
+	local is_dread = inst.dread == true
 	self.hp_max = st.hp
 	self.health = inst.hp
 	self.old_health = inst.hp
 	self.damage = 1 + math.floor(st.atk / 25 + inst.level / 10)
 	local props = { hp_max = st.hp }
-	if self.owner == nil or self.owner == "" then
-		props.nametag_color = defs.nametag_color(species)
+	if wild_entity(self) then
+		props.nametag_color = is_dread and dread.NAMETAG_COLOUR or defs.nametag_color(species)
+		if is_dread then
+			self.passive = false -- a wild Dread creature is aggressive whatever its temperament (D-031)
+		end
 	end
 	self.object:set_properties(props)
 	self.object:set_hp(inst.hp)
-	self.nametag = defs.nametag_text(species, inst.level)
+	self.nametag = dread.nametag(defs.nametag_text(species, inst.level), is_dread)
 	self:update_tag()
+end
+
+-- Makes a wild creature Dread (T-30): the flag, a higher level, the Dread stats and the exp for that level. HP is full.
+-- rng is a minemon.rng for the level bump.
+local function set_dread(self, species, rng)
+	local inst = self._mm
+	inst.dread = true
+	inst.level = dread.dread_level(inst.level, rng)
+	inst.exp = minemon.formulas.exp_for_level(inst.level, species.growth_rate)
+	inst.hp = minemon.instance.stats(inst, species).hp
 end
 
 -- on_spawn runs once per entity, after activation. A natural spawn has no instance yet: its level comes from
@@ -65,6 +91,13 @@ local function make_on_spawn(species, min_level)
 			local rng = spawning.rng_at(pos)
 			self._mm = minemon.instance.new(species, level, rng)
 			self._mm.shiny = defs.roll_shiny(rng)
+			-- The Dread roll (T-30, D-031): only at night, rarer near the origin, never inside a Sanctuary ward.
+			local in_ward = minemon.sanctuary ~= nil and minemon.sanctuary.is_safe ~= nil
+				and minemon.sanctuary.is_safe(pos) == true
+			local dist = math.sqrt(pos.x * pos.x + pos.z * pos.z)
+			if dread.roll(dist, core.get_timeofday(), in_ward, rng) then
+				set_dread(self, species, rng)
+			end
 		end
 		apply(self, species)
 		apply_visual(self, species)
@@ -167,6 +200,26 @@ API.register_brain = runtime.register_brain
 API.wild = wild_brain
 API.register_brain("wild", wild_brain.think)
 minemon.events.register("creature_hurt", wild_brain.on_hurt)
+
+-- Makes an existing wild creature Dread (T-30). Used by the integration tests and by forced spawns. Returns true when
+-- the creature is Dread afterwards, false for an entity that is not one of ours.
+function API.make_dread(obj)
+	local le = obj and obj:get_luaentity()
+	if not le or type(le.name) ~= "string" or le.name:sub(1, #defs.PREFIX) ~= defs.PREFIX or le._mm == nil then
+		return false
+	end
+	if le._mm.dread == true then
+		return true
+	end
+	local species = minemon.data.get_species(le._mm.species_id)
+	if species == nil then
+		return false
+	end
+	set_dread(le, species, spawning.rng_at(obj:get_pos()))
+	apply(le, species)
+	apply_visual(le, species)
+	return true
+end
 
 -- A wild creature (owner_name nil) despawns through the sweep in spawning.lua. An owned one is tamed,
 -- persistent and never despawns.

@@ -232,7 +232,11 @@ minemon.events.register("creature_defeated", function(victim_le, _attacker)
 		return
 	end
 	local t = core.get_timeofday()
-	SHOP.drop_coins(pos, inst.level, t < 0.2 or t > 0.8, coin_rng)
+	local amount = SHOP.drop_coins(pos, inst.level, t < 0.2 or t > 0.8, coin_rng)
+	if inst.dread == true then
+		-- A Dread creature pays three times (T-30, D-031): one more stack of twice the drop.
+		core.add_item(pos, "minemon:coin " .. (2 * amount))
+	end
 end)
 
 -- The starter kit (3 Potions, 10 coins, and the hint) once per player, when the party is not empty.

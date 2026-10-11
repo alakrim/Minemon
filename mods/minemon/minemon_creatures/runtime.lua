@@ -20,6 +20,8 @@
 local MODPATH = core.get_modpath("minemon_creatures")
 local LOGIC = dofile(MODPATH .. "/runtime_logic.lua")
 local defs = dofile(MODPATH .. "/defs.lua")
+local dread = dofile(MODPATH .. "/dread_logic.lua")
+local dread_fx = dofile(MODPATH .. "/dread_fx.lua")
 
 local M = {}
 
@@ -85,7 +87,9 @@ local function hurt_effects(le)
 	if pos then
 		mcl_mobs.effect(pos, 5, PARTICLE_TEXTURE, 1, 2, 2, nil)
 	end
-	core.sound_play(HURT_SOUND, { object = obj, max_hear_distance = 8 }, true)
+	-- A Dread creature cries lower (T-30): the same sound at pitch 0.6.
+	local pitch = (le._mm and le._mm.dread == true) and dread.HURT_PITCH or 1.0
+	core.sound_play(HURT_SOUND, { object = obj, max_hear_distance = 8, pitch = pitch }, true)
 end
 
 local function enter_exhausted(le)
@@ -100,14 +104,22 @@ local function enter_exhausted(le)
 	le:set_animation("sit")
 end
 
+-- Passive as the temperament says. A wild Dread creature is never passive (T-30, D-031); an owned one keeps its
+-- temperament.
+local function base_passive(le)
+	if le._mm.dread == true and not owned(le) then
+		return false
+	end
+	local species = minemon.data.get_species(le._mm.species_id)
+	return not (species ~= nil and defs.is_hostile(species.temperament))
+end
+
 -- Exhaustion over: passive from the temperament, 25% HP, flee (S-12 section 3).
 local function recover(le)
 	local inst = le._mm
 	le._mm_exhausted = nil
 	le._mm_exhausted_t = nil
-	local species = minemon.data.get_species(inst.species_id)
-	local hostile = species ~= nil and defs.is_hostile(species.temperament)
-	le.passive = not hostile
+	le.passive = base_passive(le)
 	inst.hp = LOGIC.recovery_hp(max_hp(le))
 	write_hp(le)
 	le.nametag = LOGIC.without_suffix(le.nametag)
@@ -134,8 +146,7 @@ end
 -- Enraged over (after break_free): the temperament's passive state again. The brains run from the next step.
 local function calm(le)
 	le._mm_enraged_t = nil
-	local species = minemon.data.get_species(le._mm.species_id)
-	le.passive = not (species ~= nil and defs.is_hostile(species.temperament))
+	le.passive = base_passive(le)
 	le.attack = nil
 	le.state = "stand"
 end
@@ -286,6 +297,7 @@ function M.do_custom(self, dtime)
 		return nil
 	end
 	sync(self)
+	dread_fx.sync(self)
 	if self._mm_exhausted then
 		exhausted_step(self, dtime)
 		return false
@@ -345,6 +357,8 @@ function M.after_activate(self, _staticdata, _def, _dtime)
 		self.passive = true
 		stop_moving(self.object)
 		self:set_animation("sit")
+	elseif self._mm.dread == true and not owned(self) then
+		self.passive = false -- a wild Dread creature is aggressive (T-30, D-031)
 	end
 end
 

@@ -80,6 +80,12 @@
     "name": "Ultra Ball",
     "price": 800
   },
+  "umbral_ball": {
+    "catch_mult": 0.5,
+    "kind": "ball",
+    "name": "Umbral Ball",
+    "price": 0
+  },
   "up_grade": {
     "kind": "held_evo",
     "name": "Upgrade",

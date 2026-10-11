@@ -5,7 +5,8 @@
 -- {action="idle"}. The targets are opaque values from ctx (objects in the game, anything in the tests).
 --
 -- ctx fields:
---   temperament        "aggressive" | "territorial" | "skittish" | "peaceful"
+--   temperament        "aggressive" | "territorial" | "skittish" | "peaceful" (a Dread creature is "aggressive")
+--   dread              true for a Dread creature: it hunts within DREAD_HUNT_RANGE (T-30)
 --   types              species types (list of strings)
 --   hp_frac            instance HP / max HP, 0..1
 --   is_night           boolean
@@ -29,6 +30,7 @@ M.LOW_HP = 0.2 -- below this HP fraction every temperament flees, except aggress
 M.HUNT_SPEED_MULT = 1.2 -- run speed multiplier while hunting a player
 M.ANGER = { aggressive = 30, territorial = 30, skittish = 30, peaceful = 10 } -- seconds angry after a hit
 M.NIGHT_TERRITORIAL_TYPES = { ghost = true, dark = true, poison = true } -- behave as aggressive at night
+M.DREAD_HUNT_RANGE = 20 -- a Dread creature (ctx.dread) hunts the nearest player within this range, at any hour (D-031)
 
 -- Danger tuning (T-21b brief): melee damage and the bite period, from the instance stats.
 M.DAMAGE_MIN = 2
@@ -99,6 +101,9 @@ end
 -- the player is hunted. Returns nil when no player is in view.
 local function engage_player(ctx)
 	local range = (ctx.view_range or 0) * (ctx.is_night and M.NIGHT_VIEW_MULT or 1)
+	if ctx.dread == true then
+		range = M.DREAD_HUNT_RANGE
+	end
 	if ctx.player == nil or ctx.player_distance == nil or ctx.player_distance > range then
 		return nil
 	end

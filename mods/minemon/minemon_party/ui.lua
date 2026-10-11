@@ -48,6 +48,9 @@ return function(S)
 			end
 			if sp ~= nil then
 				local text = LOGIC.hud_line(m, sp.name, max, m.uid == active_uid)
+				if m.dread == true then
+					text = text .. " ☠" -- a Dread creature (T-30, D-031)
+				end
 				local colour = LOGIC.hp_colour(m.hp, max)
 				if ids[i] == nil then
 					ids[i] = player:hud_add({
@@ -115,6 +118,9 @@ return function(S)
 				local mark = m.uid == active_uid and "▶ " or ""
 				local title = string.format("%s%s Lv%d (%s)", mark, LOGIC.member_name(m, sp.name), m.level,
 					LOGIC.status_text(m.status))
+				if m.dread == true then
+					title = title .. " ☠" -- a Dread creature (T-30, D-031)
+				end
 				-- Bond hook (T-27): minemon_growth sets minemon.party.bond_text to a short string, e.g. hearts.
 				local hook = minemon.party and minemon.party.bond_text
 				local bond = hook and hook(m) or ""
