@@ -22,3 +22,4 @@ A private, free Pokémon game for the owner and one friend: Luanti 5.17.0 + the 
 
 ## Hard content rule
 Never create, draw, model or download Pokémon art, models, textures or sounds. Creature visuals are our own procedural stand-ins, or files the owner supplies. Private use only.
+Exceptions by owner directive: D-029 (Cobblemon models converted at setup into `.tools/`, never committed) and D-030 (our own generated 16×16 item icons for balls and items are allowed).

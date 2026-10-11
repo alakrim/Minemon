@@ -1,6 +1,6 @@
 # STATE
 
-- **Phase:** C build loop. **M1 delivered to the owner** (build Minemon-M1 in the owner's Downloads\Minemon-M1). Next: M2 capture and growth.
+- **Phase:** C build loop. **M1 delivered to the owner** (build Minemon-M1 in the owner's Downloads\Minemon-M1). M2 in progress (wave 1).
 - **Stack:** Luanti 5.17.0 + VoxeLibre 0.92.3 + mods/minemon; Pokémon models converted from Cobblemon (D-029; generated in .tools, never committed).
 - **Last session:** 2026-10-11
 
@@ -11,8 +11,8 @@ Core API, 251-species data, Cobblemon models and animations (247 species), creat
 - none
 
 ## Next action
-1. Owner playtest feedback on M1 (fps, danger, feel).
-2. M2 (capture and growth). Shortcut scout S-14 is done (docs/research/S-14-m2-shortcuts.md). Write M2 briefs: Poké Balls with catch formula and only-when-exhausted; ball and cry assets via the Cobblemon converter (owner directive covers Cobblemon assets); exp, levels and move learning; evolution (Link Cable item for trade evolutions); Pokémon Center (heal plus respawn checkpoint via mcl_spawn); PC box.
+1. M2 wave 1 building: T-26 capture, T-27 growth, T-28 Sanctuary (D-030). Then merge, build, deliver M2a to the owner.
+2. M2 wave 2 candidates: manual move choice in combat, status-move pass (BACKLOG), Cobblemon ball models/cries check, evolution polish.
 3. Process rule: every wave starts with a Haiku shortcut scout. Max 3 workers.
 
 ## Notes

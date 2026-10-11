@@ -18,3 +18,6 @@
 | T-25a | M1 / w4 | high | DONE (Opus visual review) | Cobblemon → glTF converter (geometry, textures) |
 | T-25b | M1 / w5 | high | DONE (Opus visual review) | bake Cobblemon animations |
 | T-25c | M1 / w6 | medium | DONE (Opus visual review) | creatures use pack models |
+| T-26 | M2 / w1 | high | BUILDING | capture: thrown balls, odds HUD, shakes, break-free, creature_defeated |
+| T-27 | M2 / w1 | high | BUILDING | growth: exp, levels, moves, bond, evolution, Link Cable |
+| T-28 | M2 / w1 | medium | BUILDING | Sanctuary: altar heal + respawn, ward, PC, shop, coins, potions |
