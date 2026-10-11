@@ -102,20 +102,20 @@ end
 -- Candidates come from core.get_spawn_level at radii 8, 12 and 16; when none is dry and solid, the centre column
 -- is scanned.
 function M.find_ground(cx, cz, ring_points)
-	local fallback = nil
 	for _, radius in ipairs({ 8, 12, 16 }) do
 		for _, p in ipairs(ring_points(cx, cz, radius, 8)) do
 			local level = core.get_spawn_level(p.x, p.z)
-			if level ~= nil then
-				local y0 = level - 1
-				if floor_ok(p.x, y0, p.z) then
-					return { x = p.x, y = y0, z = p.z }
-				end
-				fallback = fallback or { x = p.x, y = y0, z = p.z }
+			if level ~= nil and floor_ok(p.x, level - 1, p.z) then
+				return { x = p.x, y = level - 1, z = p.z }
 			end
 		end
 	end
-	return fallback or scan_column(math.floor(cx + 0.5), math.floor(cz + 0.5))
+	-- Only a floor that passes floor_ok is used: an unchecked fallback could build over water or air.
+	local col = scan_column(math.floor(cx + 0.5), math.floor(cz + 0.5))
+	if col ~= nil and floor_ok(col.x, col.y, col.z) then
+		return col
+	end
+	return nil
 end
 
 -- The world spawn point (the static spawn, mcl_spawn's world spawn, or the origin).
