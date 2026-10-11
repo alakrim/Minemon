@@ -8,6 +8,7 @@
 
 local MODPATH = core.get_modpath("minemon_party")
 local LOGIC = dofile(MODPATH .. "/party_logic.lua")
+local CMD = dofile(MODPATH .. "/command_logic.lua")
 
 -- The nearest wild creature within ASSIST_RANGE that attacks the owner or this creature, or nil.
 local function find_assist(self, owner, pos)
@@ -60,14 +61,56 @@ local function ordered_target(S, rec, pos)
 	return t, tpos, d
 end
 
+-- The queued order of the command bar (T-29, D-031): the move the player selected, cast on the ordered target once it
+-- is in reach and off cooldown. A self-target move is cast at once. Returns true when the queue took this step (it
+-- walked, waited or cast), false when the AI should choose. A queue that expires, or whose cast fails for another
+-- reason, is cleared.
+local function queued_step(self, rec, target, tpos, d)
+	local q = rec.queue
+	if q == nil then
+		return false
+	end
+	if not CMD.queue_live(q, core.get_gametime()) then
+		rec.queue = nil
+		return false
+	end
+	local move = minemon.data.get_move(q.move)
+	if move == nil then
+		rec.queue = nil
+		return false
+	end
+	local self_cast = CMD.is_self_target(move)
+	local reach = move.range_m or 3
+	if not self_cast and d > reach then
+		self:go_to_pos(tpos, self.run_velocity)
+		return true
+	end
+	local ok, why = minemon.combat.use_move(self.object, (not self_cast) and target or nil, q.move)
+	if ok then
+		rec.queue = nil
+		return true
+	end
+	if why == "cooldown" or why == "busy" then
+		self:set_velocity(0)
+		self:set_animation("stand")
+		return true
+	end
+	rec.queue = nil
+	return false
+end
+
 -- Attacks target: mcl's attack state (do_attack), then the move system. The move is used when the target is within
--- its range; otherwise the creature walks toward the target.
-local function fight(self, target, tpos, d)
+-- its range; otherwise the creature walks toward the target. ordered: the target is the player's order, so a queued
+-- move (rec.queue) takes precedence over the AI choice.
+local function fight(self, rec, target, tpos, d, ordered)
 	local cur = self.attack
 	if self.state ~= "attack" or type(cur) ~= "userdata" or cur:get_guid() ~= target:get_guid() then
 		self.attack = nil
 		self.state = "stand"
 		self:do_attack(target)
+	end
+	if ordered and queued_step(self, rec, target, tpos, d) then
+		return
 	end
 	local move_id = minemon.combat.choose_move(self.object, target)
 	local move = move_id and minemon.data.get_move(move_id)
@@ -120,6 +163,7 @@ local function step(self, S, rec)
 	end
 	local target, tpos, d = ordered_target(S, rec, pos)
 	if target == nil then
+		rec.queue = nil -- a queued move belongs to the ordered target only (T-29)
 		if self.state == "attack" then
 			self.state = "stand"
 			self.attack = nil
@@ -127,13 +171,13 @@ local function step(self, S, rec)
 		local assist = find_assist(self, owner, pos)
 		if assist ~= nil then
 			local apos = assist:get_pos()
-			fight(self, assist, apos, vector.distance(pos, apos))
+			fight(self, rec, assist, apos, vector.distance(pos, apos), false)
 			return
 		end
 		follow(self, rec, opos, dist)
 		return
 	end
-	fight(self, target, tpos, d)
+	fight(self, rec, target, tpos, d, true)
 end
 
 -- Only creatures the party manages are this brain's (D-028): the ones sent out by the party (_mm_party). After a
