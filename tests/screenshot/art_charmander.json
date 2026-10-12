@@ -1,0 +1,286 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 10
+ },
+ {
+  "name": "portrait_day",
+  "pos": [
+   186,
+   10,
+   175.4
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -14,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "user_yaw_deg": 200,
+   "at": [
+    186,
+    178.0
+   ],
+   "cam": [
+    0,
+    1.0,
+    -2.6
+   ]
+  }
+ },
+ {
+  "name": "portrait_dusk",
+  "pos": [
+   186,
+   10,
+   175.41
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -14,
+  "time_of_day": 0.78,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "user_yaw_deg": 160,
+   "at": [
+    186,
+    178.01
+   ],
+   "cam": [
+    0,
+    1.0,
+    -2.6
+   ]
+  }
+ },
+ {
+  "name": "portrait_night",
+  "pos": [
+   186,
+   10,
+   175.42
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -14,
+  "time_of_day": 0.0,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "user_yaw_deg": 200,
+   "at": [
+    186,
+    178.02
+   ],
+   "cam": [
+    0,
+    1.0,
+    -2.6
+   ]
+  }
+ },
+ {
+  "name": "ember_windup",
+  "pos": [
+   186,
+   10,
+   172.53
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": -0.7,
+   "at": [
+    186,
+    178.03
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ember_launch",
+  "pos": [
+   186,
+   10,
+   172.54
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.04
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ember_flight",
+  "pos": [
+   186,
+   10,
+   172.55
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": -0.25,
+   "at": [
+    186,
+    178.05
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ember_impact",
+  "pos": [
+   186,
+   10,
+   172.56
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.06
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ember_after",
+  "pos": [
+   186,
+   10,
+   172.57
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": 0.8,
+   "at": [
+    186,
+    178.07
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ember_night",
+  "pos": [
+   186,
+   10,
+   172.58
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.0,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.08
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "burned_night",
+  "pos": [
+   186,
+   10,
+   172.59
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.0,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6,
+   "move": "ember",
+   "show_s": 3.0,
+   "status": "burn",
+   "at": [
+    186,
+    178.09
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ]
+  }
+ }
+]

@@ -1,0 +1,6 @@
+# Effect quality for players who did not choose one with /fx (M2.1). Scales the particle counts of every effect.
+# low: 40%, for weak GPUs. medium: 70%. high: 100% (the art reference).
+minemon_fx_quality (Effect quality) enum high low,medium,high
+
+# Effects are sent only to players within this many nodes of them.
+minemon_fx_range (Effect range) int 64 16 160

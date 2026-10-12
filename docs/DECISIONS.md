@@ -227,3 +227,28 @@ Evidence: S-15.
   - This is the shiny-hunt grind loop, recast as horror.
 - **Status-move pass:** implement the status moves listed as no-ops in BACKLOG, inside minemon_combat.
 - **Cobblemon cries and ball models/sounds:** S-15 found them in the pinned clone (cries 247/251, mono). D-029's text covers creature models, and CLAUDE.md forbids Pokémon sounds, so **this is pending an owner decision**. Until then, ball and evolution sounds use VoxeLibre sounds.
+
+## D-032 — M2.1 art pass: own art allowed, Vega-8 AAA bar, creature style options (owner directive, 2026-10-12)
+Owner directives (2026-10-12): M2.1 is a purely artistic step before M3, aiming at "AAA within scope"; the art does
+not need to derive from Cobblemon ("one of our many tools"); any skills, sources and materials may be used; every
+result must be AMD Vega 8 friendly. CLAUDE.md's content rule is amended accordingly (own art in any form; no assets
+ripped from official games; private use).
+Findings that drove it: the Cobblemon converter turned every model upside down and backwards and wound faces inside
+out (fixed: Bedrock is y up with x mirrored; identity root turn; face basis); fallback clips played on the T-pose
+(now layered on the idle); no blink (added). Effects used three 8x8 textures capped at 8 particles per spawner.
+Decisions:
+- **minemon_fx** (new mod): the effects library (modern particle API: flipbooks, additive blend, tweens,
+  attractors; sizes in nodes; per-player quality /fx low|medium|high; distance cut), per-move recipes (move, type,
+  default fallback), creature art profiles (glowing parts on locator bones), status looks, hit feel (flash, hit
+  stop, floating damage numbers). minemon_combat asks it first at every visual call site and falls back.
+- **Creature style**: four Charmander options were built from one code-authored sculpt (tools/sculpt/: SDF
+  sculpt, rig, six clips): A Anime Cel (smooth mesh, per-triangle atlas, ink outline), B Micro-Voxel, C HD-2D
+  sprites, D Storybook Painted. Plus the improved Cobblemon toon-voxel as the zero-effort fallback.
+  **Owner choice (2026-10-12): Micro-Voxel (B)**, with a chunkier body and a hand-tuned face (painted face-detail
+  texels on the eye/mouth voxels; eyes on the curved head, no flat face plate). It becomes the style of every
+  creature: hand-made sculpts where they exist (tools/sculpt/<species>.py), an automatic Cobblemon-to-micro-voxel
+  conversion for the rest. Big species get an eldritch presence (fx_logic.is_eldritch: weight >= 80 kg or huge and
+  colossal classes; aura, glowing eyes at night, the world darkening near them) and a compressed size
+  (fx_logic.visual_height, capped at 3.2 nodes).
+What would change this: owner preference after seeing the options; Vega 8 frame rate below 30 fps with 20
+creatures on screen.

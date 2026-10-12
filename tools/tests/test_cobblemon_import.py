@@ -73,14 +73,74 @@ class BoxUvTests(unittest.TestCase):
 
 class BoundsTests(unittest.TestCase):
     def test_inflate_grows_each_side(self):
+        # Bedrock x is mirrored in model space (M2.1): x 0..4 becomes -4..0, then the inflate grows it.
         lo, hi = ci.cube_bounds({"origin": [0, 0, 0], "size": [4, 8, 4], "inflate": 1})
-        self.assertEqual(lo, (-1.0, -1.0, -1.0))
-        self.assertEqual(hi, (5.0, 9.0, 5.0))
+        self.assertEqual(lo, (-5.0, -1.0, -1.0))
+        self.assertEqual(hi, (1.0, 9.0, 5.0))
 
     def test_negative_size_gives_ordered_bounds(self):
         lo, hi = ci.cube_bounds({"origin": [2, 2, 2], "size": [-4, 4, 4]})
         self.assertEqual(lo, (-2.0, 2.0, 2.0))
         self.assertEqual(hi, (2.0, 6.0, 6.0))
+
+
+class OutlineTests(unittest.TestCase):
+    """M2.1 toon-voxel outline: one inside-out hull per solid cube, sampling a palette strip below the texture."""
+
+    def test_each_solid_cube_gets_a_hull_on_the_palette_strip(self):
+        model = ci.build_model(SYNTHETIC)
+        self.assertEqual(len(model["cubes"]), 2)
+        self.assertEqual(len(model["positions"]), 2 * 24 * 2)  # body faces plus hull faces, two cubes
+        tex_w, tex_h, pad = model["tex_size"]
+        self.assertEqual(pad, 1)
+        hull_uvs = model["uvs"][24:48]  # the first cube's hull follows its 24 body vertices
+        self.assertTrue(all(abs(v - (tex_h + 0.5) / (tex_h + pad)) < 1e-9 for _u, v in hull_uvs))
+
+    def test_flat_planes_get_no_hull(self):
+        plane = {"description": {"texture_width": 16, "texture_height": 16},
+                 "bones": [{"name": "root", "pivot": [0, 0, 0],
+                            "cubes": [{"origin": [0, 0, 0], "size": [0, 4, 4], "uv": [0, 0]}]}]}
+        model = ci.build_model(plane)
+        self.assertEqual(model["cubes"], [])
+        self.assertEqual(model["tex_size"][2], 0)
+
+
+class RoundTests(unittest.TestCase):
+    """M2.1 style option: rounded cubes keep every vertex inside the original box and bend the edge normals."""
+
+    def test_rounded_face_stays_inside_the_box_with_bent_edge_normals(self):
+        lo, hi = (0.0, 0.0, 0.0), (4.0, 4.0, 4.0)
+        verts, quads = ci._face_grid(lo, hi, "north", 1.0)
+        self.assertEqual((len(verts), len(quads)), (16, 9))
+        for p, n, _s, _t in verts:
+            self.assertTrue(all(lo[k] - 1e-9 <= p[k] <= hi[k] + 1e-9 for k in range(3)))
+            self.assertAlmostEqual(math.sqrt(sum(c * c for c in n)), 1.0)
+        corner_normal = verts[0][1]
+        self.assertTrue(abs(corner_normal[0]) > 0.3 and abs(corner_normal[1]) > 0.3)  # a corner faces diagonally
+        centre_normal = verts[5][1]
+        self.assertEqual(tuple(round(c, 6) for c in centre_normal), (0.0, 0.0, -1.0))
+
+
+class UprightTests(unittest.TestCase):
+    """M2.1 regression: Bedrock y runs up, so the head (pivot y 30) ends above the body (y 24-32) in glTF, and the
+    front (Bedrock north, -z) stays glTF -z, which Luanti shows as the entity's forward."""
+
+    def test_head_is_above_the_body(self):
+        model = ci.build_model(SYNTHETIC)
+        head = model["names"].index("head")
+        ys = {0: [], head: []}
+        for p, j in zip(model["positions"], model["joints"]):
+            ys[j[0]].append(p[1])
+        self.assertGreater(max(ys[head]), max(ys[0]))
+        self.assertAlmostEqual(min(ys[0]), 0.0)
+
+    def test_north_face_stays_at_gltf_minus_z(self):
+        cube = {"bones": [{"name": "root", "pivot": [0, 0, 0],
+                           "cubes": [{"origin": [-1, 0, -4], "size": [2, 2, 2], "uv": [0, 0]}]}],
+                "description": {"texture_width": 16, "texture_height": 16}}
+        model = ci.build_model(cube)
+        zs = [p[2] for p in model["positions"]]
+        self.assertLess(max(zs), 0.0)  # the cube sits at Bedrock z -4..-2 (the front), and stays there in glTF
 
 
 class RotationTests(unittest.TestCase):
@@ -104,7 +164,13 @@ class RotationTests(unittest.TestCase):
 
 class ModelTests(unittest.TestCase):
     def setUp(self):
+        # These checks are about the cube geometry: the outline hulls (M2.1) are off here; OutlineTests covers them.
+        self._outline = ci.OUTLINE_PX
+        ci.OUTLINE_PX = 0
         self.model = ci.build_model(SYNTHETIC)
+
+    def tearDown(self):
+        ci.OUTLINE_PX = self._outline
 
     def test_lowest_point_sits_at_zero(self):
         lowest = min(p[1] for p in self.model["positions"])
@@ -119,8 +185,8 @@ class ModelTests(unittest.TestCase):
             for cube in bone.get("cubes", []):
                 lo, hi = ci.cube_bounds(cube)
                 for face, _rect, _mirror in ci.cube_faces(cube, bool(bone.get("mirror", False))):
-                    corners, _normal = ci.face_corners(lo, hi, face)
-                    for corner in corners:
+                    verts, _quads = ci._face_grid(lo, hi, face, 0.0)
+                    for corner, _n, _s, _t in verts:
                         expected.append((bone_index, corner))
         self.assertEqual(len(expected), len(self.model["positions"]))
         local = []
@@ -249,7 +315,8 @@ class ChooseClipTests(unittest.TestCase):
 
     def test_missing_clips_use_the_fallbacks(self):
         plan, sources = ci.build_plan({}, ci.choose_clips({}, "biped"), ci.Molang(), "root")
-        self.assertIsInstance(plan["punch"], ci.Lunge)
+        self.assertIsInstance(plan["punch"], ci.Layered)
+        self.assertIsInstance(plan["punch"].over, ci.Lunge)
         self.assertIsInstance(plan["run"], ci.Repeat)
         self.assertEqual(sources["die"], "fallback")
 
@@ -273,9 +340,9 @@ class PoseDeltaTests(unittest.TestCase):
         self.assertTrue(_close(locals_[self.head][0], ci.q_euler((0, 0, 40))))
 
     def test_position_delta_moves_the_pivot_up(self):
-        # Bedrock y runs up: a delta of +2 moves the head pivot from y = 30 to 28, so 4 px above the root pivot.
+        # Bedrock y runs up (M2.1): a delta of +2 moves the head pivot from y = 30 to 32, 8 px above the root pivot.
         locals_, _ = ci.pose_nodes(self.model, {"head": {"position": (0, 2, 0)}})
-        self.assertTrue(_close(locals_[self.head][1], (0, 4, 0)))
+        self.assertTrue(_close(locals_[self.head][1], (0, 8, 0)))
 
     def test_root_position_delta_moves_the_model_up_in_glTF(self):
         rest = ci.pose_nodes(self.model, {})[0][self.root][1]
@@ -326,7 +393,7 @@ class BakeTests(unittest.TestCase):
     def test_a_bone_still_in_the_stand_range_has_no_motion_there(self):
         # The root moves in the punch, die and sit fallbacks, so it has a track; over frames 0-20 it stays at rest.
         values = self.track(self.model["names"].index("root"), "rotation")
-        self.assertTrue(all(_close(v, (1.0, 0.0, 0.0, 0.0)) for v in values[:21]))
+        self.assertTrue(all(_close(v, ci.FLIP_ROT) for v in values[:21]))
 
     def test_glb_carries_one_clip_with_86_keyframes(self):
         glb = ci.write_glb(self.model, self.anim)

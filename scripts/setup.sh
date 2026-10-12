@@ -123,10 +123,12 @@ fi
 
 # Converter dev dependency (D-029, T-25b): the molang evaluator.
 python3 -c "import molang" 2>/dev/null || pip install -q --break-system-packages molang
+# M2.1 skin bake (tools/creature_look.py, D-032): numpy and Pillow, setup time only.
+python3 -c "import numpy, PIL" 2>/dev/null || pip install -q --break-system-packages numpy pillow
 
 # Conversion is skipped while the stamp (source commit plus converter sources) is unchanged.
 PACK_DIR=.tools/pack_cobblemon
-CONV_HASH=$(cat tools/cobblemon_import.py tools/gen_standins.py | sha256sum | cut -d' ' -f1)
+CONV_HASH=$(cat tools/cobblemon_import.py tools/gen_standins.py tools/creature_look.py | sha256sum | cut -d' ' -f1)
 PACK_STAMP="$COBBLEMON_BEDROCK_COMMIT $CONV_HASH"
 if [ -f "$PACK_DIR/minemon_pack_cobblemon/init.lua" ] && [ "$(cat "$PACK_DIR/.stamp" 2>/dev/null || true)" = "$PACK_STAMP" ]; then
 	: # pack is current

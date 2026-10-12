@@ -108,6 +108,8 @@ function M.resolve(G, user, victim, move_id, move, scale)
 	end
 	if amount > 0 then
 		G.apply_damage(victim, amount, user, { move_id = move_id, effectiveness = eff, crit = res.crit })
+		G.vfx.play("impact", { move_id = move_id, move = move, user = user, victim = victim, result = res,
+			dealt = amount, pos = G.vfx.anchor(victim, "target") or G.eye(victim) })
 		if move.type == "fire" then
 			G.status.thaw_on_fire(victim)
 		end
@@ -126,10 +128,16 @@ end
 -- Projectile: an orb flies from the user towards the target at ORB_SPEED. The first creature or player that is not
 -- the user or its owner's creatures is hit (see register_orb).
 function M.projectile(G, user, target, move_id, move)
-	local eu, et = G.eye(user), G.eye(target)
+	local et = G.vfx.anchor(target, "target") or G.eye(target)
+	-- M2.1: the shot leaves the mouth when the model has one (Cobblemon locator), else the eye point.
+	local mouth = G.vfx.anchor(user, "mouth")
+	local eu = mouth or G.eye(user)
 	local dir = vector.normalize(vector.subtract(et, eu))
-	local start = vector.add(eu, vector.multiply(dir, 0.8))
-	G.vfx.burst(start, move.type, "orb", 1.5, 0.2)
+	local start = mouth and vector.add(eu, vector.multiply(dir, 0.2)) or vector.add(eu, vector.multiply(dir, 0.8))
+	local ctx = { move_id = move_id, move = move, user = user, target = target, from = start, dir = dir }
+	if not G.vfx.play("launch", ctx) then
+		G.vfx.burst(start, move.type, "orb", 1.5, 0.2)
+	end
 	local obj = vl_projectile.create(M.ORB, {
 		pos = start,
 		dir = dir,
@@ -139,7 +147,16 @@ function M.projectile(G, user, target, move_id, move)
 		extra = { user = user, move_id = move_id, move = move },
 	})
 	if obj then
-		obj:set_properties({ textures = { G.vfx.texture("orb", move.type) } })
+		ctx.obj = obj
+		if G.vfx.play("projectile", ctx) then
+			local le = obj:get_luaentity()
+			local extra = le and le._vl_projectile and le._vl_projectile.extra
+			if extra then
+				extra.fx_trail = true -- the recipe attached its own trail: no orb_trail packets
+			end
+		else
+			obj:set_properties({ textures = { G.vfx.texture("orb", move.type) } })
+		end
 	end
 	return obj ~= nil
 end
@@ -159,7 +176,9 @@ function M.beam(G, user, target, move_id, move)
 			break
 		end
 	end
-	G.vfx.line(eu, stop, move.type)
+	if not G.vfx.play("beam", { move_id = move_id, move = move, user = user, target = target, from = eu, to = stop }) then
+		G.vfx.line(eu, stop, move.type)
+	end
 	if hit then
 		M.resolve(G, user, hit, move_id, move)
 	end
@@ -182,7 +201,11 @@ function M.melee_arc(G, user, target, move_id, move)
 	end
 	G.animate(user, "punch")
 	user:add_velocity(vector.multiply(dir, 2))
-	G.vfx.swoosh(vector.add(pu, vector.new(0, G.height(user) * 0.4, 0)), fwd, move.type)
+	local centre = vector.add(pu, vector.new(0, G.height(user) * 0.4, 0))
+	if not G.vfx.play("melee", { move_id = move_id, move = move, user = user, target = target, centre = centre,
+			fwd = fwd }) then
+		G.vfx.swoosh(centre, fwd, move.type)
+	end
 	M.resolve(G, user, target, move_id, move)
 	return true
 end
@@ -192,7 +215,10 @@ end
 function M.area_burst(G, user, target, move_id, move)
 	local centre = vector.add(target:get_pos(), vector.new(0, G.height(target) * 0.4, 0))
 	local radius = move.range_m
-	G.vfx.sphere(centre, radius, move.type)
+	if not G.vfx.play("area", { move_id = move_id, move = move, user = user, target = target, centre = centre,
+			radius = radius }) then
+		G.vfx.sphere(centre, radius, move.type)
+	end
 	for _, obj in ipairs(core.get_objects_inside_radius(centre, radius)) do
 		if G.is_combatant(obj) and G.guid(obj) ~= G.guid(user) and not G.is_friend(user, obj) then
 			local d = vector.distance(centre, obj:get_pos())
@@ -204,9 +230,12 @@ function M.area_burst(G, user, target, move_id, move)
 end
 
 -- Aura: stat changes on the user, or on the target when the change says target = "target". Glow on the user.
-function M.aura(G, user, target, _move_id, move)
+function M.aura(G, user, target, move_id, move)
 	local effect = move.effect or {}
-	G.vfx.aura(vector.add(user:get_pos(), vector.new(0, G.height(user) * 0.5, 0)), move.type)
+	local centre = vector.add(user:get_pos(), vector.new(0, G.height(user) * 0.5, 0))
+	if not G.vfx.play("aura", { move_id = move_id, move = move, user = user, target = target, centre = centre }) then
+		G.vfx.aura(centre, move.type)
+	end
 	for _, c in ipairs(effect.stat_changes or {}) do
 		local who = user
 		if c.target == "target" and target ~= nil and target:get_pos() then
@@ -222,7 +251,7 @@ end
 -- Status cloud: a puff cloud at the target for CLOUD_LIFE_S seconds. Its accuracy roll is made once, at the cast.
 -- Victims inside are checked every 0.5 s (M.tick_clouds): stat changes apply once on first contact, and the status
 -- is rolled until it lands.
-function M.status_cloud(G, user, target, _move_id, move)
+function M.status_cloud(G, user, target, move_id, move)
 	local centre = vector.add(target:get_pos(), vector.new(0, 0.2, 0))
 	-- Without a view (a target that is not a creature or player) the cloud is cosmetic: no accuracy roll, no effects.
 	local atk, def = G.view_of(user), G.view_of(target)
@@ -231,7 +260,10 @@ function M.status_cloud(G, user, target, _move_id, move)
 		local res = G.formulas.damage(atk, def, move, G.type_mult, G.rng)
 		hit = not res.missed
 	end
-	G.vfx.cloud(centre, M.CLOUD_RADIUS, move.type, M.CLOUD_LIFE_S)
+	if not G.vfx.play("cloud", { move_id = move_id, move = move, user = user, target = target, centre = centre,
+			radius = M.CLOUD_RADIUS, time = M.CLOUD_LIFE_S }) then
+		G.vfx.cloud(centre, M.CLOUD_RADIUS, move.type, M.CLOUD_LIFE_S)
+	end
 	if hit then
 		for _, c in ipairs(move.effect and move.effect.stat_changes or {}) do
 			if c.target == "user" then
@@ -361,7 +393,7 @@ function M.register_orb(G)
 				self._mm_trail = 0
 				local p = self.object:get_pos()
 				local extra = self._vl_projectile and self._vl_projectile.extra
-				if p and extra then
+				if p and extra and not extra.fx_trail then
 					G.vfx.orb_trail(p, extra.move.type)
 				end
 			end

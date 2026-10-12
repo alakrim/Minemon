@@ -1,6 +1,6 @@
 -- Visual effects for minemon_combat (T-23): particle spawners, the orb trail and the effectiveness text.
 -- Glue: it touches core. Every spawner call is capped at MAX_PER_CALL particles.
--- luacheck: read_globals core vector
+-- luacheck: read_globals core vector minemon
 
 local SAFE = dofile(core.get_modpath("minemon_combat") .. "/safe.lua")
 
@@ -40,6 +40,22 @@ M.TYPE_COLOUR = {
 }
 
 local HUD_TYPE = core.features.hud_def_type_field and "type" or "hud_elem_type"
+
+-- M2.1 (D-032): every visual call site asks minemon_fx first. play returns true when an fx recipe drew the phase;
+-- the functions below are the fallback when minemon_fx is absent or has no recipe for it.
+function M.play(phase, ctx)
+	local fx = minemon.fx
+	if fx and fx.play then
+		return fx.play(phase, ctx) == true
+	end
+	return false
+end
+
+-- The world position of a creature's locator (mouth, target, ...), or nil without minemon_fx or the locator.
+function M.anchor(obj, name)
+	local fx = minemon.fx
+	return fx and fx.anchor and fx.anchor(obj, name) or nil
+end
 
 M.FEEDBACK = {
 	super = { text = "Super effective!", colour = 0x33DD55 },

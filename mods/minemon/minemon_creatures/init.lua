@@ -46,6 +46,8 @@ local function apply_visual(self, species)
 		collisionbox = vis.collisionbox,
 		selectionbox = vis.selectionbox,
 	})
+	-- M2.1: art profiles (minemon_fx) attach their glowing parts here, after every activation and evolution.
+	minemon.events.fire("creature_visual", self.object, species)
 end
 
 -- Sets the instance's stats on the entity: HP, damage, nametag (and the object HP, which the engine ignores).

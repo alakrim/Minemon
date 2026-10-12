@@ -1,0 +1,164 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 10
+ },
+ {
+  "name": "tt_front",
+  "pos": [
+   186,
+   10,
+   175.0
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -16,
+  "time_of_day": 0.45,
+  "wait_s": 3,
+  "scene": {
+   "at": [
+    186,
+    178.0
+   ],
+   "user": 4,
+   "user_yaw_deg": 180,
+   "cam": [
+    0,
+    1.2,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "tt_side",
+  "pos": [
+   186,
+   10,
+   175.01
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -16,
+  "time_of_day": 0.45,
+  "wait_s": 3,
+  "scene": {
+   "at": [
+    186,
+    178.01
+   ],
+   "user": 4,
+   "user_yaw_deg": 270,
+   "cam": [
+    0,
+    1.2,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "tt_q",
+  "pos": [
+   186,
+   10,
+   175.02
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -16,
+  "time_of_day": 0.45,
+  "wait_s": 3,
+  "scene": {
+   "at": [
+    186,
+    178.02
+   ],
+   "user": 4,
+   "user_yaw_deg": 225,
+   "cam": [
+    0,
+    1.2,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "tt_squirtle",
+  "pos": [
+   186,
+   10,
+   175.03
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -16,
+  "time_of_day": 0.45,
+  "wait_s": 3,
+  "scene": {
+   "at": [
+    186,
+    178.03
+   ],
+   "user": 7,
+   "user_yaw_deg": 225,
+   "cam": [
+    0,
+    1.2,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "tt_bulbasaur",
+  "pos": [
+   186,
+   10,
+   175.04
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -16,
+  "time_of_day": 0.45,
+  "wait_s": 3,
+  "scene": {
+   "at": [
+    186,
+    178.04
+   ],
+   "user": 1,
+   "user_yaw_deg": 225,
+   "cam": [
+    0,
+    1.2,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "tt_pikachu",
+  "pos": [
+   186,
+   10,
+   175.05
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -16,
+  "time_of_day": 0.45,
+  "wait_s": 3,
+  "scene": {
+   "at": [
+    186,
+    178.05
+   ],
+   "user": 25,
+   "user_yaw_deg": 225,
+   "cam": [
+    0,
+    1.2,
+    -3.0
+   ]
+  }
+ }
+]

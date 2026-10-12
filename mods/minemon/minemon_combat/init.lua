@@ -481,7 +481,9 @@ function API.use_move(user, target, move_id)
 	-- Confusion: a 33% roll at the cast turns the move on the user (effects.lua self_hit).
 	local confused = STATUS.has(user, "confusion") and EFX.confusion_self_hit(rng)
 	casting[le] = { move_id = move_id, target = target }
-	VFX.windup(G.eye(user), move.type, move.cast_s)
+	if not VFX.play("cast", { move_id = move_id, move = move, user = user, target = target, time = move.cast_s }) then
+		VFX.windup(G.eye(user), move.type, move.cast_s)
+	end
 	core.after(move.cast_s, function()
 		SAFE.call("cast " .. tostring(move_id), finish_cast, user, target, move_id, move, confused)
 	end)

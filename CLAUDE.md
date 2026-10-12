@@ -20,6 +20,5 @@ A private, free Pokémon game for the owner and one friend: Luanti 5.17.0 + the 
 - `docs/`, `tasks/`: project memory (docs/PROTOCOL.md)
 - `.tools/` (git-ignored): luantiserver, VoxeLibre clone, assembled game
 
-## Hard content rule
-Never create, draw, model or download Pokémon art, models, textures or sounds. Creature visuals are our own procedural stand-ins, or files the owner supplies. Private use only.
-Exceptions by owner directive: D-029 (Cobblemon models converted at setup into `.tools/`, never committed) and D-030 (our own generated 16×16 item icons for balls and items are allowed).
+## Content rule (amended by owner directive D-032, M2.1)
+Private, non-commercial use only. We may author our own creature art in any form (code-sculpted models, generated textures, effects) and use any permissively licensed tool or source; Cobblemon (D-029) is one tool among many. Never use assets ripped from official games. The quality bar is "AAA within scope" and every asset must run well on an AMD Vega 8 (docs/ART_GUIDE.md budgets).

@@ -14,8 +14,7 @@ The output is never committed: it goes to .tools/pack_cobblemon, which is git-ig
 Rules:
   - 16 px = 1 block = 1 node = 10 glTF units (as tools/gen_standins.py).
   - The lowest point of each model (its feet) sits at y = 0, found per model; the Bedrock ground plane is not used.
-    The front faces the same way as the stand-ins of tools/gen_standins.py: the Bedrock front (-z) becomes
-    glTF +z (a 180-degree turn about x; see FLIP_ROT).
+    The Bedrock front (-z) stays glTF -z, Luanti's forward (FLIP_ROT is the identity). Bedrock space is y up with x mirrored (bpos, q_euler).
   - Bones keep their names. A bone's rest pose is its pivot and rotation (degrees, Java/Bedrock order Rz*Ry*Rx).
   - Cube rotation, inflate, mirror and both UV forms (box and per face) are applied; the UV is normalised by the
     geometry's texture_width and texture_height.
@@ -50,6 +49,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
 import gen_standins as gs  # noqa: E402  (the stdlib GLB writer; see module docstring)
+import creature_look  # noqa: E402  (M2.1 skin bake; numpy and Pillow, setup time only)
 
 PACK_NAME = "minemon_pack_cobblemon"
 SOURCE_SUBDIR = os.path.join("development_resource_packs", "cobblemon")
@@ -63,11 +63,12 @@ SCALE = gs.UNITS / PX_PER_BLOCK  # glTF units per pixel
 # Quaternions are (x, y, z, w).
 IDENTITY_Q = (0.0, 0.0, 0.0, 1.0)
 IDENTITY = (IDENTITY_Q, (0.0, 0.0, 0.0))
-# Model space to glTF space is a 180-degree turn about x (y and z negated) followed by a lift: the lowest point of
-# the model goes to y = 0 (see build_model). The lift is the translation part of the root transform.
-# The Bedrock front (-z) becomes glTF +z, the front of gen_standins.py; Luanti shows that as facing -z
-# (checked on Rattata and Gastly: the face toward a camera at -z when yaw is 0).
-FLIP_ROT = (1.0, 0.0, 0.0, 0.0)
+# Model space to glTF space (M2.1): model space is already glTF space (y up, front -z), so the root turn is the
+# identity, followed by a lift: the lowest point of the model goes to y = 0 (see build_model). The lift is the
+# translation part of the root transform. Luanti shows glTF -z as the entity's forward (+z at yaw 0, the way
+# mcl_mobs walks and minemon_combat faces a target). Before M2.1 the root turn was 180 degrees about x, which
+# turned every model upside down and backwards.
+FLIP_ROT = (0.0, 0.0, 0.0, 1.0)
 
 
 # ---------------------------------------------------------------- quaternions and rigid transforms
@@ -98,8 +99,11 @@ def q_axis(axis, degrees):
 
 
 def q_euler(rot):
-    """Bedrock bone or cube rotation in degrees [x, y, z]: R = Rz * Ry * Rx, so x is applied first."""
-    rx, ry, rz = rot
+    """Bedrock bone or cube rotation in degrees [x, y, z]: R = Rz * Ry * Rx, so x is applied first.
+
+    Bedrock space is model space with x mirrored (see bpos), so the x and y angles change sign (as Blockbench's
+    Bedrock import does: rotation [-x, -y, z])."""
+    rx, ry, rz = -rot[0], -rot[1], rot[2]
     return q_mul(q_axis((0.0, 0.0, 1.0), rz), q_mul(q_axis((0.0, 1.0, 0.0), ry), q_axis((1.0, 0.0, 0.0), rx)))
 
 
@@ -158,11 +162,13 @@ def column_major(xf):
 
 # ---------------------------------------------------------------- box geometry and UV
 
-# Outward normal and image-up direction of each face, in Bedrock space. Bedrock y runs down, so up is -y.
-# north is the front (-z). The image-right direction of a face is cross(image-up, view direction).
-FACE_NORMAL = {"north": (0, 0, -1), "south": (0, 0, 1), "east": (1, 0, 0), "west": (-1, 0, 0),
-               "up": (0, -1, 0), "down": (0, 1, 0)}
-FACE_UP = {"north": (0, -1, 0), "south": (0, -1, 0), "east": (0, -1, 0), "west": (0, -1, 0),
+# Outward normal and image-up direction of each face, in model space (y up, x mirrored from Bedrock: see bpos).
+# north is the front (-z). Bedrock's east (+x) is model -x. The image-right direction of a face is
+# cross(view direction, image-up), the viewer's right. The top face's image-up points to the back, the bottom face's to the front.
+# (M2.1: before, Bedrock y was read as running down, which turned every model upside down.)
+FACE_NORMAL = {"north": (0, 0, -1), "south": (0, 0, 1), "east": (-1, 0, 0), "west": (1, 0, 0),
+               "up": (0, 1, 0), "down": (0, -1, 0)}
+FACE_UP = {"north": (0, 1, 0), "south": (0, 1, 0), "east": (0, 1, 0), "west": (0, 1, 0),
            "up": (0, 0, 1), "down": (0, 0, -1)}
 FACES = ("north", "south", "east", "west", "up", "down")
 
@@ -190,7 +196,7 @@ def face_corners(lo, hi, face):
     """The four corners of a box face as (bottom-left, bottom-right, top-right, top-left), seen from outside."""
     normal = FACE_NORMAL[face]
     up = FACE_UP[face]
-    right = cross(up, neg(normal))
+    right = cross(neg(normal), up)  # the viewer's right, looking at the face from outside (y up)
     plane_axis, plane_sign = _axis_of(normal)
     r_axis, r_sign = _axis_of(right)
     u_axis, u_sign = _axis_of(up)
@@ -243,12 +249,14 @@ def cube_faces(cube, bone_mirror):
 
 
 def cube_bounds(cube):
+    """The cube's corners in model space (x mirrored from Bedrock, see bpos)."""
     origin = [float(x) for x in cube["origin"]]
     size = [float(x) for x in cube["size"]]
     inflate = float(cube.get("inflate", 0.0))
-    lo = tuple(min(origin[i], origin[i] + size[i]) - inflate for i in range(3))
-    hi = tuple(max(origin[i], origin[i] + size[i]) + inflate for i in range(3))
-    return lo, hi
+    lo = [min(origin[i], origin[i] + size[i]) - inflate for i in range(3)]
+    hi = [max(origin[i], origin[i] + size[i]) + inflate for i in range(3)]
+    lo[0], hi[0] = -hi[0], -lo[0]
+    return tuple(lo), tuple(hi)
 
 
 # ---------------------------------------------------------------- geometry to a skinned model
@@ -257,6 +265,14 @@ def _vec(value, default=(0.0, 0.0, 0.0)):
     if value is None:
         return tuple(default)
     return (float(value[0]), float(value[1]), float(value[2]))
+
+
+def bpos(value, default=(0.0, 0.0, 0.0)):
+    """A Bedrock point (pivot, or an animation position delta) in model space: Bedrock is y up with x mirrored
+    (Blockbench's Bedrock import negates x), so x changes sign."""
+    if value is None:
+        return tuple(default)
+    return (-float(value[0]), float(value[1]), float(value[2]))
 
 
 def bone_order(parent):
@@ -290,6 +306,97 @@ def build_model(geometry, pose=None):
     return _build_model(geometry, (0.0, -lowest, 0.0))
 
 
+# The toon-voxel look (M2.1, docs/ART_GUIDE.md): every solid cube gets an outline hull, a copy inflated by
+# OUTLINE_PX with its faces turned inside out. Back-face culling shows only the hull's far side, so a dark rim
+# appears around the cube's silhouette. The hull samples one texel of a palette strip appended below the texture
+# (tools/creature_look.py paints it: the cube's own colour, darkened). Cubes thinner than OUTLINE_MIN_PX on any axis
+# (flat planes: flames, whiskers, fins) get no hull. OUTLINE_PX = 0 turns the outline off.
+OUTLINE_PX = 0.35
+OUTLINE_MIN_PX = 0.5
+# Rounded cubes (M2.1 style options): the radius in pixels of the soft edge given to every solid cube (0: sharp
+# voxel boxes). Each face becomes a 3x3 grid whose edge band is bent onto the rounded box, with smooth normals.
+ROUND_PX = 0.0
+
+
+STYLE = dict(creature_look.STYLES[creature_look.DEFAULT_STYLE])
+
+
+def set_style(name):
+    """Selects a creature_look.STYLES preset: its round_px and outline_px drive the geometry, the rest the bake."""
+    global ROUND_PX, OUTLINE_PX, STYLE
+    STYLE = dict(creature_look.STYLES[name])
+    ROUND_PX = STYLE["round_px"]
+    OUTLINE_PX = STYLE["outline_px"]
+
+
+def _length(v):
+    return math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2])
+
+
+def _face_grid(lo, hi, face, r):
+    """One face of the box lo..hi, rounded by r: (vertices [(pos, normal, s, t)], quads [(a, b, c, d)] in the
+    BL, BR, TR, TL order of face_corners). s and t are the flat face coordinates (0..1) for the UV."""
+    corners, normal = face_corners(lo, hi, face)
+    bl, br, _tr, tl = corners
+    ex, ey = sub(br, bl), sub(tl, bl)
+    w, h = _length(ex), _length(ey)
+
+    def ticks(length):
+        if r <= 0 or length <= 2 * r + 1e-6:
+            return [0.0, 1.0]
+        return [0.0, r / length, 1.0 - r / length, 1.0]
+    ts, tt = ticks(w), ticks(h)
+    inner_lo = [lo[k] + r for k in range(3)]
+    inner_hi = [hi[k] - r for k in range(3)]
+    verts = []
+    for t in tt:
+        for s_ in ts:
+            p = add(bl, add(tuple(c * s_ for c in ex), tuple(c * t for c in ey)))
+            n = normal
+            if r > 0:
+                q = tuple(min(max(p[k], inner_lo[k]), inner_hi[k]) for k in range(3))
+                d = sub(p, q)
+                length = _length(d)
+                if length > 1e-9:
+                    n = tuple(c / length for c in d)
+                    p = add(q, tuple(c * r for c in n))
+            verts.append((p, n, s_, t))
+    nx = len(ts)
+    quads = []
+    for j in range(len(tt) - 1):
+        for i in range(nx - 1):
+            a = j * nx + i
+            quads.append((a, a + 1, a + nx + 1, a + nx))
+    return verts, quads
+
+
+def _round_radius(lo, hi):
+    if ROUND_PX <= 0:
+        return 0.0
+    return min(ROUND_PX, 0.45 * min(hi[k] - lo[k] for k in range(3)))
+
+
+def _hull_faces(lo, hi, full, normal_q, joint, cell_uv, positions, normals, uvs, joints, weights, indices):
+    """Appends the inside-out hull of the box lo..hi (cube space) under the transform full. Returns the vertex count."""
+    r = _round_radius(lo, hi)
+    lo = tuple(c - OUTLINE_PX for c in lo)
+    hi = tuple(c + OUTLINE_PX for c in hi)
+    count = 0
+    for face in FACES:
+        verts, quads = _face_grid(lo, hi, face, r + OUTLINE_PX if r > 0 else 0.0)
+        base = len(positions)
+        for p, n, _s, _t in verts:
+            positions.append(t_apply(full, p))
+            normals.append(q_rot(normal_q, neg(n)))
+            uvs.append(cell_uv)
+            joints.append((joint, 0, 0, 0))
+            weights.append((1.0, 0.0, 0.0, 0.0))
+        for a, b, c, d in quads:
+            indices += [base + a, base + c, base + b, base + a, base + d, base + c]
+        count += len(verts)
+    return count
+
+
 def _build_model(geometry, lift):
     flip = (FLIP_ROT, lift)
     desc = geometry["description"]
@@ -307,7 +414,7 @@ def _build_model(geometry, lift):
     parent = [index.get(b.get("parent")) if b.get("parent") is not None else None for b in bones]
     order = bone_order(parent)
     n = len(bones)
-    pivots = [_vec(b.get("pivot")) for b in bones]
+    pivots = [bpos(b.get("pivot")) for b in bones]
     rest_deg = [_vec(b.get("rotation")) for b in bones]
     rots = [q_euler(r) for r in rest_deg]
 
@@ -328,35 +435,63 @@ def _build_model(geometry, lift):
             fk[i] = t_mul(fk[p], pivot_rot(rots[i], pivots[i]))
 
     positions, normals, uvs, joints, weights, indices = [], [], [], [], [], []
+    flat_cubes = []  # cubes without a hull (thin, or outline off): their rects, for the eye glints
+    cubes = []  # per solid cube: its face rects (texels) and its outline palette cell, for tools/creature_look.py
+    hull_cells = []  # (index into uvs where the hull starts, cell number)
     lo_pt = [float("inf")] * 3
     hi_pt = [float("-inf")] * 3
     for i, bone in enumerate(bones):
         bone_mirror = bool(bone.get("mirror", False))
         for cube in bone.get("cubes", []):
             if "rotation" in cube:
-                cube_t = pivot_rot(q_euler(_vec(cube["rotation"])), _vec(cube.get("pivot"), pivots[i]))
+                cube_t = pivot_rot(q_euler(_vec(cube["rotation"])), bpos(cube.get("pivot")) if cube.get("pivot") else pivots[i])
             else:
                 cube_t = IDENTITY
             full = t_mul(flip, t_mul(fk[i], cube_t))
             normal_q = q_mul(flip[0], q_mul(fk[i][0], cube_t[0]))
             lo, hi = cube_bounds(cube)
+            rects = []
+            solid = min(hi[k] - lo[k] for k in range(3)) >= OUTLINE_MIN_PX
+            r = _round_radius(lo, hi) if solid else 0.0
             for face, rect, mirror in cube_faces(cube, bone_mirror):
-                corners, normal = face_corners(lo, hi, face)
-                uv = face_uv_corners(rect, mirror)
+                rects.append((face, rect))
+                uv = face_uv_corners(rect, mirror)  # BL, BR, TR, TL
+                verts, quads = _face_grid(lo, hi, face, r)
                 base = len(positions)
-                for corner, (tu, tv) in zip(corners, uv):
+                for corner, nrm, s_, t in verts:
                     p = t_apply(full, corner)
                     for k in range(3):
                         lo_pt[k] = min(lo_pt[k], p[k])
                         hi_pt[k] = max(hi_pt[k], p[k])
                     positions.append(p)
-                    normals.append(q_rot(normal_q, normal))
-                    uvs.append((tu / tex_w, tv / tex_h))
+                    normals.append(q_rot(normal_q, nrm))
+                    bottom = (uv[0][0] + (uv[1][0] - uv[0][0]) * s_, uv[0][1] + (uv[1][1] - uv[0][1]) * s_)
+                    top = (uv[3][0] + (uv[2][0] - uv[3][0]) * s_, uv[3][1] + (uv[2][1] - uv[3][1]) * s_)
+                    uvs.append((bottom[0] + (top[0] - bottom[0]) * t, bottom[1] + (top[1] - bottom[1]) * t))
                     joints.append((i, 0, 0, 0))
                     weights.append((1.0, 0.0, 0.0, 0.0))
-                indices += [base, base + 1, base + 2, base, base + 2, base + 3]
+                for a, b, c, d in quads:
+                    indices += [base + a, base + b, base + c, base + a, base + c, base + d]
+            if OUTLINE_PX > 0 and solid and rects:
+                cell = len(cubes)
+                count = _hull_faces(lo, hi, full, normal_q, i, (0.0, 0.0), positions, normals, uvs, joints, weights,
+                                    indices)
+                hull_cells.append((len(uvs) - count, count, cell))
+                cubes.append({"rects": rects, "cell": cell, "bone": bone["name"]})
+            elif rects:
+                flat_cubes.append({"rects": rects, "bone": bone["name"]})
     if not positions:
         raise ValueError("geometry has no cubes")
+    # The palette strip: one texel per outlined cube, in rows of tex_w below the texture. UVs become 0..1 last.
+    cols = max(1, int(tex_w))
+    pad_rows = (len(cubes) + cols - 1) // cols
+    for start, count, cell in hull_cells:
+        cu = (cell % cols) + 0.5
+        cv = tex_h + (cell // cols) + 0.5
+        for k in range(start, start + count):
+            uvs[k] = (cu, cv)
+    full_h = tex_h + pad_rows
+    uvs = [(u / tex_w, v / full_h) for u, v in uvs]
 
     inverse_bind = [column_major(t_inv(glob[i])) for i in range(n)]
     children = [[j for j in range(n) if parent[j] == i] for i in range(n)]
@@ -366,6 +501,7 @@ def _build_model(geometry, lift):
         "positions": positions, "normals": normals, "uvs": uvs, "joints": joints, "weights": weights,
         "indices": indices, "inverse_bind": inverse_bind,
         "bounds_px": (tuple(lo_pt), tuple(hi_pt)),
+        "cubes": cubes, "flat_cubes": flat_cubes, "tex_size": (tex_w, tex_h, pad_rows),
         # what pose_nodes needs to pose the skeleton, and the rest globals that the skin is bound to
         "parent": parent, "order": order, "pivots": pivots, "rest_deg": rest_deg, "flip": flip, "glob": glob,
     }
@@ -387,8 +523,8 @@ def pose_nodes(model, pose=None):
     for i in model["order"]:
         delta = pose.get(model["names"][i], {})
         dp = delta.get("position", (0.0, 0.0, 0.0))
-        # Bedrock animation y runs up; the geometry's pivots run down (see tools/gen_standins.py and poses.py).
-        anchor[i] = add(model["pivots"][i], (float(dp[0]), -float(dp[1]), float(dp[2])))
+        # Animation position deltas are Bedrock points like the pivots (bpos: x mirrored, y up).
+        anchor[i] = add(model["pivots"][i], bpos(dp))
         rot = q_euler(add(model["rest_deg"][i], delta.get("rotation", (0.0, 0.0, 0.0))))
         p = parent[i]
         if p is None:
@@ -668,6 +804,50 @@ class Repeat:
         return self.clip.sample(1.0 if u >= 1.0 else (u * self.times) % 1.0)
 
 
+def merge_poses(base, over):
+    """Two poses (bone -> {path: vec}) added channel by channel: rotation and position deltas add, scales multiply."""
+    out = {bone: dict(chans) for bone, chans in base.items()}
+    for bone, chans in over.items():
+        cur = out.setdefault(bone, {})
+        for path, vec in chans.items():
+            if path not in cur:
+                cur[path] = vec
+            elif path == "scale":
+                cur[path] = tuple(a * b for a, b in zip(cur[path], vec))
+            else:
+                cur[path] = add(cur[path], vec)
+    return out
+
+
+class Layered:
+    """A clip played over another (M2.1): a fallback over the idle pose instead of the T-pose rest, or a blink over
+    the idle. base_u fixes the base clip at one point (None: the base follows u)."""
+
+    def __init__(self, base, over, base_u=None):
+        self.base = base
+        self.over = over
+        self.base_u = base_u
+
+    def sample(self, u):
+        bu = u if self.base_u is None else self.base_u
+        return merge_poses(self.base.sample(bu), self.over.sample(u))
+
+
+class Window:
+    """A short clip placed inside the range: silent outside [start, end] of u, played across it inside (the blink
+    near the end of each idle loop)."""
+
+    def __init__(self, clip, start, end):
+        self.clip = clip
+        self.start = start
+        self.end = end
+
+    def sample(self, u):
+        if u < self.start or u > self.end:
+            return {}
+        return self.clip.sample((u - self.start) / (self.end - self.start))
+
+
 def _ease(u):
     return 0.5 - 0.5 * math.cos(math.pi * min(max(u, 0.0), 1.0))
 
@@ -743,7 +923,7 @@ def choose_clips(clips, body_plan):
         "stand": _first_of(clips, stand_first + ["ground_idle", "battle_idle"]) or _search(clips, "idle"),
         "walk": _first_of(clips, walk_first + ["ground_walk"]) or _search(clips, "walk"),
         "run": _first_of(clips, ["ground_run"]),
-        "punch": _first_of(clips, ["physical", "attack"]),
+        "punch": _first_of(clips, ["physical", "attack", "special"]),
         "die": _first_of(clips, ["faint"]),
         "sit": _first_of(clips, ["sleep"]),
     }
@@ -754,12 +934,16 @@ def build_plan(clips, names, molang, root):
     def bedrock(key):
         return BedrockClip(clips[names[key]], molang) if names[key] else None
 
-    plan = {"stand": bedrock("stand") or Static()}
+    idle = bedrock("stand") or Static()
+    # M2.1: a blink near the end of each idle loop (Cobblemon ships one per species; it moves the eyelid bones).
+    plan = {"stand": Layered(idle, Window(BedrockClip(clips["blink"], molang), 0.82, 0.92)) if "blink" in clips
+            else idle}
     plan["walk"] = bedrock("walk") or plan["stand"]
     plan["run"] = bedrock("run") or Repeat(plan["walk"], 2)
-    plan["punch"] = bedrock("punch") or Lunge(root)
-    plan["die"] = bedrock("die") or Roll(root)
-    plan["sit"] = bedrock("sit") or Squat(root)
+    # Fallbacks play over the first idle pose, not over the rest pose (a T-pose for most Cobblemon models).
+    plan["punch"] = bedrock("punch") or Layered(idle, Lunge(root), 0.0)
+    plan["die"] = bedrock("die") or Layered(idle, Roll(root), 0.0)
+    plan["sit"] = bedrock("sit") or Layered(idle, Squat(root), 0.0)
     sources = {key: (names[key] or "fallback") for key, _first, _last in CLIP_RANGES}
     return plan, sources
 
@@ -904,6 +1088,29 @@ def load_body_plans(path):
         return {int(s["id"]): s.get("body_plan") for s in json.load(f)}
 
 
+def locators(model, anim):
+    """Anchor points for effects (M2.1): every bone named locator_* (Cobblemon's mouth, head, target, fire, foot...),
+    at the stand clip's frame 0, as {name without "locator_": (x, y, z)} in nodes in entity space: +y up from the
+    feet, +z the entity's forward (glTF -z), +x glTF +x. Luanti turns this space by the entity's yaw."""
+    locals_, _scales = anim["rest"]
+    glob = chain_globals(model, locals_)
+    out = {}
+    for i, name in enumerate(model["names"]):
+        if name.startswith("locator_") and len(name) > len("locator_"):
+            t = glob[i][1]
+            out[name[len("locator_"):]] = (t[0] / PX_PER_BLOCK, t[1] / PX_PER_BLOCK, -t[2] / PX_PER_BLOCK)
+    return out
+
+
+def locators_lua(locs):
+    parts = []
+    for key in sorted(locs):
+        if re.match(r"^[a-z_][a-z0-9_]*$", key):
+            x, y, z = locs[key]
+            parts.append("%s = {%s, %s, %s}" % (key, lua_number(x), lua_number(y), lua_number(z)))
+    return "{%s}" % ", ".join(parts)
+
+
 def lua_number(value):
     return "%.3f" % value
 
@@ -927,7 +1134,8 @@ def write_pack(out_dir, converted, commit):
         "-- Assets from kirbycope/cobblemon-bedrock (commit %s). Credits and licence: CREDITS.txt." % commit,
         "-- Each model is one glTF with one clip: stand, walk, run, punch, die and sit at the frame ranges in anims",
         "-- (the same for every species). height and width are the rest model's bounding box in nodes; scale_hint",
-        "-- is the larger of the two, the size a consumer scales by.",
+        "-- is the larger of the two, the size a consumer scales by. locators (M2.1): Cobblemon's locator_* bones at the",
+        "-- stand clip's frame 0, in nodes, entity space (+y up from the feet, +z forward): effect anchors.",
         "minemon_pack = rawget(_G, \"minemon_pack\") or {}",
         "minemon_pack.models = {",
     ]
@@ -937,6 +1145,7 @@ def write_pack(out_dir, converted, commit):
                      " texture_shiny = \"mmp_%04d_s.png\"," % (dex, dex, dex, dex))
         lines.append("\t\theight = %s, width = %s, scale_hint = %s,"
                      % (lua_number(model["height"]), lua_number(model["width"]), lua_number(model["scale_hint"])))
+        lines.append("\t\tlocators = %s," % locators_lua(model.get("locators", {})))
         lines.append("\t\tanims = %s}," % anims)
     lines.append("}")
     with open(os.path.join(pack, "init.lua"), "w", encoding="utf-8") as f:
@@ -961,9 +1170,10 @@ def write_pack(out_dir, converted, commit):
     for dex, _name, model, shiny in converted:
         with open(os.path.join(pack, "models", "mmp_%04d.glb" % dex), "wb") as f:
             f.write(write_glb(model, model["anim"]))
-        shutil.copyfile(model["base_png"], os.path.join(pack, "textures", "mmp_%04d.png" % dex))
+        # M2.1: the skins are baked (light, bevels, outline palette) by tools/creature_look.py, not copied.
+        creature_look.bake(model["base_png"], model, os.path.join(pack, "textures", "mmp_%04d.png" % dex), STYLE)
         shiny_src = shiny if shiny else model["base_png"]
-        shutil.copyfile(shiny_src, os.path.join(pack, "textures", "mmp_%04d_s.png" % dex))
+        creature_look.bake(shiny_src, model, os.path.join(pack, "textures", "mmp_%04d_s.png" % dex), STYLE)
     return pack
 
 
@@ -974,7 +1184,10 @@ def main(argv=None):
     parser.add_argument("--only", default="", help="comma-separated dex numbers to convert (default: all 1-251)")
     parser.add_argument("--commit", default="unknown", help="the pinned source commit, written into the pack")
     parser.add_argument("--species", default=DEFAULT_SPECIES, help="species data with body_plan per dex")
+    parser.add_argument("--style", default=creature_look.DEFAULT_STYLE, choices=sorted(creature_look.STYLES),
+                        help="the creature art style preset (M2.1, tools/creature_look.py)")
     args = parser.parse_args(argv)
+    set_style(args.style)
 
     base, found = discover(args.src)
     if args.only:
@@ -1005,6 +1218,7 @@ def main(argv=None):
         model["scale_hint"] = max(model["height"], model["width"])
         model["base_png"] = base_png
         model["anim"] = anim
+        model["locators"] = locators(model, anim)
         for key, source in sources.items():
             source_counts[key][source] += 1
         if shiny_png is None:
