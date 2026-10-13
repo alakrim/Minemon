@@ -75,17 +75,89 @@ function F.anim(key, length)
 	return { type = "vertical_frames", aspect_w = px, aspect_h = px, length = length or -1 }
 end
 
--- A texture table for the modern particle API. o: blend ("add", "alpha", "screen", "clip"), fade (true: alpha 1 -> 0
+-- Glow blend (M2.1 review). Luanti's "add" and "sub" blends multiply what is behind by the framebuffer alpha
+-- (GL_DST_ALPHA): over soft smoke or water that alpha is below 1 and every glow became a dark square. So "add" is
+-- drawn as "screen" (ONE, ONE_MINUS_SRC_COLOR), which ignores alpha, on the premultiplied copy of the texture
+-- (<name>_pm.png, tools/premultiply_fx.py). Screen ignores alpha tweens too, so a fade becomes a flipbook of
+-- FADE_FRAMES copies whose brightness steps along the tween; a static alpha becomes a grey multiply. "sub" (a void
+-- that takes light away) becomes a very dark alpha blend.
+F.FADE_FRAMES = 8
+F.SUB_DARKEN = "#2e2a33"
+local BIG_PX = { glow = true, ring = true, foam = true, frost_decal = true, puddle = true, smoke_anim = true,
+	blast_anim = true }
+
+local function grey(v)
+	local c = math.floor(math.max(0, math.min(1, v)) * 255 + 0.5)
+	return string.format("#%02x%02x%02x", c, c, c)
+end
+
+-- "minemon_fx_<key>.png^mods" -> base, key, mods.
+local function split(name)
+	local base, mods = name:match("^([^%^]+)(.*)$")
+	local key = base and base:match("^minemon_fx_([%w_]+)%.png$")
+	return base, key, mods or ""
+end
+
+-- A vertical strip of FADE_FRAMES copies of a premultiplied texture, brightness from a to b.
+local function fade_strip(pm, px, a, b)
+	local parts = {}
+	local n = F.FADE_FRAMES
+	for i = 0, n - 1 do
+		local v = a + (b - a) * i / (n - 1)
+		parts[#parts + 1] = string.format("0,%d=%s\\^[resize\\:%dx%d\\^[multiply\\:%s", i * px, pm, px, px, grey(v))
+	end
+	return string.format("[combine:%dx%d:", px, px * n) .. table.concat(parts, ":")
+end
+
+-- The texture table for one glow ("add") particle: screen blend, premultiplied texture, fades as flipbooks.
+local function glow_tex(name, o)
+	local _, key, mods = split(name)
+	if not key or key == "blank" then
+		return nil
+	end
+	local pm = "minemon_fx_" .. key .. "_pm.png"
+	local t = { blend = "screen" }
+	local animated = o.anim ~= nil or key:find("_anim$") ~= nil
+	local a, b
+	if o.fade == true then
+		a, b = o.alpha or 1, 0
+	elseif type(o.fade) == "table" then
+		a, b = o.fade[1], o.fade[2]
+	end
+	if a and not animated and math.abs(a - b) > 0.05 then
+		local px = BIG_PX[key] and 64 or 32
+		t.name = fade_strip(pm, px, a, b) .. mods
+		t.animation = { type = "vertical_frames", aspect_w = px, aspect_h = px, length = -1 }
+	else
+		local level = a and math.max(a, b) or o.alpha
+		t.name = pm .. mods .. ((level and level < 0.99) and ("^[multiply:" .. grey(level)) or "")
+	end
+	return t
+end
+
+-- A texture table for the modern particle API. o: blend ("add", "alpha", "sub", "clip"), fade (true: alpha 1 -> 0
 -- over the life; or a tween table), alpha, grow ({from, to}: the scale over the life), anim (an F.FRAMES key).
 function F.tex(name, o)
 	o = o or {}
-	local t = { name = name, blend = o.blend or "alpha" }
-	if o.fade == true then
-		t.alpha_tween = { o.alpha or 1, 0 }
-	elseif type(o.fade) == "table" then
-		t.alpha_tween = o.fade
-	elseif o.alpha then
-		t.alpha = o.alpha
+	local blend = o.blend or "alpha"
+	local t
+	if blend == "add" then
+		t = glow_tex(name, o)
+	end
+	if not t then
+		if blend == "add" or blend == "sub" then
+			-- No premultiplied copy (a texture from another mod), or a void: an alpha blend.
+			name = blend == "sub" and (name .. "^[multiply:" .. F.SUB_DARKEN) or name
+			blend = "alpha"
+		end
+		t = { name = name, blend = blend }
+		if o.fade == true then
+			t.alpha_tween = { o.alpha or 1, 0 }
+		elseif type(o.fade) == "table" then
+			t.alpha_tween = o.fade
+		elseif o.alpha then
+			t.alpha = o.alpha
+		end
 	end
 	if o.grow then
 		t.scale_tween = { o.grow[1], o.grow[2] }
