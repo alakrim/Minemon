@@ -6,7 +6,11 @@
 --     "at": [x, z],          scene centre on the real terrain (the surface y is found here)
 --     "user": 4,             species id of the creature that acts (stands left of centre, seen from the camera)
 --     "target": 19,          optional species id of the creature it faces (right of centre)
---     "d": 5,                distance between user and target (default 5); without a target the user stands at "at"
+--     "d": 5,                distance between user and target (default 5, 2.2 for melee moves); without a target the
+--                            user stands at "at"
+--     "repeat_s": 1.1,       optional: re-cast the move every repeat_s seconds (effects review); the target is then a
+--                            level 50 dummy without moves, healed before every cast ("target_fights": true keeps its
+--                            moves, "target_level" sets its level)
 --     "move": "ember",       optional move the user casts at the target
 --     "show_s": 0.3,         seconds between the move's effect start (end of cast) and the capture
 --     "cast_early_s": 0,     optional: start the cast this much earlier (a negative show_s also catches the wind-up)
@@ -123,14 +127,22 @@ local function arm(sc, player)
 	player:set_physics_override({ gravity = 0 })
 	player:set_pos({ x = sc.cam_x, y = gy + cam[2], z = sc.cam_z })
 	local level = sc.level or 20
-	local d = sc.d or 5
+	local mv = sc.move and minemon.data.get_move(sc.move)
+	-- Melee moves reach 2.5 nodes: stand close enough for them to land.
+	local d = sc.d or ((mv and mv.archetype == "melee_arc") and 2.2 or 5)
 	-- Side view: the camera looks along +z, so the user stands on -x and faces +x (yaw -pi/2), the target on +x.
 	local user, target
 	if sc.target then
 		local up = { x = cx - d / 2, y = ground_y(cx - d / 2, cz, gy) or gy, z = cz }
 		local tp = { x = cx + d / 2, y = ground_y(cx + d / 2, cz, gy) or gy, z = cz }
 		user = spawn_fixed(up, sc.user, -math.pi / 2, sc.move, level)
-		target = spawn_fixed(tp, sc.target, math.pi / 2, nil, level)
+		-- In repeat mode the target is a sturdy dummy: higher level, healed before every cast, no moves of its own
+		-- (a wild target fights back and its effects clutter the shot), unless the scene sets target_fights.
+		target = spawn_fixed(tp, sc.target, math.pi / 2, nil, sc.target_level or (sc.repeat_s and 50) or level)
+		local tinst = target and minemon.creatures.get_instance(target)
+		if tinst and not sc.target_fights then
+			tinst.moves = {}
+		end
 	elseif sc.user then
 		user = spawn_fixed({ x = cx, y = gy, z = cz }, sc.user, math.rad(sc.user_yaw_deg or 180), sc.move, level)
 	end
@@ -177,6 +189,7 @@ local function arm(sc, player)
 			if inst and inst.moves and inst.moves[1] then
 				inst.moves[1].pp = 99
 			end
+			minemon.creatures.heal(target, 10000)
 			minemon.combat.use_move(user, target, sc.move)
 			core.after(sc.repeat_s, again)
 		end

@@ -1,0 +1,1562 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   182.0,
+   10,
+   170.0
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "fx2_tackle_0",
+  "pos": [
+   182.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    182.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "tackle",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_tackle_1",
+  "pos": [
+   182.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    182.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "tackle",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_scratch_0",
+  "pos": [
+   183.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    183.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "scratch",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_scratch_1",
+  "pos": [
+   183.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    183.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "scratch",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_pound_0",
+  "pos": [
+   184.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    184.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "pound",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_pound_1",
+  "pos": [
+   184.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    184.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "pound",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_quick_attack_0",
+  "pos": [
+   185.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    185.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "quick_attack",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_quick_attack_1",
+  "pos": [
+   185.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    185.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "quick_attack",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_slash_0",
+  "pos": [
+   186.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    186.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "slash",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_slash_1",
+  "pos": [
+   186.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    186.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "slash",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_body_slam_0",
+  "pos": [
+   187.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    187.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "body_slam",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_body_slam_1",
+  "pos": [
+   187.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    187.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "body_slam",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_headbutt_0",
+  "pos": [
+   188.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    188.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "headbutt",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_headbutt_1",
+  "pos": [
+   188.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    188.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "headbutt",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_take_down_0",
+  "pos": [
+   189.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    189.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "take_down",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_take_down_1",
+  "pos": [
+   189.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    189.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "take_down",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "warmup",
+  "pos": [
+   182.0,
+   10,
+   170.0
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "fx2_double_edge_0",
+  "pos": [
+   182.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    182.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "double_edge",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_double_edge_1",
+  "pos": [
+   182.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    182.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "double_edge",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_mega_punch_0",
+  "pos": [
+   183.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    183.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "mega_punch",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_mega_punch_1",
+  "pos": [
+   183.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    183.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "mega_punch",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_mega_kick_0",
+  "pos": [
+   184.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    184.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "mega_kick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_mega_kick_1",
+  "pos": [
+   184.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    184.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "mega_kick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_karate_chop_0",
+  "pos": [
+   185.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    185.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "karate_chop",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_karate_chop_1",
+  "pos": [
+   185.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    185.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "karate_chop",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_mach_punch_0",
+  "pos": [
+   186.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    186.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "mach_punch",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_mach_punch_1",
+  "pos": [
+   186.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    186.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "mach_punch",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_low_kick_0",
+  "pos": [
+   187.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    187.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "low_kick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_low_kick_1",
+  "pos": [
+   187.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    187.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "low_kick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_double_kick_0",
+  "pos": [
+   188.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    188.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "double_kick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_double_kick_1",
+  "pos": [
+   188.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    188.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "double_kick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_extreme_speed_0",
+  "pos": [
+   189.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    189.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "extreme_speed",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_extreme_speed_1",
+  "pos": [
+   189.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    189.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "extreme_speed",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "warmup",
+  "pos": [
+   182.0,
+   10,
+   170.0
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "fx2_hyper_fang_0",
+  "pos": [
+   182.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    182.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "hyper_fang",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_hyper_fang_1",
+  "pos": [
+   182.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    182.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "hyper_fang",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_horn_attack_0",
+  "pos": [
+   183.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    183.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "horn_attack",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_horn_attack_1",
+  "pos": [
+   183.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    183.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "horn_attack",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_fury_swipes_0",
+  "pos": [
+   184.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    184.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "fury_swipes",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_fury_swipes_1",
+  "pos": [
+   184.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    184.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "fury_swipes",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_stomp_0",
+  "pos": [
+   185.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    185.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "stomp",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_stomp_1",
+  "pos": [
+   185.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    185.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "stomp",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_peck_0",
+  "pos": [
+   186.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    186.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "peck",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_peck_1",
+  "pos": [
+   186.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    186.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "peck",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_drill_peck_0",
+  "pos": [
+   187.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    187.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "drill_peck",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_drill_peck_1",
+  "pos": [
+   187.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    187.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "drill_peck",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_wing_attack_0",
+  "pos": [
+   188.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    188.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "wing_attack",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_wing_attack_1",
+  "pos": [
+   188.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    188.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "wing_attack",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_lick_0",
+  "pos": [
+   189.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    189.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "lick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_lick_1",
+  "pos": [
+   189.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    189.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "lick",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "warmup",
+  "pos": [
+   182.0,
+   10,
+   170.0
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "fx2_leech_life_0",
+  "pos": [
+   182.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    182.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "leech_life",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_leech_life_1",
+  "pos": [
+   182.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    182.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "leech_life",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_rollout_0",
+  "pos": [
+   183.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    183.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "rollout",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_rollout_1",
+  "pos": [
+   183.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    183.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "rollout",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_dig_0",
+  "pos": [
+   184.0,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    184.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "dig",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2_dig_1",
+  "pos": [
+   184.5,
+   10,
+   175.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    184.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 2.2,
+   "move": "dig",
+   "cam": [
+    0,
+    1.2,
+    -3.6
+   ],
+   "repeat_s": 1.1
+  }
+ }
+]
