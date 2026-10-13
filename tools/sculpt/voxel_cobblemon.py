@@ -320,7 +320,10 @@ def overrides(dex):
 # pupils, an open mouth) and attack props (vine whips) that its game code toggles; at rest only the neutral face
 # and body must show.
 import re  # noqa: E402
-GLOBAL_HIDE = re.compile(r"^(angry|sad|happy|surprised|shocked|sleepy|cry|blush)_|^mouth_open$|^vines?(_|$)")
+# Alternate expressions (Cobblemon swaps them in by animation; voxelized together they pile up), attack props and
+# the held-item placeholder planes. M2.1 lineup review: Gastly's open mouths, tongue and item planes made a grey slab.
+GLOBAL_HIDE = re.compile(r"^(angry|sad|happy|surprised|shocked|sleepy|cry|blush)_|_(angry|sad|surprised|shocked)(_|\d|$)"
+                         r"|^mouth_\w*open(?!_ditto)|^vines?(_|$)|^held_item|pupil\w*_closed\d*$")
 
 
 def hidden_bones(model, anim, hide_names=()):

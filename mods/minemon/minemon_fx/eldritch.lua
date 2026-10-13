@@ -30,9 +30,10 @@ local function body(obj)
 	return (cb[4] - cb[1]) / 2, cb[5] - cb[2], cb[2]
 end
 
+-- Night and dusk: the eyes glow from dusk on (the world is already dark enough then to read them).
 local function is_night()
 	local t = core.get_timeofday()
-	return t < 0.23 or t > 0.77
+	return t < 0.25 or t > 0.75
 end
 
 local function emit_aura(obj, s)
@@ -63,12 +64,25 @@ local function emit_aura(obj, s)
 		for _, key in ipairs({ "eye_left", "eye_right" }) do
 			local e = loc and loc[key]
 			if e then
+				-- A hot core that flickers, a red bloom round it, and now and then a spark that drifts off.
+				local at = { x = e[1] * scale, y = e[2] * scale, z = e[3] * scale + 0.03 }
 				F.on(obj, {
-					amount = math.floor(12 * s), time = s,
-					pos = { x = e[1] * scale, y = e[2] * scale, z = e[3] * scale + 0.02 },
+					amount = math.floor(12 * s), time = s, pos = at,
 					vel = { x = 0, y = 0, z = 0 }, exptime = { min = 0.15, max = 0.25 },
-					size = { min = 0.14 * scale, max = 0.18 * scale },
-					texture = F.tex(F.tint(F.TEX.glow, "#ff3a2a"), { blend = "add" }), glow = 14,
+					size = { min = 0.16 + 0.06 * scale, max = 0.2 + 0.08 * scale },
+					texture = F.tex(F.tint(F.TEX.glow, "#ffb0a0"), { blend = "add" }), glow = 14,
+				})
+				F.on(obj, {
+					amount = math.floor(3 * s), time = s, pos = at,
+					vel = { x = 0, y = 0, z = 0 }, exptime = { min = 0.6, max = 0.8 },
+					size = { min = 0.5 + 0.2 * scale, max = 0.6 + 0.25 * scale },
+					texture = F.tex(F.tint(F.TEX.glow, "#ff2a1a"), { blend = "add", alpha = 0.55 }), glow = 14,
+				})
+				F.on(obj, {
+					amount = math.max(1, math.floor(1 * s)), time = s, pos = at,
+					vel = { min = { x = -0.1, y = 0.1, z = -0.1 }, max = { x = 0.1, y = 0.3, z = 0.1 } },
+					exptime = { min = 0.6, max = 1.0 }, size = { min = 0.04, max = 0.07 },
+					texture = F.tex(F.tint(F.TEX.ember, "#ff4030"), { blend = "add", fade = true }), glow = 14,
 				})
 			end
 		end
@@ -78,6 +92,11 @@ end
 local aura_acc = 0
 local presence_acc = 0
 local presence = {} -- player name -> { level = n, base = { saturation, exposure_correction, intensity } }
+
+-- How much light the presence takes (exposure correction) per level; less at night, when the world is already
+-- dark and the creature must still read (M2.1 review: night shots were black).
+local DARK_DAY = { 0.0, 0.2, 0.38 }
+local DARK_NIGHT = { 0.0, 0.05, 0.1 }
 
 local function apply_presence(player, level)
 	local name = player:get_player_name()
@@ -91,13 +110,15 @@ local function apply_presence(player, level)
 		} }
 		presence[name] = rec
 	end
-	if rec.level == level then
+	local night = is_night()
+	if rec.level == level and rec.night == night then
 		return
 	end
 	rec.level = level
+	rec.night = night
 	local b = rec.base
 	local sat = ({ 1.0, 0.72, 0.45 })[level + 1]
-	local dark = ({ 0.0, 0.3, 0.6 })[level + 1]
+	local dark = (night and DARK_NIGHT or DARK_DAY)[level + 1]
 	player:set_lighting({
 		saturation = b.saturation * sat,
 		exposure = { exposure_correction = b.exposure - dark },
