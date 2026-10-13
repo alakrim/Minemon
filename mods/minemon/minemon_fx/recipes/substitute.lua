@@ -30,7 +30,7 @@ function R.aura(F, c)
 		local p = vector.add(centre, vector.multiply(fwd, 1.0))
 		local t = F.tex(F.tint(SPIN, c.palette.core), { blend = "alpha", fade = { 1, 0.5 }, grow = { 0.5, 1.0 } })
 		t.animation = { type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = -1 }
-		F.emit({ amount = 1, time = 0.02, pos = p, vel = ZERO, exptime = 1.6, size = 0.8, texture = t, glow = 8 })
+		F.emit({ amount = 1, time = 0.02, pos = p, vel = ZERO, exptime = 1.6, size = 1.1, texture = t, glow = 8 })
 		F.emit({
 			amount = 6, time = 0.2, pos = p, vel = { min = { x = -0.4, y = 0.2, z = -0.4 },
 				max = { x = 0.4, y = 0.6, z = 0.4 } },

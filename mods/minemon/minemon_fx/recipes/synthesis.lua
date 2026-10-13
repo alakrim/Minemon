@@ -24,7 +24,7 @@ function R.aura(F, c)
 			F.emit({
 				amount = 5, time = 0.25, pos = p, vel = { x = 0, y = -5.0, z = 0 },
 				jitter = { min = { x = -0.05, y = 0, z = -0.05 }, max = { x = 0.05, y = 0, z = 0.05 } },
-				exptime = { min = 0.35, max = 0.45 }, size = { min = 0.1, max = 0.14 },
+				exptime = { min = 0.35, max = 0.45 }, size = { min = 0.16, max = 0.22 },
 				texture = F.tex(F.tint(SPARK, RAY), { blend = "add", fade = true }), glow = 14,
 			})
 		end)

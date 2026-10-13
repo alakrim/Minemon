@@ -26,7 +26,7 @@ function R.aura(F, c)
 			for _, s in ipairs({ -1, 1 }) do
 				local p = vector.add(centre, vector.multiply(side, 0.9 * s))
 				F.emit({
-					amount = 1, time = 0.02, pos = p, vel = ZERO, exptime = 0.55, size = 1.0,
+					amount = 1, time = 0.02, pos = p, vel = ZERO, exptime = 0.55, size = 1.3,
 					texture = F.tex(F.tint(F.TEX.glow, "#fff8f0"), { blend = "alpha", fade = { 0.6, 0 }, alpha = 0.45,
 						grow = { 1.0, 1.1 } }),
 					glow = 4,
