@@ -25,9 +25,16 @@ from . import rig
 
 LO = np.array([-0.35, -0.02, -0.35])
 HI = np.array([0.35, 0.82, 0.55])
+
+
+def set_grid(lo, hi):
+    """Sets the voxel grid box (nodes) for the next build (voxel_cobblemon.py sizes it per species)."""
+    global LO, HI
+    LO = np.asarray(lo, float)
+    HI = np.asarray(hi, float)
 JITTER = 0.03
 ATLAS_MAX = 512
-BONE_BITS = 64  # bone index must fit in 6 bits of the merge key
+BONE_BITS = 4096  # bone index must fit below this in the merge key (Charizard has more than 64 bones)
 
 # (axis, sign) -> face shade: top up, bottom down, sides neutral (baked sun).
 FACES = [(0, 1), (0, -1), (1, 1), (1, -1), (2, 1), (2, -1)]
@@ -248,7 +255,7 @@ def assemble(sculpt, dims, quads, voxel, details=(), rgb_grid=None):
         cx, cy = cell % per_row, cell // per_row
         # Rows of the cell run along the face's v axis, columns along u (see the UVs below).
         atlas[CELL * cy:CELL * cy + CELL, CELL * cx:CELL * cx + CELL] = \
-            (np.transpose(painted[n], (1, 0, 2)) * 255 + 0.5).astype(np.uint8)
+            (np.clip(np.transpose(painted[n], (1, 0, 2)), 0, 1) * 255 + 0.5).astype(np.uint8)
 
     positions, normals, uvs, joints, weights, indices = [], [], [], [], [], []
     for axis, sign, plane, u0, v0, h, w, code, bone, det in quads:

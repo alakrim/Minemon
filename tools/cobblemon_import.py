@@ -435,6 +435,7 @@ def _build_model(geometry, lift):
             fk[i] = t_mul(fk[p], pivot_rot(rots[i], pivots[i]))
 
     positions, normals, uvs, joints, weights, indices = [], [], [], [], [], []
+    all_cubes = []
     flat_cubes = []  # cubes without a hull (thin, or outline off): their rects, for the eye glints
     cubes = []  # per solid cube: its face rects (texels) and its outline palette cell, for tools/creature_look.py
     hull_cells = []  # (index into uvs where the hull starts, cell number)
@@ -453,6 +454,10 @@ def _build_model(geometry, lift):
             rects = []
             solid = min(hi[k] - lo[k] for k in range(3)) >= OUTLINE_MIN_PX
             r = _round_radius(lo, hi) if solid else 0.0
+            # Every cube, for the micro-voxel builder (tools/sculpt/voxel_cobblemon.py): its box in cube space, the
+            # cube-to-model transform, and its faces' texel rectangles.
+            all_cubes.append({"bone": i, "name": bone["name"], "lo": lo, "hi": hi, "full": full,
+                              "faces": list(cube_faces(cube, bone_mirror))})
             for face, rect, mirror in cube_faces(cube, bone_mirror):
                 rects.append((face, rect))
                 uv = face_uv_corners(rect, mirror)  # BL, BR, TR, TL
@@ -501,7 +506,7 @@ def _build_model(geometry, lift):
         "positions": positions, "normals": normals, "uvs": uvs, "joints": joints, "weights": weights,
         "indices": indices, "inverse_bind": inverse_bind,
         "bounds_px": (tuple(lo_pt), tuple(hi_pt)),
-        "cubes": cubes, "flat_cubes": flat_cubes, "tex_size": (tex_w, tex_h, pad_rows),
+        "cubes": cubes, "flat_cubes": flat_cubes, "all_cubes": all_cubes, "tex_size": (tex_w, tex_h, pad_rows),
         # what pose_nodes needs to pose the skeleton, and the rest globals that the skin is bound to
         "parent": parent, "order": order, "pivots": pivots, "rest_deg": rest_deg, "flip": flip, "glob": glob,
     }
@@ -1225,7 +1230,17 @@ def main(argv=None):
             shiny_fallbacks += 1
         converted.append((dex, name, model, shiny_png))
     os.makedirs(args.out, exist_ok=True)
-    pack = write_pack(args.out, converted, args.commit)
+    if args.style == "microvoxel":
+        # M2.1 owner-chosen creature style (D-032): every species voxelized, hand-made sculpts where they exist.
+        sys.path.insert(0, ROOT)
+        from tools.sculpt import voxel_cobblemon as vc
+        heights = {}
+        if os.path.isfile(args.species):
+            with open(args.species, encoding="utf-8") as f:
+                heights = {int(sp["id"]): float(sp.get("height_m", 1.0)) for sp in json.load(f)}
+        pack = vc.write_pack(args.out, converted, args.commit, heights, plans=plans)
+    else:
+        pack = write_pack(args.out, converted, args.commit)
     print("cobblemon_import: converted %d of %d species into %s" % (len(converted), len(wanted), pack))
     print("cobblemon_import: shiny textures falling back to base: %d" % shiny_fallbacks)
     for key, _first, _last in CLIP_RANGES:

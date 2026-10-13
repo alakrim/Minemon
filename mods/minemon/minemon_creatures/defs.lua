@@ -146,8 +146,8 @@ function M.animation_table()
 end
 
 -- Visual data for one species (T-25c). pack_entry is minemon_pack.models[dex], or nil. shiny picks the shiny texture.
--- With a pack entry: the pack mesh and texture, visual_size 1 (the models are at true Cobblemon scale), and a
--- collision box from the pack's width and height. Without one: the stand-in mesh for the body plan, the type texture
+-- With a pack entry: the pack mesh and texture, visual_size = the entry's scale (1 when absent: true Cobblemon
+-- scale), and a collision box from the pack's width and height times that scale. Without one: the stand-in mesh for the body plan, the type texture
 -- and the size class scale. Returns { mesh, textures, visual_size, collisionbox, selectionbox, animation }.
 function M.visual_for(species, pack_entry, shiny)
 	assert(type(species) == "table", "species must be a table")
@@ -156,16 +156,21 @@ function M.visual_for(species, pack_entry, shiny)
 	if pack_entry then
 		assert(type(pack_entry.mesh) == "string", "pack entry has no mesh")
 		local texture = pack_entry.texture
+		local mesh = pack_entry.mesh
 		if shiny and pack_entry.texture_shiny then
 			texture = pack_entry.texture_shiny
+			-- The micro-voxel pack (M2.1) bakes colours into per-species atlases: the shiny has its own mesh.
+			mesh = pack_entry.mesh_shiny or mesh
 		end
-		local half_width = clamp(pack_entry.width, M.PACK_WIDTH_RANGE) / 2
-		local height = clamp(pack_entry.height, M.PACK_HEIGHT_RANGE)
+		-- scale (M2.1 micro-voxel pack): the visual size of the size rule; the box is scaled with it.
+		local s = pack_entry.scale or 1
+		local half_width = clamp(pack_entry.width * s, M.PACK_WIDTH_RANGE) / 2
+		local height = clamp(pack_entry.height * s, M.PACK_HEIGHT_RANGE)
 		local box = { -half_width, 0, -half_width, half_width, height, half_width }
 		return {
-			mesh = pack_entry.mesh,
+			mesh = mesh,
 			textures = { { texture } },
-			visual_size = { x = 1, y = 1, z = 1 },
+			visual_size = { x = s, y = s, z = s },
 			collisionbox = box,
 			selectionbox = copy_box(box),
 			animation = animation,

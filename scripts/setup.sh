@@ -128,13 +128,17 @@ python3 -c "import numpy, PIL" 2>/dev/null || pip install -q --break-system-pack
 
 # Conversion is skipped while the stamp (source commit plus converter sources) is unchanged.
 PACK_DIR=.tools/pack_cobblemon
-CONV_HASH=$(cat tools/cobblemon_import.py tools/gen_standins.py tools/creature_look.py | sha256sum | cut -d' ' -f1)
-PACK_STAMP="$COBBLEMON_BEDROCK_COMMIT $CONV_HASH"
+# Creature style (D-032): microvoxel (the owner's choice; slow: a few minutes on 4 cores) or toon_voxel.
+CREATURE_STYLE=${MINEMON_CREATURE_STYLE:-microvoxel}
+CONV_HASH=$(cat tools/cobblemon_import.py tools/gen_standins.py tools/creature_look.py tools/sculpt/*.py \
+	tools/sculpt/voxel_overrides.json | sha256sum | cut -d' ' -f1)
+PACK_STAMP="$COBBLEMON_BEDROCK_COMMIT $CONV_HASH $CREATURE_STYLE"
 if [ -f "$PACK_DIR/minemon_pack_cobblemon/init.lua" ] && [ "$(cat "$PACK_DIR/.stamp" 2>/dev/null || true)" = "$PACK_STAMP" ]; then
 	: # pack is current
 else
 	echo "[setup] converting Cobblemon models into $PACK_DIR"
-	python3 tools/cobblemon_import.py --src "$CBR_DIR" --out "$PACK_DIR" --commit "$COBBLEMON_BEDROCK_COMMIT"
+	python3 tools/cobblemon_import.py --src "$CBR_DIR" --out "$PACK_DIR" --commit "$COBBLEMON_BEDROCK_COMMIT" \
+		--style "$CREATURE_STYLE"
 	printf '%s\n' "$PACK_STAMP" > "$PACK_DIR/.stamp"
 fi
 

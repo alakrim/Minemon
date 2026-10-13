@@ -1,0 +1,6 @@
+{
+  "_doc": "Per-species fixes for tools/sculpt/voxel_cobblemon.py (M2.1). Keys are dex numbers. hide: bone names hidden with their children (action-only props Cobblemon hides in game code, e.g. vine whips). scale: multiplies the size rule's scale. eye_bones: extra bone names to repaint as anime eyes. Fill this while reviewing lineups; one line of reason per entry in _why.",
+  "1": {"hide": ["vines"], "_why": "vine whips are attack props, hidden at rest in Cobblemon"},
+  "2": {"hide": ["vines"], "_why": "vine whips"},
+  "3": {"hide": ["vines"], "_why": "vine whips"}
+}

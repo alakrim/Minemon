@@ -45,6 +45,10 @@ STYLES = {
     "painterly": {"round_px": 0.7, "outline_px": 0.25, "upscale": "epx", "blur": 1, "shade": "paint",
                   "grain": 0.06, "saturation": 0.95, "outline_value": 0.24, "flatten": 0.08, "glint": True},
 }
+# "microvoxel" (the owner's choice, D-032) only sets the geometry flags: the skins are not baked, the creatures are
+# voxelized by tools/sculpt/voxel_cobblemon.py.
+STYLES["microvoxel"] = {"round_px": 0.0, "outline_px": 0.0, "upscale": "pixel", "blur": 0, "shade": "chisel",
+                        "grain": 0.0, "saturation": 1.0, "outline_value": 0.3}
 DEFAULT_STYLE = "toon_voxel"
 
 
