@@ -330,18 +330,22 @@ def hidden_bones(model, anim, hide_names=()):
     return hidden
 
 
-def convert(model, anim, png_path, height_m, out_glb, out_png, body_plan=None, fix=None):
-    """Voxelizes one converted species. Returns (triangles, texture size, scale, height_nodes, width_nodes)."""
-    lo_px, hi_px = np.array(model["bounds_px"][0]), np.array(model["bounds_px"][1])
-    height_px = hi_px[1] - lo_px[1]
-    voxel_px = max(height_px / VOXELS_TALL, 0.2)
+MAX_TRIS = 12000  # per creature (Vega 8; and Irrlicht's 65535-vertex limit per mesh)
+
+
+def convert(model, anim, png_path, height_m, out_glb, out_png, body_plan=None, fix=None, shiny_png=None,
+            out_png_shiny=None):
+    """Voxelizes one converted species: one mesh, the normal atlas and (with shiny_png) the shiny atlas in the same
+    layout. Returns (triangles, texture size, scale, height_nodes, width_nodes)."""
     fix = fix or {}
-    sculpt = CobbleSculpt(model, png_path, voxel_px, hidden_bones(model, anim, fix.get("hide", ())))
-    if not sculpt.cubes:  # everything filtered (Ditto, Victreebel): keep every cube rather than fail
-        sculpt = CobbleSculpt(model, png_path, voxel_px, (), keep_all=True)
+    hidden = hidden_bones(model, anim, fix.get("hide", ()))
+    probe = CobbleSculpt(model, png_path, 1.0, hidden)
+    keep_all = not probe.cubes
+    if keep_all:  # everything filtered (Ditto, Victreebel): keep every cube rather than fail
+        probe = CobbleSculpt(model, png_path, 1.0, (), keep_all=True)
     # The grid covers the visible cubes only (some models carry far-away invisible helper boxes).
     corners = []
-    for c in sculpt.cubes:
+    for c in probe.cubes:
         for sx in (0, 1):
             for sy in (0, 1):
                 for sz in (0, 1):
@@ -349,14 +353,29 @@ def convert(model, anim, png_path, height_m, out_glb, out_png, body_plan=None, f
                     corners.append(c["R"] @ loc + c["t"])
     corners = np.array(corners)
     lo_px, hi_px = corners.min(axis=0), corners.max(axis=0)
-    height_px = hi_px[1] - lo_px[1]
-    voxel = voxel_px / PX
-    sculpt.voxel_nodes = voxel
-    pad = 2 * voxel
-    BV.set_grid(lo_px / PX - pad, hi_px / PX + pad)
-    dims, solid, bone, rgb_grid = BV.voxelize(sculpt, voxel, seed=7)
-    quads, details = BV.build_mesh(dims, solid, bone, rgb_grid, voxel, sculpt)
-    mesh, atlas, side = BV.assemble(sculpt, dims, quads, voxel, details, rgb_grid)
+    ext_px = hi_px - lo_px
+    # Voxel density follows the creature's bulk (its height, or half its longest side for long or wide bodies), so
+    # Geodude's arms and Ekans' length do not explode the voxel count; then a hard triangle budget.
+    voxel_px = max(ext_px[1], 0.5 * max(ext_px[0], ext_px[2])) / VOXELS_TALL
+    voxel_px = max(voxel_px, 0.2)
+    for _attempt in range(6):
+        sculpt = CobbleSculpt(model, png_path, voxel_px, () if keep_all else hidden, keep_all=keep_all)
+        voxel = voxel_px / PX
+        sculpt.voxel_nodes = voxel
+        sculpt2 = None
+        if shiny_png:
+            sculpt2 = CobbleSculpt(model, shiny_png, voxel_px, () if keep_all else hidden, keep_all=keep_all)
+            sculpt2.voxel_nodes = voxel
+        pad = 2 * voxel
+        BV.set_grid(lo_px / PX - pad, hi_px / PX + pad)
+        dims, solid, bone, rgb_grid = BV.voxelize(sculpt, voxel, seed=7)
+        rgb2 = BV.voxelize(sculpt2, voxel, seed=7)[3] if sculpt2 else None
+        quads, details = BV.build_mesh(dims, solid, bone, rgb_grid, voxel, sculpt, rgb2)
+        if len(quads) * 2 <= MAX_TRIS:
+            break
+        voxel_px *= 1.2
+    out = BV.assemble(sculpt, dims, quads, voxel, details, rgb_grid, sculpt2, rgb2)
+    mesh, atlas, side = out[0], out[1], out[2]
     vox_model = dict(model)
     vox_model["positions"] = [tuple(c * PX for c in p) for p in mesh["positions"]]
     vox_model["normals"] = mesh["normals"]
@@ -367,6 +386,8 @@ def convert(model, anim, png_path, height_m, out_glb, out_png, body_plan=None, f
     with open(out_glb, "wb") as f:
         f.write(ci.write_glb(vox_model, anim))
     Image.fromarray(atlas).save(out_png, optimize=True)
+    if shiny_png and out_png_shiny:
+        Image.fromarray(out[3]).save(out_png_shiny, optimize=True)
     # Extents from the voxels themselves. The size rule targets the creature's bulk: its height, or for serpents
     # (Onix, Gyarados, Ekans) 60% of their length, so they do not stretch across the landscape.
     pos = np.array(mesh["positions"])
@@ -418,13 +439,11 @@ def _job(args):
             scale, h, w, locs = _from_sculpt(mod, height_m, glb, png)
             out.update(scale=scale, height=h, width=w, locators=locs, source="sculpt")
             import shutil
-            shutil.copyfile(glb, os.path.join(pack, "models", "mmp_%04d_s.glb" % dex))
             shutil.copyfile(png, os.path.join(pack, "textures", "mmp_%04d_s.png" % dex))
         else:
-            _t, _s, scale, h, w = convert(model, model["anim"], model["base_png"], height_m, glb, png, plan, fix)
-            convert(model, model["anim"], shiny or model["base_png"], height_m,
-                    os.path.join(pack, "models", "mmp_%04d_s.glb" % dex),
-                    os.path.join(pack, "textures", "mmp_%04d_s.png" % dex), plan, fix)
+            _t, _s, scale, h, w = convert(model, model["anim"], model["base_png"], height_m, glb, png, plan, fix,
+                                          shiny or model["base_png"],
+                                          os.path.join(pack, "textures", "mmp_%04d_s.png" % dex))
             out.update(scale=scale, height=h, width=w, locators=model.get("locators", {}), source="cobblemon")
     except Exception as e:  # one species failing must not stop the pack
         out["error"] = "%s: %s" % (type(e).__name__, e)
@@ -433,7 +452,7 @@ def _job(args):
 
 def write_pack(out_dir, converted, commit, heights, jobs=4, plans=None):
     """The micro-voxel pack: same layout and init.lua fields as cobblemon_import.write_pack, plus scale (the
-    visual size the creature code applies) and mesh_shiny (the shiny atlas needs its own UVs)."""
+    visual size the creature code applies). The shiny skin is a second atlas in the same layout (one mesh)."""
     import multiprocessing
     import shutil
     pack = os.path.join(out_dir, ci.PACK_NAME)
@@ -465,8 +484,8 @@ def write_pack(out_dir, converted, commit, heights, jobs=4, plans=None):
         if "error" in r:
             failed.append((dex, r["error"]))
             continue
-        lines.append("\t[%d] = {mesh = \"mmp_%04d.glb\", mesh_shiny = \"mmp_%04d_s.glb\", texture = \"mmp_%04d.png\","
-                     " texture_shiny = \"mmp_%04d_s.png\"," % (dex, dex, dex, dex, dex))
+        lines.append("\t[%d] = {mesh = \"mmp_%04d.glb\", texture = \"mmp_%04d.png\","
+                     " texture_shiny = \"mmp_%04d_s.png\"," % (dex, dex, dex, dex))
         lines.append("\t\theight = %s, width = %s, scale = %s, source = \"%s\","
                      % (ci.lua_number(r["height"]), ci.lua_number(r["width"]), ci.lua_number(r["scale"]),
                         r["source"]))

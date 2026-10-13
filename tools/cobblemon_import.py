@@ -570,8 +570,20 @@ def write_glb(model, anim):
     acc_pos = binb.add(gs.pack_floats(positions), n, "VEC3", gs.FLOAT, (pmin, pmax))
     acc_nrm = binb.add(gs.pack_floats(model["normals"]), n, "VEC3", gs.FLOAT)
     acc_uv = binb.add(gs.pack_floats(model["uvs"]), n, "VEC2", gs.FLOAT)
-    acc_jnt = binb.add(gs.pack_ushorts(model["joints"]), n, "VEC4", gs.USHORT)
-    acc_wgt = binb.add(gs.pack_floats(model["weights"]), n, "VEC4", gs.FLOAT)
+    # Compact skin data (M2.1: voxel meshes have many vertices): byte joints when the skeleton allows, and weights
+    # as normalized bytes (glTF allows both; Luanti's loader reads them).
+    if len(model["names"]) < 256:
+        flat = [j for js in model["joints"] for j in js]
+        acc_jnt = binb.add(struct.pack("<%dB" % len(flat), *flat), n, "VEC4", 5121)
+    else:
+        acc_jnt = binb.add(gs.pack_ushorts(model["joints"]), n, "VEC4", gs.USHORT)
+    wq = []
+    for ws in model["weights"]:
+        q = [int(round(max(0.0, min(1.0, w)) * 255)) for w in ws]
+        q[0] += 255 - sum(q) if sum(q) else 255  # keep the sum exact
+        wq += q
+    acc_wgt = binb.add(struct.pack("<%dB" % len(wq), *wq), n, "VEC4", 5121)
+    binb.accessors[acc_wgt]["normalized"] = True
     if n < 65536:
         idx_raw = struct.pack("<%dH" % len(model["indices"]), *model["indices"])
         idx_type = gs.USHORT

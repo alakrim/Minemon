@@ -148,7 +148,7 @@ def _surface(sculpt, p, steps=2):
     return p
 
 
-def build_mesh(dims, solid, bone, rgb_grid, voxel, sculpt=None):
+def build_mesh(dims, solid, bone, rgb_grid, voxel, sculpt=None, rgb_grid2=None):
     """Returns the quads: (axis, sign, plane value, u0, v0, h, w, code, bone, detail_index or -1), and the detail
     faces [(axis, sign, voxel index)]."""
     quads = []
@@ -160,6 +160,8 @@ def build_mesh(dims, solid, bone, rgb_grid, voxel, sculpt=None):
         exposed = _exposed(solid, axis, sign)
         shade = _shade(axis, sign)
         code = _code(np.clip(rgb_grid * shade, 0.0, 1.0))
+        if rgb_grid2 is not None:  # a second skin (the shiny) shares the mesh: the key holds both colours
+            code = code * PAIR + _code(np.clip(rgb_grid2 * shade, 0.0, 1.0))
         keys = np.where(exposed, code * BONE_BITS + bone, -1)
         detail_id = np.full(dims.tolist(), -1, dtype=np.int64)
         if sculpt is not None:
@@ -230,9 +232,17 @@ def paint_details(sculpt, details, rgb_grid, voxel):
     return out.reshape(len(details), DETAIL, DETAIL, 3)
 
 
-def assemble(sculpt, dims, quads, voxel, details=(), rgb_grid=None):
+PAIR = 1 << 24  # colour codes are 24-bit RGB; a pair (normal, shiny) is base * PAIR + shiny
+
+
+def _rgb_of(code):
+    return code // 65536, (code // 256) % 256, code % 256
+
+
+def assemble(sculpt, dims, quads, voxel, details=(), rgb_grid=None, sculpt2=None, rgb_grid2=None):
     """Turns quads into GLB arrays and the atlas. Flat colours get a CELL x CELL cell (sampled at its centre); detail
-    faces get a painted cell mapped corner to corner. Returns (mesh dict, atlas array, atlas size)."""
+    faces get a painted cell mapped corner to corner. With sculpt2/rgb_grid2 (the shiny skin) the codes are pairs and
+    a second atlas with the same layout is painted. Returns (mesh dict, atlas array, atlas size[, atlas2])."""
     colours = sorted({q[7] for q in quads if q[9] < 0})
     cells = len(colours) + len(details)
     per_row = 1
@@ -244,18 +254,24 @@ def assemble(sculpt, dims, quads, voxel, details=(), rgb_grid=None):
     if side > ATLAS_MAX * 2:
         raise SystemExit("FAIL: %d cells do not fit the atlas" % cells)
     cell_of = {c: i for i, c in enumerate(colours)}
-    atlas = np.zeros((side, side, 3), np.uint8)
-    for code, cell in cell_of.items():
-        r, g, b = code // 65536, (code // 256) % 256, code % 256
-        cx, cy = cell % per_row, cell // per_row
-        atlas[CELL * cy:CELL * cy + CELL, CELL * cx:CELL * cx + CELL] = (r, g, b)
-    painted = paint_details(sculpt, list(details), rgb_grid, voxel) if len(details) else None
-    for n in range(len(details)):
-        cell = len(colours) + n
-        cx, cy = cell % per_row, cell // per_row
-        # Rows of the cell run along the face's v axis, columns along u (see the UVs below).
-        atlas[CELL * cy:CELL * cy + CELL, CELL * cx:CELL * cx + CELL] = \
-            (np.clip(np.transpose(painted[n], (1, 0, 2)), 0, 1) * 255 + 0.5).astype(np.uint8)
+    paired = rgb_grid2 is not None
+    atlases = []
+    for which in ((0, 1) if paired else (0,)):
+        atlas = np.zeros((side, side, 3), np.uint8)
+        for code, cell in cell_of.items():
+            c = (code // PAIR if which == 0 else code % PAIR) if paired else code
+            cx, cy = cell % per_row, cell // per_row
+            atlas[CELL * cy:CELL * cy + CELL, CELL * cx:CELL * cx + CELL] = _rgb_of(c)
+        sc, grid = (sculpt, rgb_grid) if which == 0 else (sculpt2, rgb_grid2)
+        painted = paint_details(sc, list(details), grid, voxel) if len(details) else None
+        for n in range(len(details)):
+            cell = len(colours) + n
+            cx, cy = cell % per_row, cell // per_row
+            # Rows of the cell run along the face's v axis, columns along u (see the UVs below).
+            atlas[CELL * cy:CELL * cy + CELL, CELL * cx:CELL * cx + CELL] = \
+                (np.clip(np.transpose(painted[n], (1, 0, 2)), 0, 1) * 255 + 0.5).astype(np.uint8)
+        atlases.append(atlas)
+    atlas = atlases[0]
 
     positions, normals, uvs, joints, weights, indices = [], [], [], [], [], []
     for axis, sign, plane, u0, v0, h, w, code, bone, det in quads:
@@ -280,6 +296,8 @@ def assemble(sculpt, dims, quads, voxel, details=(), rgb_grid=None):
         indices += [base, base + 1, base + 2, base, base + 2, base + 3]
     mesh = {"positions": positions, "normals": normals, "uvs": uvs, "joints": joints, "weights": weights,
             "indices": indices}
+    if paired:
+        return mesh, atlas, side, atlases[1]
     return mesh, atlas, side
 
 
