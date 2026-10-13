@@ -5,6 +5,25 @@
 
 local R = {}
 
+-- The cast, melee and impact contexts differ: the cast and impact have no facing. The direction is the horizontal line
+-- from the user to its target (cast) or victim (impact).
+local function with_fwd(c)
+	if c.fwd then
+		return c
+	end
+	local other = c.victim or c.target
+	local u, v = c.user:get_pos(), other and other:get_pos()
+	local dx, dz = v and (v.x - u.x) or 1, v and (v.z - u.z) or 0
+	local len = math.sqrt(dx * dx + dz * dz)
+	local t = {}
+	for k, val in pairs(c) do
+		t[k] = val
+	end
+	t.fwd = len > 0.01 and { x = dx / len, y = 0, z = dz / len } or { x = 1, y = 0, z = 0 }
+	return t
+end
+
+
 local CLAW = "minemon_fx_claw.png"
 local SPARK = "minemon_fx_spark.png"
 local SPACING = 0.22
@@ -16,6 +35,7 @@ end
 
 -- Wind-up: three glints appear in front of the chest, one per claw.
 function R.cast(F, c)
+	c = with_fwd(c)
 	local at = F.anchor(c.user, "middle", 0.6, 0.6)
 	if not at then
 		return false
@@ -45,6 +65,7 @@ end
 
 -- Three cuts stay on the victim for a moment; sparks drop off each cut as it lands.
 function R.impact(F, c)
+	c = with_fwd(c)
 	local at = c.pos
 	for k = -1, 1 do
 		local p = vector.add(at, across(c.fwd, k))

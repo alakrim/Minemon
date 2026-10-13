@@ -6,6 +6,25 @@
 
 local R = {}
 
+-- The cast, melee and impact contexts differ: the cast and impact have no facing. The direction is the horizontal line
+-- from the user to its target (cast) or victim (impact).
+local function with_fwd(c)
+	if c.fwd then
+		return c
+	end
+	local other = c.victim or c.target
+	local u, v = c.user:get_pos(), other and other:get_pos()
+	local dx, dz = v and (v.x - u.x) or 1, v and (v.z - u.z) or 0
+	local len = math.sqrt(dx * dx + dz * dz)
+	local t = {}
+	for k, val in pairs(c) do
+		t[k] = val
+	end
+	t.fwd = len > 0.01 and { x = dx / len, y = 0, z = dz / len } or { x = 1, y = 0, z = 0 }
+	return t
+end
+
+
 local FEATHER = "minemon_fx_feather.png"
 local SPEED = "minemon_fx_speedline.png"
 local FEATHERS = 8
@@ -14,6 +33,7 @@ local SWEEP = math.rad(70)
 
 -- Wind-up: feathers are drawn in to the shoulders from the air round the user.
 function R.cast(F, c)
+	c = with_fwd(c)
 	local at = F.anchor(c.user, "middle", 0.7, 0.0)
 	if not at then
 		return false
@@ -44,6 +64,7 @@ end
 
 -- The hit: two wide bars of wind across the chest, and the feather fan thrown outward from it.
 function R.impact(F, c)
+	c = with_fwd(c)
 	local at = c.pos
 	for _, dy in ipairs({ 0.12, -0.14 }) do
 		F.emit({

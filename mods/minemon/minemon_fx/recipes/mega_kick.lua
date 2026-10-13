@@ -6,6 +6,25 @@
 
 local R = {}
 
+-- The cast, melee and impact contexts differ: the cast and impact have no facing. The direction is the horizontal line
+-- from the user to its target (cast) or victim (impact).
+local function with_fwd(c)
+	if c.fwd then
+		return c
+	end
+	local other = c.victim or c.target
+	local u, v = c.user:get_pos(), other and other:get_pos()
+	local dx, dz = v and (v.x - u.x) or 1, v and (v.z - u.z) or 0
+	local len = math.sqrt(dx * dx + dz * dz)
+	local t = {}
+	for k, val in pairs(c) do
+		t[k] = val
+	end
+	t.fwd = len > 0.01 and { x = dx / len, y = 0, z = dz / len } or { x = 1, y = 0, z = 0 }
+	return t
+end
+
+
 local ARC = "minemon_fx_arc_wide.png^[transformR90" -- turned to a low smile: it sweeps across the legs
 local DUST = "minemon_fx_dust.png"
 local ZERO = { x = 0, y = 0, z = 0 }
@@ -17,6 +36,7 @@ end
 
 -- Wind-up: the leg is drawn back. A faint arc forms behind the user, and dust is pressed into the floor under it.
 function R.cast(F, c)
+	c = with_fwd(c)
 	local feet = feet_of(c.user)
 	if not feet then
 		return false

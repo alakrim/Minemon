@@ -6,6 +6,25 @@
 
 local R = {}
 
+-- The cast, melee and impact contexts differ: the cast and impact have no facing. The direction is the horizontal line
+-- from the user to its target (cast) or victim (impact).
+local function with_fwd(c)
+	if c.fwd then
+		return c
+	end
+	local other = c.victim or c.target
+	local u, v = c.user:get_pos(), other and other:get_pos()
+	local dx, dz = v and (v.x - u.x) or 1, v and (v.z - u.z) or 0
+	local len = math.sqrt(dx * dx + dz * dz)
+	local t = {}
+	for k, val in pairs(c) do
+		t[k] = val
+	end
+	t.fwd = len > 0.01 and { x = dx / len, y = 0, z = dz / len } or { x = 1, y = 0, z = 0 }
+	return t
+end
+
+
 local CLAW = "minemon_fx_claw.png"
 local CLAW_FX = "minemon_fx_claw.png^[transformFX" -- the other diagonal: the two arms of the V
 local SPEED = "minemon_fx_speedline.png"
@@ -17,6 +36,7 @@ end
 
 -- Wind-up: speed lines are drawn up into the raised hand, above the head.
 function R.cast(F, c)
+	c = with_fwd(c)
 	local head = F.anchor(c.user, "head", 1.0)
 	if not head then
 		return false
@@ -45,6 +65,7 @@ end
 
 -- The blow: the V lands on the victim's shoulder, a flash, and splinters thrown sideways from the edge.
 function R.impact(F, c)
+	c = with_fwd(c)
 	local at = c.pos
 	for _, arm in ipairs({ { tex = CLAW, k = -0.14 }, { tex = CLAW_FX, k = 0.14 } }) do
 		F.emit({

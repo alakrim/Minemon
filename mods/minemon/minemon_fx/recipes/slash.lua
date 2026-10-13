@@ -6,6 +6,25 @@
 
 local R = {}
 
+-- The cast, melee and impact contexts differ: the cast and impact have no facing. The direction is the horizontal line
+-- from the user to its target (cast) or victim (impact).
+local function with_fwd(c)
+	if c.fwd then
+		return c
+	end
+	local other = c.victim or c.target
+	local u, v = c.user:get_pos(), other and other:get_pos()
+	local dx, dz = v and (v.x - u.x) or 1, v and (v.z - u.z) or 0
+	local len = math.sqrt(dx * dx + dz * dz)
+	local t = {}
+	for k, val in pairs(c) do
+		t[k] = val
+	end
+	t.fwd = len > 0.01 and { x = dx / len, y = 0, z = dz / len } or { x = 1, y = 0, z = 0 }
+	return t
+end
+
+
 local BLADE = { "minemon_fx_slash_l.png", "minemon_fx_slash.png", "minemon_fx_slash_r.png" }
 local SPARK = "minemon_fx_spark.png"
 
@@ -18,6 +37,7 @@ end
 
 -- Wind-up: a glint of light is drawn into the chest, and the sparks that will be the blades gather there.
 function R.cast(F, c)
+	c = with_fwd(c)
 	local at = F.anchor(c.user, "middle", 0.6, 0.6)
 	if not at then
 		return false
@@ -46,6 +66,7 @@ end
 
 -- The fan lands on the victim: three bright blades, a white catch light, and sparks thrown off the cut edges.
 function R.impact(F, c)
+	c = with_fwd(c)
 	local at = c.pos
 	for i, f in ipairs(FAN) do
 		local p = fan_point(at, c.fwd, f, 1.2)
