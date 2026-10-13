@@ -30,10 +30,16 @@ function M.is_night()
 	return t < 0.2 or t > 0.8
 end
 
--- Wild level at a position: distance from the origin in xz, night bonus, seeded jitter (D-026).
+-- Wild level at a position: distance from the origin in xz, night bonus, seeded jitter (D-026), then the admin's
+-- level offset (D-033). The gate and on_spawn both use it, so they agree.
 function M.level_at(pos)
 	local dist = math.sqrt(pos.x * pos.x + pos.z * pos.z)
-	return minemon.formulas.wild_level(dist, M.is_night(), M.rng_at(pos))
+	local level = minemon.formulas.wild_level(dist, M.is_night(), M.rng_at(pos))
+	local T = minemon.tuning
+	if T then
+		level = T.logic.apply_level(level, T.get("level_offset"))
+	end
+	return level
 end
 
 -- True for a loaded wild creature of ours: no owner and not tamed.
@@ -56,6 +62,11 @@ end
 -- check_position for mcl_mobs:spawn_setup: the level gate (S-12 section 2), then the local cap.
 local function gate(min_level)
 	return function(pos)
+		-- Admin switches (D-033): wild spawns can be turned off, and the local cap scaled (0 means none).
+		local T = minemon.tuning
+		if T and T.get("spawn_enabled") == false then
+			return false
+		end
 		-- Sanctuary wards (D-030): no wild spawn within 24 nodes of a sanctuary centre.
 		if minemon.sanctuary and minemon.sanctuary.blocks_spawn and minemon.sanctuary.blocks_spawn(pos) then
 			return false
@@ -63,7 +74,11 @@ local function gate(min_level)
 		if M.level_at(pos) < min_level then
 			return false
 		end
-		return M.wild_nearby(pos) < LOCAL_CAP
+		local cap = LOCAL_CAP
+		if T then
+			cap = math.floor(LOCAL_CAP * T.get("spawn_cap_mult") + 0.5)
+		end
+		return M.wild_nearby(pos) < cap
 	end
 end
 

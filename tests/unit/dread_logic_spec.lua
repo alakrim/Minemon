@@ -108,6 +108,44 @@ describe("dread_logic.roll", function()
 	end)
 end)
 
+describe("dread_logic.roll with the Dread knob (mult, D-033)", function()
+	it("mult 0 is never Dread at night, and draws nothing", function()
+		local rng = { float = function() error("no draw when the chance is zero") end }
+		assert.is_false(D.roll(0, NIGHT, false, rng, 0))
+		assert.is_false(D.roll(2000, NIGHT, false, scripted(0.0), 0))
+	end)
+
+	it("a large mult is always Dread at night, clamped to 1", function()
+		assert.is_true(D.roll(2000, NIGHT, false, scripted(0.999999), 20))
+		assert.is_false(D.roll(2000, NIGHT, false, scripted(1), 20))
+	end)
+
+	it("at the origin, mult 20 gives chance 0.5 (no clamp needed)", function()
+		assert.is_true(D.roll(0, NIGHT, false, scripted(0.49), 20))
+		assert.is_false(D.roll(0, NIGHT, false, scripted(0.5), 20))
+	end)
+
+	it("mult 1 is the same as no mult", function()
+		assert.is_true(D.roll(0, NIGHT, false, scripted(1 / 40 - 0.001), 1))
+		assert.is_false(D.roll(0, NIGHT, false, scripted(1 / 40), 1))
+		assert.is_true(D.roll(2000, NIGHT, false, scripted(1 / 12 - 0.001), 1))
+	end)
+
+	it("scales the chance: mult 2 at the origin passes below 2 / 40", function()
+		assert.is_true(D.roll(0, NIGHT, false, scripted(2 / 40 - 0.001), 2))
+		assert.is_false(D.roll(0, NIGHT, false, scripted(2 / 40), 2))
+	end)
+
+	it("is still never Dread by day, whatever the mult", function()
+		local rng = { float = function() error("no draw by day") end }
+		assert.is_false(D.roll(0, DAY, false, rng, 20))
+	end)
+
+	it("is still false inside a Sanctuary ward, whatever the mult", function()
+		assert.is_false(D.roll(1500, NIGHT, true, scripted(0), 20))
+	end)
+end)
+
 describe("dread_logic.dread_level", function()
 	it("adds 5 to 12 levels", function()
 		assert.equals(14, D.dread_level(9, scripted(0, 5)))

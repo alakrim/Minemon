@@ -553,4 +553,32 @@ describe("creatures_defs shiny roll", function()
 	it("the odds are 1 in 512", function()
 		assert.equals(512, D.SHINY_ODDS)
 	end)
+
+	it("an explicit mult of 1 is the default roll (the same int draw)", function()
+		local seen = {}
+		local rng = { int = function(_, a, b)
+			seen[#seen + 1] = { a, b }
+			return 1
+		end }
+		assert.is_true(D.roll_shiny(rng, 1))
+		assert.are.same({ 1, 512 }, seen[1])
+	end)
+
+	it("mult = SHINY_ODDS makes every wild creature shiny", function()
+		local rng = { float = function() return 0.999999 end }
+		assert.is_true(D.roll_shiny(rng, D.SHINY_ODDS))
+		assert.is_true(D.roll_shiny(rng, 10 * D.SHINY_ODDS))
+	end)
+
+	it("mult 0 is never shiny", function()
+		local rng = { float = function() return 0 end }
+		assert.is_false(D.roll_shiny(rng, 0))
+	end)
+
+	it("another mult uses one float draw below mult / 512", function()
+		local rng = { float = function() return 2 / 512 - 0.0001 end }
+		assert.is_true(D.roll_shiny(rng, 2))
+		rng = { float = function() return 2 / 512 end }
+		assert.is_false(D.roll_shiny(rng, 2))
+	end)
 end)
