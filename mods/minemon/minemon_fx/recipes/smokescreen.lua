@@ -34,7 +34,7 @@ function R.cloud(F, c)
 		speed = 1.0, radius = 0.3, life = { 1.8, 2.4 }, size = { 0.7, 0.95 }, grow = { 0.8, 1.6 }, gravity = 0,
 		glow = 0 })
 	F.ring({ pos = low, colour = c.palette.smoke, size = 0.6, grow = 4.0, life = 0.8 })
-	core.after(0.6, function()
+	F.after(0.6, function()
 		F.burst({ pos = low, tex = F.TEX.smoke, anim = "smoke", colour = c.palette.smoke, blend = "alpha", amount = 14,
 			speed = 0.8, radius = 0.3, life = { 1.6, 2.2 }, size = { 0.5, 0.7 }, grow = { 0.8, 1.5 }, glow = 0 })
 		F.ring({ pos = low, colour = c.palette.main, size = 0.6, grow = 4.0, life = 0.9 })

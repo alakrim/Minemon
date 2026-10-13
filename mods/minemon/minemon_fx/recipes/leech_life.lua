@@ -51,7 +51,7 @@ function R.impact(F, c)
 	F.burst({ pos = at, tex = MOTE, colour = c.palette.main, amount = 5, speed = 1.2, life = { 0.3, 0.5 },
 		size = { 0.14, 0.2 }, glow = 14 })
 	local user = c.user
-	core.after(ARRIVE_S, function()
+	F.after(ARRIVE_S, function()
 		if not user:get_pos() then
 			return
 		end

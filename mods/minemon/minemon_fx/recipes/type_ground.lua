@@ -140,7 +140,7 @@ function R.area(F, c)
 	local r = c.radius
 	local at = c.centre
 	F.ring({ pos = at, colour = c.palette.main, size = 0.8, grow = r * 1.8, life = 0.55 })
-	core.after(0.2, function()
+	F.after(0.2, function()
 		F.ring({ pos = at, colour = c.palette.edge, size = 0.6, grow = r * 2.2, life = 0.6 })
 	end)
 	F.burst({ pos = at, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 30, speed = r * 1.2,

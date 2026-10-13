@@ -38,7 +38,7 @@ end
 function R.cloud(F, c)
 	local at = F.anchor(c.target, "middle", 0.55) or c.centre
 	for k = 0, 2 do
-		core.after(k * 0.45, function()
+		F.after(k * 0.45, function()
 			F.burst({ pos = at, tex = DASH, colour = c.palette.main, amount = 10 + 2 * k, speed = 2.2 + 0.4 * k,
 				radius = 0.3, life = { 0.3, 0.5 }, size = { 0.5, 0.7 }, glow = 8 })
 			F.ring({ pos = at, colour = c.palette.edge, size = 0.3, grow = 2.0 + 0.6 * k, life = 0.3 })

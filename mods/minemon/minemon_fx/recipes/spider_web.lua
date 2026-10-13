@@ -34,7 +34,7 @@ function R.cloud(F, c)
 		exptime = { min = 0.45, max = 0.6 }, size = { min = 0.16, max = 0.22 },
 		texture = F.tex(F.tint(THREAD, c.palette.core), { blend = "add", fade = true }), glow = 8,
 	})
-	core.after(0.5, function()
+	F.after(0.5, function()
 		F.emit({
 			amount = 1, time = 0.02, pos = vector.add(at, { x = 0, y = 0.7, z = 0 }), vel = ZERO, exptime = t - 0.5,
 			size = 2.0,

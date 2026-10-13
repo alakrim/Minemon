@@ -35,7 +35,7 @@ function R.cloud(F, c)
 	local speed = 14
 	local dir = vector.multiply(d, 1 / math.max(0.01, vector.length(d)))
 	for k = 0, 2 do
-		core.after(k * 0.2, function()
+		F.after(k * 0.2, function()
 			F.emit({
 				amount = 7, time = 0.03, pos = from, vel = vector.multiply(dir, speed),
 				exptime = vector.length(d) / speed, size = { min = 0.34, max = 0.46 },

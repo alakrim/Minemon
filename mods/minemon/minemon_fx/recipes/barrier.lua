@@ -27,7 +27,7 @@ function R.aura(F, c)
 			texture = tex, glow = 10,
 		})
 		-- Lock: the plate stays where it lands, one metre out, and fades.
-		core.after(0.36, function()
+		F.after(0.36, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = vector.add(centre, vector.multiply(dir, 1.0)), vel = ZERO,
 				exptime = 2.0, size = 0.4,
@@ -35,7 +35,7 @@ function R.aura(F, c)
 			})
 		end)
 	end
-	core.after(0.36, function()
+	F.after(0.36, function()
 		F.ring({ pos = centre, colour = c.palette.main, size = 0.5, grow = 2.6, life = 0.4 })
 		F.flare({ pos = centre, colour = c.palette.core, size = 1.0, life = 0.16 })
 	end)

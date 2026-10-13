@@ -34,7 +34,7 @@ function R.cloud(F, c)
 		texture = F.tex(F.tint(RUNE, c.palette.edge), { blend = "alpha", fade = true }), glow = 0,
 	})
 	F.decal({ pos = at, tex = F.tint(F.TEX.ring, c.palette.smoke), size = 2.2, life = t, glow = 0 })
-	core.after(t * 0.5, function()
+	F.after(t * 0.5, function()
 		F.decal({ pos = at, tex = F.tint(F.TEX.ring, c.palette.edge), size = 1.2, life = t * 0.5, glow = 0 })
 	end)
 end

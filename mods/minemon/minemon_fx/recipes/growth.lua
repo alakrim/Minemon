@@ -34,7 +34,7 @@ function R.aura(F, c)
 		})
 	end
 	F.ring({ pos = vector.add(feet, { x = 0, y = 0.05, z = 0 }), colour = PALE, size = 0.5, grow = 2.4, life = 0.5 })
-	core.after(0.3, function()
+	F.after(0.3, function()
 		F.burst({ pos = c.centre, tex = F.TEX.mote, colour = "#e8ffb0", amount = 14, speed = 1.4, radius = 0.2,
 			life = { 0.5, 0.9 }, size = { 0.16, 0.24 }, gravity = -0.6, glow = 14 })
 	end)

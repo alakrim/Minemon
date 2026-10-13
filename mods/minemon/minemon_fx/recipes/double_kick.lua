@@ -18,7 +18,7 @@ function R.cast(F, c)
 	end
 	local t = math.max(0.12, c.time or 0.3)
 	for i = 0, 1 do
-		core.after(i * t / 2, function()
+		F.after(i * t / 2, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = at, vel = { x = 0, y = 0, z = 0 }, exptime = t / 3, size = 0.7,
 				texture = F.tex(F.tint(F.TEX.glow, c.palette.core), { blend = "add", fade = true, grow = { 0.6, 1.0 } }),
@@ -41,7 +41,7 @@ function R.melee(F, c)
 		exptime = { min = 0.12, max = 0.2 }, size = { min = 0.5, max = 0.6 },
 		texture = F.tex(F.tint(SPEED, c.palette.main), { blend = "add", fade = true }), glow = 14,
 	})
-	core.after(GAP_S, function()
+	F.after(GAP_S, function()
 		if not c.user:get_pos() then
 			return
 		end
@@ -73,7 +73,7 @@ function R.impact(F, c)
 	local low = vector.add(feet, { x = 0, y = 0.35, z = 0 })
 	local high = vector.add(feet, { x = 0, y = 1.0, z = 0 })
 	pulse(F, c, low, 1.3)
-	core.after(GAP_S, function()
+	F.after(GAP_S, function()
 		if victim:get_pos() then
 			pulse(F, c, high, 1.6)
 		end

@@ -29,7 +29,7 @@ function R.cloud(F, c)
 	local at = c.centre
 	local t = c.time or 3
 	for loop = 0, 4 do
-		core.after(loop * 0.5, function()
+		F.after(loop * 0.5, function()
 			for k = 0, 5 do
 				local a = k * math.pi / 3 + loop * 0.4
 				local sense = (loop % 2 == 0) and 1 or -1

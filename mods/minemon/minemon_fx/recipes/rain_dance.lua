@@ -41,7 +41,7 @@ function R.cloud(F, c)
 		})
 	end
 	for k = 0, 7 do
-		core.after(0.3 + k * 0.35, function()
+		F.after(0.3 + k * 0.35, function()
 			local a = (k * 2.3) % (2 * math.pi)
 			local p = { x = feet.x + math.cos(a) * RING, y = feet.y + 0.05, z = feet.z + math.sin(a) * RING }
 			F.ring({ pos = p, colour = "#bfe6ff", size = 0.2, grow = 1.6, life = 0.3 })

@@ -119,7 +119,7 @@ function R.area(F, c)
 	local r = c.radius or 3
 	F.flare({ pos = c.centre, colour = c.palette.core, size = 1.4, life = 0.2 })
 	F.ring({ pos = c.centre, colour = c.palette.main, size = 0.6, grow = r * 2 / 0.6, life = 0.5 })
-	core.after(0.12, function()
+	F.after(0.12, function()
 		F.ring({ pos = c.centre, colour = c.palette.edge, size = 0.6, grow = r * 2 / 0.6, life = 0.6 })
 	end)
 	F.burst({ pos = c.centre, tex = F.TEX.spark, colour = GOLD, amount = 30, speed = r * 1.5, radius = 0.3,
@@ -135,7 +135,7 @@ function R.impact(F, c)
 	local at = c.pos
 	F.flare({ pos = at, colour = c.palette.core, size = 1.4, life = 0.14 })
 	F.ring({ pos = at, colour = c.palette.core, size = 0.4, grow = 4.0, life = 0.4 })
-	core.after(0.07, function()
+	F.after(0.07, function()
 		F.ring({ pos = at, colour = c.palette.main, size = 0.4, grow = 4.8, life = 0.45 })
 	end)
 	F.burst({ pos = at, tex = F.TEX.glow, colour = c.palette.main, amount = 22, speed = 4, life = { 0.3, 0.6 },

@@ -44,7 +44,7 @@ function R.cloud(F, c)
 		texture = F.tex(F.tint(F.TEX.flare, SUN), { blend = "add", fade = { 0.8, 0.4 }, grow = { 0.9, 1.1 } }), glow = 14,
 	})
 	for k = 0, 2 do
-		core.after(k * 0.9, function()
+		F.after(k * 0.9, function()
 			F.burst({ pos = sun, colour = c.palette.core, amount = 14, speed = 1.3, radius = 0.4, life = { 1.0, 1.6 },
 				size = { 0.1, 0.16 }, glow = 14 })
 		end)

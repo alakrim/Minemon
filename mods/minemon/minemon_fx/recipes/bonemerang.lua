@@ -43,7 +43,7 @@ function R.beam(F, c)
 	F.burst({ pos = c.to, tex = F.TEX.spark, colour = c.palette.core, amount = 10, speed = 3, life = { 0.2, 0.4 },
 		size = { 0.1, 0.16 } })
 	-- The bone comes back along the line once it has struck, spinning.
-	core.after(PASS_S, function()
+	F.after(PASS_S, function()
 		pass(F, c, c.to, vector.multiply(vel, -1))
 		F.sound("mcl_throwing_throw", { pos = c.to, gain = 0.5, pitch = 0.8 })
 	end)

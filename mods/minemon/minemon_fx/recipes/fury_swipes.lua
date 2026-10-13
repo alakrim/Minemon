@@ -47,7 +47,7 @@ end
 function R.impact(F, c)
 	local at = c.pos
 	for i = 1, COUNT do
-		core.after((i - 1) * STEP_S, function()
+		F.after((i - 1) * STEP_S, function()
 			local p = vector.add(at, { x = (math.random() - 0.5) * 0.5, y = (math.random() - 0.5) * 0.4, z = 0 })
 			F.emit({
 				amount = 1, time = 0.02, pos = p, vel = { x = 0, y = 0, z = 0 }, exptime = 0.14, size = 0.55,

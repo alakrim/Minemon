@@ -68,7 +68,7 @@ function R.impact(F, c)
 		if len > 0.1 then
 			local dir = vector.multiply(d, 1 / len)
 			local speed = 3.5
-			core.after(0.3, function()
+			F.after(0.3, function()
 				F.emit({
 					amount = 18, time = 0.4, pos = { min = vector.subtract(at, { x = 0.2, y = 0.2, z = 0.2 }),
 						max = vector.add(at, { x = 0.2, y = 0.2, z = 0.2 }) },

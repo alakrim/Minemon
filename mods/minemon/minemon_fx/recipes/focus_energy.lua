@@ -22,7 +22,7 @@ function R.aura(F, c)
 			texture = F.tex(F.tint(F.TEX.spark, c.palette.main), { blend = "add", fade = true }), glow = 14,
 		})
 	end
-	core.after(0.4, function()
+	F.after(0.4, function()
 		F.flare({ pos = centre, colour = c.palette.core, size = 1.3, life = 0.2 })
 		F.burst({ pos = centre, colour = c.palette.main, amount = 16, speed = 2.4, radius = 0.2, life = { 0.3, 0.6 },
 			size = { 0.1, 0.18 }, glow = 14 })

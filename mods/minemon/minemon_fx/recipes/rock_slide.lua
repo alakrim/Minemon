@@ -30,7 +30,7 @@ function R.area(F, c)
 		bounce = { min = 0.2, max = 0.35 }, glow = 0,
 	})
 	-- The crash, when the boulders land: a flash, stone blocks thrown up, dust and a crater.
-	core.after(LAND_S, function()
+	F.after(LAND_S, function()
 		F.flare({ pos = ctr, colour = c.palette.core, size = 1.6, life = 0.15 })
 		F.ring({ pos = ctr, colour = c.palette.edge, size = 0.8, grow = r * 2.2, life = 0.5 })
 		F.burst({ pos = ctr, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 34,

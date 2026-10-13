@@ -82,7 +82,7 @@ function R.impact(F, c)
 	for i, f in ipairs(fan) do
 		local p = vector.add(at, { x = f[1], y = f[2], z = 0 })
 		local tex = (i % 2 == 0) and (TEX.slash .. SLASH_FLIP) or TEX.slash
-		core.after(0.04 * i, function()
+		F.after(0.04 * i, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = p, vel = ZERO, exptime = 0.2, size = 1.5,
 				texture = F.tex(F.tint(tex, c.palette.main), { blend = "add", fade = true, grow = { 0.6, 1.1 } }),

@@ -26,7 +26,7 @@ function R.aura(F, c)
 		speed = 1.0, radius = 0.3, life = { 0.6, 1.0 }, size = { 0.4, 0.6 }, glow = 0 })
 	F.flare({ pos = centre, colour = c.palette.core, size = 1.2, life = 0.18 })
 	-- The decoy: a spinning shard in front of the user, shown for 1.4 s, sparkling as it settles.
-	core.after(0.25, function()
+	F.after(0.25, function()
 		local p = vector.add(centre, vector.multiply(fwd, 1.0))
 		local t = F.tex(F.tint(SPIN, c.palette.core), { blend = "alpha", fade = { 1, 0.5 }, grow = { 0.5, 1.0 } })
 		t.animation = { type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = -1 }

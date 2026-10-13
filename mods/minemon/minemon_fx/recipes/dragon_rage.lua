@@ -17,7 +17,7 @@ end
 function R.launch(F, c)
 	F.flare({ pos = c.from, colour = c.palette.core, size = 1.4, life = 0.18 })
 	F.ring({ pos = c.from, colour = c.palette.main, size = 0.45, grow = 3.6, life = 0.32 })
-	core.after(0.08, function()
+	F.after(0.08, function()
 		F.ring({ pos = c.from, colour = c.palette.edge, size = 0.45, grow = 3.2, life = 0.36 })
 	end)
 	F.emit({
@@ -58,7 +58,7 @@ function R.impact(F, c)
 	local at = c.pos
 	F.flare({ pos = at, colour = "#ffffff", size = 2.0, life = 0.14 })
 	F.ring({ pos = at, colour = c.palette.core, size = 0.5, grow = 4.6, life = 0.4 })
-	core.after(0.06, function()
+	F.after(0.06, function()
 		F.ring({ pos = at, colour = c.palette.main, size = 0.5, grow = 5.4, life = 0.5 })
 	end)
 	F.burst({ pos = at, tex = F.TEX.glow, colour = c.palette.main, amount = 28, speed = 5, life = { 0.3, 0.7 },

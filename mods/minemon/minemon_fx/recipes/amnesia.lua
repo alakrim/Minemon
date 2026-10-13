@@ -12,11 +12,11 @@ function R.aura(F, c)
 	end
 	local head = F.anchor(user, "head", 1.0) or c.centre
 	F.ring({ pos = head, colour = c.palette.main, size = 0.3, grow = 2.8, life = 0.55 })
-	core.after(0.15, function()
+	F.after(0.15, function()
 		F.ring({ pos = head, colour = c.palette.core, size = 0.25, grow = 2.2, life = 0.5 })
 	end)
 	for k = 0, 4 do
-		core.after(0.05 + k * 0.09, function()
+		F.after(0.05 + k * 0.09, function()
 			local a = k * 1.26
 			F.emit({
 				amount = 1, time = 0.02, pos = head,

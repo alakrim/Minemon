@@ -160,7 +160,7 @@ function R.area(F, c)
 		texture = chunk(F, c.palette.edge, { blend = "alpha" }), collisiondetection = true,
 		bounce = { min = 0.2, max = 0.35 }, glow = 0,
 	})
-	core.after(0.6, function()
+	F.after(0.6, function()
 		F.flare({ pos = ctr, colour = c.palette.core, size = 1.4, life = 0.15 })
 		F.burst({ pos = ctr, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 30,
 			speed = r * 1.2, radius = 0.4, life = { 0.8, 1.4 }, size = { 0.45, 0.7 }, gravity = -0.4, glow = 0 })

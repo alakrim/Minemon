@@ -58,7 +58,7 @@ function R.impact(F, c)
 		glow = 6,
 	})
 	F.ring({ pos = at, colour = c.palette.core, size = 0.35, grow = 2.6, life = 0.25 })
-	core.after(0.1, function()
+	F.after(0.1, function()
 		F.ring({ pos = at, colour = c.palette.main, size = 0.3, grow = 3.4, life = 0.3 })
 	end)
 	F.burst({ pos = at, tex = TEX.droplet, colour = c.palette.main, amount = 14, speed = 4, radius = 0.15,

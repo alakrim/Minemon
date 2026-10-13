@@ -36,7 +36,7 @@ function R.cloud(F, c)
 	local at = c.centre
 	local steps = 14
 	for i = 0, steps - 1 do
-		core.after(i * 0.15, function()
+		F.after(i * 0.15, function()
 			local a = i * 0.75
 			local y = at.y - 0.2 + i * 0.12
 			local p = { x = at.x + math.cos(a) * 0.5, y = y, z = at.z + math.sin(a) * 0.5 }

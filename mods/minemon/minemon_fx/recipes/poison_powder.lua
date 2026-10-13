@@ -45,7 +45,7 @@ function R.cloud(F, c)
 	})
 	local floor_at = vector.add(at, { x = 0, y = -0.15, z = 0 })
 	for _, when in ipairs({ 0.0, 1.4 }) do
-		core.after(when, function()
+		F.after(when, function()
 			F.ring({ pos = floor_at, colour = c.palette.main, size = 0.3, grow = 2.6, life = 0.45 })
 			F.burst({ pos = vector.add(at, { x = 0, y = -0.5, z = 0 }), colour = c.palette.main, amount = 14, speed = 1.6,
 				radius = 0.2, life = { 0.3, 0.6 }, size = { 0.1, 0.16 }, gravity = 2.0, glow = 8 })

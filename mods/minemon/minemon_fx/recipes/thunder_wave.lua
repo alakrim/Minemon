@@ -42,7 +42,7 @@ function R.cloud(F, c)
 	local from, to = user:get_pos(), target:get_pos()
 	local steps = 8
 	for i = 0, steps do
-		core.after(i * 0.08, function()
+		F.after(i * 0.08, function()
 			local f = i / steps
 			local p = vector.add(vector.multiply(from, 1 - f), vector.multiply(to, f))
 			p.y = p.y + 0.15
@@ -60,7 +60,7 @@ function R.cloud(F, c)
 			})
 		end)
 	end
-	core.after(steps * 0.08 + 0.1, function()
+	F.after(steps * 0.08 + 0.1, function()
 		F.on(target, {
 			amount = 12, time = 2.2,
 			pos = { min = { x = -0.3, y = 0.1, z = -0.3 }, max = { x = 0.3, y = 1.2, z = 0.3 } },

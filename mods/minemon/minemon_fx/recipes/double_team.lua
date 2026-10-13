@@ -22,7 +22,7 @@ function R.aura(F, c)
 	local centre = c.centre
 	local _, side = facing(user)
 	for k = 0, 2 do
-		core.after(k * 0.3, function()
+		F.after(k * 0.3, function()
 			for _, s in ipairs({ -1, 1 }) do
 				local p = vector.add(centre, vector.multiply(side, 0.9 * s))
 				F.emit({

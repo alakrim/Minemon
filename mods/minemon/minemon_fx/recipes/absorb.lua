@@ -52,7 +52,7 @@ function R.impact(F, c)
 				exptime = len / speed, size = { min = 0.12, max = 0.16 },
 				texture = F.tex(F.tint(TEX.mote, c.palette.core), { blend = "add", fade = { 1, 0.3 } }), glow = 14,
 			}, at)
-			core.after(len / speed, function()
+			F.after(len / speed, function()
 				if user and user:get_pos() then
 					F.flare({ pos = F.anchor(user, "middle", 0.6), colour = c.palette.core, size = 0.9, life = 0.2 })
 				end

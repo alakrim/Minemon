@@ -32,7 +32,7 @@ function R.cloud(F, c)
 	local d = vector.subtract(to, from)
 	local horiz = vector.normalize({ x = d.x, y = 0, z = d.z })
 	for k = 0, 2 do
-		core.after(k * 0.25, function()
+		F.after(k * 0.25, function()
 			F.emit({
 				amount = 30, time = 0.05, pos = from,
 				vel = { min = vector.add(vector.multiply(horiz, 5), { x = -0.6, y = 2.0, z = -0.6 }),
@@ -45,7 +45,7 @@ function R.cloud(F, c)
 		end)
 	end
 	-- Grit on the face: a dust that hangs round the head for a second, sinking very slightly.
-	core.after(0.6, function()
+	F.after(0.6, function()
 		F.on(target, {
 			amount = 8, time = 1.2,
 			pos = { min = { x = -0.2, y = -0.1, z = -0.2 }, max = { x = 0.2, y = 0.2, z = 0.2 } },

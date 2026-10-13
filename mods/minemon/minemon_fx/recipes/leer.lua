@@ -39,7 +39,7 @@ function R.cloud(F, c)
 		open(z, 1.2)
 	end
 	-- A blink, then the glare again.
-	core.after(1.5, function()
+	F.after(1.5, function()
 		for _, z in ipairs({ -0.2, 0.2 }) do
 			open(z, t - 1.5)
 		end

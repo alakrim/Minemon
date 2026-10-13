@@ -37,7 +37,7 @@ function R.cloud(F, c)
 	F.burst({ pos = at, tex = MOTE, colour = SPORE, amount = 60, speed = 1.8, radius = 0.25, life = { 1.2, 1.8 },
 		size = { 0.2, 0.28 }, glow = 10 })
 	F.ring({ pos = at, colour = c.palette.core, size = 0.4, grow = 3.2, life = 0.5 })
-	core.after(0.35, function()
+	F.after(0.35, function()
 		F.ring({ pos = at, colour = c.palette.main, size = 0.4, grow = 2.6, life = 0.7 })
 	end)
 	F.emit({

@@ -15,7 +15,7 @@ function R.cast(F, c)
 	local head = F.anchor(c.user, "head", 1.0) or c.user:get_pos()
 	local dir = vector.normalize(vector.subtract(c.target:get_pos(), head))
 	for k = 0, 2 do
-		core.after(k * 0.12, function()
+		F.after(k * 0.12, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = head, vel = vector.multiply(dir, 4.5), exptime = 0.5, size = 0.5,
 				texture = F.tex(F.tint(F.TEX.ring, c.palette.core), { blend = "add", fade = true, grow = { 0.5, 1.6 } }),
@@ -32,7 +32,7 @@ function R.cloud(F, c)
 	local t = c.time or 3
 	local sides = { -0.22, 0.2, -0.16, 0.24, -0.2, 0.12 }
 	for k = 1, 6 do
-		core.after((k - 1) * (t / 6.5), function()
+		F.after((k - 1) * (t / 6.5), function()
 			local p = vector.add(at, { x = sides[k], y = (k % 2 == 0) and 0.25 or -0.1, z = 0 })
 			F.ring({ pos = p, colour = (k % 2 == 0) and c.palette.core or c.palette.main, size = 0.5, grow = 3.2,
 				life = 0.55 })

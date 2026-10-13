@@ -12,7 +12,7 @@ function R.aura(F, c)
 	local centre = c.centre
 	F.flare({ pos = centre, colour = c.palette.core, size = 1.6, life = 0.22 })
 	for layer = 0, 1 do
-		core.after(layer * 0.12, function()
+		F.after(layer * 0.12, function()
 			local rad = 0.85 + 0.3 * layer
 			local shade = (layer == 0) and c.palette.core or c.palette.main
 			for k = 0, 5 do

@@ -28,7 +28,7 @@ function R.cloud(F, c)
 	local t = c.time or 3
 	local radius = (c.radius or 2.5) * 0.65
 	for step = 0, 9 do
-		core.after(step * 0.3, function()
+		F.after(step * 0.3, function()
 			for j = 0, 5 do
 				local a = step * 0.55 + j * (2 * math.pi / 6)
 				local ca, sa = math.cos(a), math.sin(a)

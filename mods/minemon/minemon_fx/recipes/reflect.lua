@@ -25,7 +25,7 @@ function R.aura(F, c)
 	local centre = c.centre
 	local fwd, side = facing(user)
 	for k = 0, GLINTS - 1 do
-		core.after(k * 0.05, function()
+		F.after(k * 0.05, function()
 			local a = -ARC + k * (2 * ARC / (GLINTS - 1))
 			local p = vector.add(centre, vector.add(vector.multiply(fwd, math.cos(a) * 0.95),
 				vector.multiply(side, math.sin(a) * 0.95)))

@@ -46,7 +46,7 @@ function R.melee(F, c)
 		local a = t * TURNS * 2 * math.pi
 		local p = vector.add(vector.add(from, vector.multiply(span, t)),
 			vector.add(vector.multiply(side, RADIUS * math.cos(a)), vector.multiply(up, RADIUS * math.sin(a))))
-		core.after(i * STEP_S, function()
+		F.after(i * STEP_S, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = p, vel = vector.multiply(dir, 6), exptime = 0.14, size = 0.32,
 				texture = F.tex(F.tint(STREAK, c.palette.core), { blend = "add", fade = true }), glow = 10,

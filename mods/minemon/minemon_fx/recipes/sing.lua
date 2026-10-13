@@ -22,7 +22,7 @@ function R.cast(F, c)
 		glow = 10,
 	})
 	for k = 0, 1 do
-		core.after(k * 0.18, function()
+		F.after(k * 0.18, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = vector.add(at, { x = 0, y = 0.1 * k, z = 0 }),
 				vel = { x = 0.15 * (k * 2 - 1), y = 1.0, z = 0 }, exptime = 0.9, size = 0.42,
@@ -48,7 +48,7 @@ function R.cloud(F, c)
 		glow = 4,
 	})
 	for _, when in ipairs({ 0.2, 1.0 }) do
-		core.after(when, function()
+		F.after(when, function()
 			F.ring({ pos = at, colour = c.palette.core, size = 0.4, grow = 2.6, life = 0.6 })
 		end)
 	end

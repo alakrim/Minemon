@@ -12,7 +12,7 @@ local RUNE = "minemon_fx_rune.png"
 function R.launch(F, c)
 	F.flare({ pos = c.from, colour = c.palette.core, size = 1.3, life = 0.2 })
 	F.ring({ pos = c.from, colour = c.palette.main, size = 0.45, grow = 3.4, life = 0.32 })
-	core.after(0.09, function()
+	F.after(0.09, function()
 		F.ring({ pos = c.from, colour = c.palette.edge, size = 0.4, grow = 3.0, life = 0.3 })
 	end)
 	F.emit({
@@ -54,10 +54,10 @@ function R.impact(F, c)
 	local at = c.pos
 	F.flare({ pos = at, colour = c.palette.core, size = 1.8, life = 0.16 })
 	F.ring({ pos = at, colour = c.palette.core, size = 0.35, grow = 3.4, life = 0.32 })
-	core.after(0.14, function()
+	F.after(0.14, function()
 		F.ring({ pos = at, colour = c.palette.main, size = 0.35, grow = 4.6, life = 0.45 })
 	end)
-	core.after(0.3, function()
+	F.after(0.3, function()
 		F.ring({ pos = at, colour = c.palette.edge, size = 0.35, grow = 5.4, life = 0.5 })
 	end)
 	F.burst({ pos = at, tex = RUNE, colour = c.palette.main, amount = 30, speed = 4.5, life = { 0.6, 1.1 },

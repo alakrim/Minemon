@@ -43,7 +43,7 @@ function R.impact(F, c)
 	local beats = { { x = -0.4, t = 0 }, { x = 0.4, t = 0.12 }, { x = -0.4, t = 0.24 } }
 	for _, b in ipairs(beats) do
 		local p = vector.add(at, { x = b.x, y = 0, z = 0 })
-		core.after(b.t, function()
+		F.after(b.t, function()
 			F.ring({ pos = p, colour = c.palette.main, size = 0.35, grow = 2.4, life = 0.3 })
 		end)
 	end

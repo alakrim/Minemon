@@ -43,7 +43,7 @@ function R.impact(F, c)
 	end
 	local feet = vector.add(victim:get_pos(), { x = 0, y = 0.15, z = 0 })
 	F.flare({ pos = c.pos, colour = c.palette.core, size = 0.8, life = 0.1 })
-	core.after(0.14, function()
+	F.after(0.14, function()
 		if not victim:get_pos() then
 			return
 		end

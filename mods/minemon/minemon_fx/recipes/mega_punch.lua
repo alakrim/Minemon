@@ -49,7 +49,7 @@ function R.impact(F, c)
 		{ delay = 0.16, colour = c.palette.edge, size = 0.5, grow = 3.8 },
 	}
 	for _, r in ipairs(ripples) do
-		core.after(r.delay, function()
+		F.after(r.delay, function()
 			F.ring({ pos = at, colour = r.colour, size = r.size, grow = r.grow, life = 0.4 })
 		end)
 	end

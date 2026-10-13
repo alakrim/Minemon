@@ -24,7 +24,7 @@ function R.aura(F, c)
 	local fwd, side = facing(user)
 	-- Five streaks, alternating sides and three heights, each one thrown backwards off the body.
 	for k = 0, 4 do
-		core.after(k * 0.07, function()
+		F.after(k * 0.07, function()
 			local s = (k % 2 == 0) and -1 or 1
 			local y = ((k % 3) - 1) * 0.3
 			local p = vector.add(vector.add(centre, vector.multiply(side, 0.3 * s)), { x = 0, y = y, z = 0 })

@@ -26,7 +26,7 @@ function R.cloud(F, c)
 	local head = (c.target and F.anchor(c.target, "head", 1.0)) or c.centre
 	local t = c.time or 3
 	for k = 0, 2 do
-		core.after(k * 0.6, function()
+		F.after(k * 0.6, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = head, vel = ZERO, exptime = 0.7, size = 1.6 + 0.2 * k,
 				texture = F.tex(F.tint(STAR, "#2e2630"), { blend = "alpha", fade = { 1, 0 }, grow = { 0.7, 1.2 } }),

@@ -55,7 +55,7 @@ function R.impact(F, c)
 	if not (victim and victim:get_pos()) then
 		return
 	end
-	core.after(FALL_S, function()
+	F.after(FALL_S, function()
 		local feet = feet_of(victim)
 		if not feet then
 			return

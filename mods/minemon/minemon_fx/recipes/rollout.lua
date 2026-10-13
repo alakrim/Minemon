@@ -64,7 +64,7 @@ function R.impact(F, c)
 		return
 	end
 	F.flare({ pos = c.pos, colour = c.palette.core, size = 0.9, life = 0.1 })
-	core.after(0.14, function()
+	F.after(0.14, function()
 		local feet = victim:get_pos()
 		if not feet then
 			return

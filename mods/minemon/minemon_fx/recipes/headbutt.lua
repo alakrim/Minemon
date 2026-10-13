@@ -50,7 +50,7 @@ function R.impact(F, c)
 	F.flare({ pos = head, colour = c.palette.core, size = 1.2, life = 0.14 })
 	F.sound("mcl_criticals_hit.2", { pos = head, gain = 0.6, pitch = 1.1 })
 	for step = 0, STEPS - 1 do
-		core.after(step * STEP_S, function()
+		F.after(step * STEP_S, function()
 			for k = 0, STARS - 1 do
 				local a = k / STARS * 2 * math.pi + step * 0.7
 				local p = { x = head.x + math.cos(a) * RING_R, y = head.y + 0.08 * math.sin(2 * a),

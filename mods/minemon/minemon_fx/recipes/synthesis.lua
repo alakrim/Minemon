@@ -17,7 +17,7 @@ function R.aura(F, c)
 	local centre = c.centre
 	local top = centre.y + 2.2
 	for k = 0, 5 do
-		core.after(k * 0.07, function()
+		F.after(k * 0.07, function()
 			local a = k * (2 * math.pi / 6)
 			-- A ray is a short line of sparks falling fast from high above, onto the user's side.
 			local p = { x = centre.x + math.cos(a) * 0.8, y = top, z = centre.z + math.sin(a) * 0.8 }
@@ -30,7 +30,7 @@ function R.aura(F, c)
 		end)
 	end
 	-- The take-up: a burst of spores off the body once the rays have landed.
-	core.after(0.5, function()
+	F.after(0.5, function()
 		F.burst({ pos = vector.add(centre, { x = 0, y = -0.2, z = 0 }), tex = F.TEX.mote, colour = c.palette.main,
 			amount = 12, speed = 1.3, radius = 0.25, life = { 0.5, 0.9 }, size = { 0.1, 0.16 }, gravity = -0.4,
 			glow = 14 })

@@ -44,7 +44,7 @@ end
 function R.impact(F, c)
 	local at = c.pos
 	for i, j in ipairs(JABS) do
-		core.after((i - 1) * STEP_S, function()
+		F.after((i - 1) * STEP_S, function()
 			local p = vector.add(at, { x = j.x, y = j.y, z = 0 })
 			F.emit({
 				amount = 1, time = 0.02, pos = p, vel = { x = 0, y = 0, z = 0 }, exptime = 0.1, size = j.size,

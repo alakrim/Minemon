@@ -168,6 +168,18 @@ function F.tex(name, o)
 	return t
 end
 
+-- A delayed effect step, guarded: a recipe's error is logged, never raised into the server step (recipes call
+-- F.after, not core.after).
+function F.after(t, fn, ...)
+	local args = { ... }
+	return core.after(t, function()
+		local ok, err = pcall(fn, unpack(args))
+		if not ok then
+			core.log("error", "[minemon_fx] delayed effect step failed: " .. tostring(err))
+		end
+	end)
+end
+
 -- ---------------------------------------------------------------- emission
 
 -- Players that should see an effect at pos, with their quality scale.

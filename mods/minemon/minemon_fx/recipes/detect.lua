@@ -17,7 +17,7 @@ function R.aura(F, c)
 	F.ring({ pos = vector.add(feet, { x = 0, y = 0.05, z = 0 }), colour = c.palette.main, size = 0.5, grow = 2.6,
 		life = 0.5 })
 	for k = 0, 4 do
-		core.after(k * 0.12, function()
+		F.after(k * 0.12, function()
 			local y = feet.y + 0.2 + k * 0.35
 			local tone = (k % 2 == 0) and c.palette.core or c.palette.main
 			F.emit({

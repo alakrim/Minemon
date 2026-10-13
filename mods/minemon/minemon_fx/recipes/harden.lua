@@ -23,7 +23,7 @@ function R.aura(F, c)
 		exptime = { min = 0.9, max = 1.2 }, size = { min = 0.3, max = 0.44 },
 		texture = F.tex(F.tint(CHIP, "#6f7880"), { blend = "alpha", fade = { 1, 0.6 } }), glow = 0,
 	})
-	core.after(0.35, function()
+	F.after(0.35, function()
 		F.ring({ pos = centre, colour = "#d8e4f4", size = 0.3, grow = 2.0, life = 0.35 })
 	end)
 	F.sound("default_dig_cracky", { pos = centre, gain = 0.3, pitch = 1.3 })

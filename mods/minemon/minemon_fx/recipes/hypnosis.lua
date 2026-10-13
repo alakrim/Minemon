@@ -14,7 +14,7 @@ function R.cloud(F, c)
 	local t = c.time or 3
 	local radius = c.radius or 2.5
 	for i = 0, PULSES - 1 do
-		core.after(i * t / PULSES, function()
+		F.after(i * t / PULSES, function()
 			F.ring({ pos = at, colour = c.palette.main, size = 0.4, grow = radius * 2 / 0.4, life = 0.6 })
 		end)
 	end

@@ -23,7 +23,7 @@ function R.aura(F, c)
 	})
 	F.ring({ pos = centre, colour = BLUE, size = 0.8, grow = 2.4, life = 0.8 })
 	for k = 0, 2 do
-		core.after(0.2 + k * 0.45, function()
+		F.after(0.2 + k * 0.45, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = vector.add(head, { x = 0.1 * k, y = 0.1 * k, z = 0 }),
 				vel = { x = 0.15, y = 0.55, z = 0 }, exptime = 1.4, size = 0.5 + 0.1 * k,

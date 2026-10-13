@@ -13,10 +13,10 @@ function R.area(F, c)
 	local r = c.radius
 	local ctr = c.centre
 	F.ring({ pos = ctr, colour = c.palette.main, size = 1.0, grow = r * 2.4, life = 0.7 })
-	core.after(0.15, function()
+	F.after(0.15, function()
 		F.ring({ pos = ctr, colour = c.palette.edge, size = 0.8, grow = r * 2.8, life = 0.8 })
 	end)
-	core.after(0.35, function()
+	F.after(0.35, function()
 		F.ring({ pos = ctr, colour = c.palette.main, size = 0.6, grow = r * 3.2, life = 0.9 })
 	end)
 	-- Dirt rises in a ring round the centre, then falls back with gravity and bounces.
@@ -37,7 +37,7 @@ function R.area(F, c)
 	})
 	F.decal({ pos = ctr, tex = F.tint(CRATER, c.palette.edge) .. "^[opacity:150", size = r * 1.7, life = 10 })
 	F.sound("default_dig_crumbly", { pos = ctr, gain = 1.2, pitch = 0.5 })
-	core.after(0.3, function()
+	F.after(0.3, function()
 		F.sound("default_gravel_dig", { pos = ctr, gain = 0.8, pitch = 0.6 })
 	end)
 end

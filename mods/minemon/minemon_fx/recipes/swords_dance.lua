@@ -24,7 +24,7 @@ function R.aura(F, c)
 	local fwd, side = facing(user)
 	-- Orbit: eight steps round the body, each step two blades placed on opposite sides and moving on tangentially.
 	for i = 0, 7 do
-		core.after(i * 0.06, function()
+		F.after(i * 0.06, function()
 			local a = i * 0.55
 			for j = 0, 1 do
 				local b = a + j * math.pi
@@ -39,7 +39,7 @@ function R.aura(F, c)
 		end)
 	end
 	-- Cross: two blades come in from either side of the user and pass through each other in front of it.
-	core.after(0.55, function()
+	F.after(0.55, function()
 		local front = vector.add(centre, vector.multiply(fwd, 0.7))
 		for _, s in ipairs({ -1, 1 }) do
 			local from = vector.add(front, vector.multiply(side, 0.9 * s))

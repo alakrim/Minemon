@@ -30,7 +30,7 @@ function R.aura(F, c)
 		amount = 1, time = 1.0, pos = centre, vel = ZERO, exptime = 1.1, size = 1.8,
 		texture = F.tex(F.tint(F.TEX.glow, "#c8ffc0"), { blend = "add", grow = { 0.7, 1.2 }, alpha = 0.3 }), glow = 10,
 	})
-	core.after(0.3, function()
+	F.after(0.3, function()
 		F.ring({ pos = vector.add(feet, { x = 0, y = 0.05, z = 0 }), colour = "#c8ffc0", size = 0.4, grow = 2.0,
 			life = 0.5 })
 	end)
