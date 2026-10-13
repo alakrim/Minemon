@@ -18,10 +18,10 @@ local ZERO = { x = 0, y = 0, z = 0 }
 function R.launch(F, c)
 	F.flare({ pos = c.from, colour = c.palette.core, size = 0.6, life = 0.1 })
 	F.emit({
-		amount = 18, time = 0.04, pos = c.from, jitter = JET,
+		amount = 34, time = 0.08, pos = c.from, jitter = JET,
 		vel = { min = vector.multiply(c.dir, 15), max = vector.multiply(c.dir, 17) },
-		exptime = { min = 0.12, max = 0.2 }, size = { min = 0.07, max = 0.1 },
-		texture = F.tex(F.tint(TEX.droplet, c.palette.main), { blend = "alpha", fade = true }), glow = 8,
+		exptime = { min = 0.14, max = 0.24 }, size = { min = 0.11, max = 0.15 },
+		texture = F.tex(F.tint(TEX.droplet, c.palette.core), { blend = "alpha", fade = true }), glow = 8,
 	})
 	F.sound("watersplash", { pos = c.from, gain = 0.4, pitch = 1.5 })
 end

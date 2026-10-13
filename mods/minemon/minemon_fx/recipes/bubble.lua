@@ -30,10 +30,11 @@ end
 
 -- Area: bubbles fill the radius, rising slowly and swaying apart. Their life is long enough to reach the far edge.
 function R.area(F, c)
-	local r = c.radius * 0.8
+	-- The bubbles gather round the victim (a fixed 2.2 m box, so they are in view), and the rest of the area is empty.
+	local r = 2.2
 	local ctr = c.centre
 	F.emit({
-		amount = 18, time = 0.5,
+		amount = 26, time = 0.5,
 		pos = { min = vector.subtract(ctr, { x = r, y = 0.2, z = r }), max = vector.add(ctr, { x = r, y = 0.6, z = r }) },
 		vel = { min = { x = -0.35, y = 0.35, z = -0.35 }, max = { x = 0.35, y = 0.85, z = 0.35 } },
 		drag = { x = 0.4, y = 0.2, z = 0.4 },
