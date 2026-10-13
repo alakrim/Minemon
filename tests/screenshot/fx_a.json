@@ -1,0 +1,1022 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 10
+ },
+ {
+  "name": "water_cast",
+  "pos": [
+   186,
+   10,
+   172.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "water_gun",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.0
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "water_flight",
+  "pos": [
+   186,
+   10,
+   172.51
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "water_gun",
+   "show_s": 0.25,
+   "at": [
+    186,
+    178.01
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "water_impact",
+  "pos": [
+   186,
+   10,
+   172.52
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "water_gun",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.02
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "water_after",
+  "pos": [
+   186,
+   10,
+   172.53
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "water_gun",
+   "show_s": 0.9,
+   "at": [
+    186,
+    178.03
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ice_cast",
+  "pos": [
+   186,
+   10,
+   172.54
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "aurora_beam",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.04
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ice_flight",
+  "pos": [
+   186,
+   10,
+   172.55
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "aurora_beam",
+   "show_s": 0.25,
+   "at": [
+    186,
+    178.05
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ice_impact",
+  "pos": [
+   186,
+   10,
+   172.56
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "aurora_beam",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.06
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "ice_after",
+  "pos": [
+   186,
+   10,
+   172.57
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "aurora_beam",
+   "show_s": 0.9,
+   "at": [
+    186,
+    178.07
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "electric_cast",
+  "pos": [
+   186,
+   10,
+   172.58
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "thunder_shock",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.08
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "electric_flight",
+  "pos": [
+   186,
+   10,
+   172.59
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "thunder_shock",
+   "show_s": 0.25,
+   "at": [
+    186,
+    178.09
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "electric_impact",
+  "pos": [
+   186,
+   10,
+   172.6
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "thunder_shock",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.1
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "electric_after",
+  "pos": [
+   186,
+   10,
+   172.61
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "thunder_shock",
+   "show_s": 0.9,
+   "at": [
+    186,
+    178.11
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "flying_cast",
+  "pos": [
+   186,
+   10,
+   172.62
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "gust",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.12
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "flying_flight",
+  "pos": [
+   186,
+   10,
+   172.63
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "gust",
+   "show_s": 0.25,
+   "at": [
+    186,
+    178.13
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "flying_impact",
+  "pos": [
+   186,
+   10,
+   172.64
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "gust",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.14
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "flying_after",
+  "pos": [
+   186,
+   10,
+   172.65
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "gust",
+   "show_s": 0.9,
+   "at": [
+    186,
+    178.15
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "normal_cast",
+  "pos": [
+   186,
+   10,
+   173.66
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 1.6,
+   "move": "slash",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.16
+   ],
+   "cam": [
+    0.0,
+    1.4,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "normal_flight",
+  "pos": [
+   186,
+   10,
+   173.67
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 1.6,
+   "move": "slash",
+   "show_s": 0.25,
+   "at": [
+    186,
+    178.17
+   ],
+   "cam": [
+    0.0,
+    1.4,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "normal_impact",
+  "pos": [
+   186,
+   10,
+   173.68
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 1.6,
+   "move": "slash",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.18
+   ],
+   "cam": [
+    0.0,
+    1.4,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "normal_after",
+  "pos": [
+   186,
+   10,
+   173.69
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 1.6,
+   "move": "slash",
+   "show_s": 0.9,
+   "at": [
+    186,
+    178.19
+   ],
+   "cam": [
+    0.0,
+    1.4,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "steel_cast",
+  "pos": [
+   186,
+   10,
+   172.7
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "steel_probe_proj",
+   "show_s": -0.4,
+   "at": [
+    186,
+    178.2
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "steel_flight",
+  "pos": [
+   186,
+   10,
+   172.71
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "steel_probe_proj",
+   "show_s": 0.25,
+   "at": [
+    186,
+    178.21
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "steel_impact",
+  "pos": [
+   186,
+   10,
+   172.72
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "steel_probe_proj",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.22
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "steel_after",
+  "pos": [
+   186,
+   10,
+   172.73
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "steel_probe_proj",
+   "show_s": 0.9,
+   "at": [
+    186,
+    178.23
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_hydro_pump_impact",
+  "pos": [
+   186,
+   10,
+   172.74
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "hydro_pump",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.24
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_waterfall_impact",
+  "pos": [
+   186,
+   10,
+   172.75
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "waterfall",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.25
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_blizzard_impact",
+  "pos": [
+   186,
+   10,
+   172.76
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "blizzard",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.26
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_ice_beam_impact",
+  "pos": [
+   186,
+   10,
+   172.77
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "ice_beam",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.27
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_thunder_impact",
+  "pos": [
+   186,
+   10,
+   172.78
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "thunder",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.28
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_thunderbolt_impact",
+  "pos": [
+   186,
+   10,
+   172.79
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "thunderbolt",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.29
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_aeroblast_impact",
+  "pos": [
+   186,
+   10,
+   172.8
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "aeroblast",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.3
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_sky_attack_impact",
+  "pos": [
+   186,
+   10,
+   172.81
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "sky_attack",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.31
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_hyper_beam_impact",
+  "pos": [
+   186,
+   10,
+   172.82
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "hyper_beam",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.32
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_explosion_impact",
+  "pos": [
+   186,
+   10,
+   172.83
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 6.0,
+   "move": "explosion",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.33
+   ],
+   "cam": [
+    0.0,
+    1.6,
+    -5.5
+   ]
+  }
+ },
+ {
+  "name": "sig_metal_claw_impact",
+  "pos": [
+   186,
+   10,
+   173.84
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 1.6,
+   "move": "metal_claw",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.34
+   ],
+   "cam": [
+    0.0,
+    1.4,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "sig_steel_wing_impact",
+  "pos": [
+   186,
+   10,
+   173.85
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "target": 19,
+   "d": 1.6,
+   "move": "steel_wing",
+   "show_s": 0.0,
+   "at": [
+    186,
+    178.35
+   ],
+   "cam": [
+    0.0,
+    1.4,
+    -4.5
+   ]
+  }
+ }
+]

@@ -56,7 +56,7 @@ def _lum(c):
 
 
 class CobbleSculpt:
-    def __init__(self, model, png_path, voxel_px, hidden=()):
+    def __init__(self, model, png_path, voxel_px, hidden=(), keep_all=False):
         self.model = model
         hidden = set(hidden)
         tex_w, tex_h, _pad = model["tex_size"]
@@ -79,7 +79,7 @@ class CobbleSculpt:
             R = _quat_matrix(c["full"][0])
             t = np.array(c["full"][1], float)
             faces = {f: (rect, mirror) for f, rect, mirror in c["faces"]}
-            if self._invisible(c["faces"]):
+            if not keep_all and self._invisible(c["faces"]):
                 continue  # helper geometry drawn fully transparent (shadows, hidden variants)
             is_eye = ("eye" in name and not any(x in name for x in EYE_EXCLUDE)
                       and max(hi[0] - lo[0], hi[1] - lo[1]) <= EYE_MAX_PX)
@@ -337,6 +337,8 @@ def convert(model, anim, png_path, height_m, out_glb, out_png, body_plan=None, f
     voxel_px = max(height_px / VOXELS_TALL, 0.2)
     fix = fix or {}
     sculpt = CobbleSculpt(model, png_path, voxel_px, hidden_bones(model, anim, fix.get("hide", ())))
+    if not sculpt.cubes:  # everything filtered (Ditto, Victreebel): keep every cube rather than fail
+        sculpt = CobbleSculpt(model, png_path, voxel_px, (), keep_all=True)
     # The grid covers the visible cubes only (some models carry far-away invisible helper boxes).
     corners = []
     for c in sculpt.cubes:
