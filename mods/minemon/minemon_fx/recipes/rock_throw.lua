@@ -30,7 +30,7 @@ function R.beam(F, c)
 	-- Its dust trail, and a few stone blocks that fall away behind it.
 	F.emit({
 		amount = 24, time = 0.3, pos = c.from, vel = vector.multiply(dir, speed * 0.5),
-		exptime = { min = 0.5, max = 0.9 }, size = { min = 0.5, max = 0.8 },
+		exptime = { min = 0.5, max = 0.9 }, size = { min = 0.35, max = 0.55 },
 		texture = F.tex(F.tint(F.TEX.dust, c.palette.smoke), { blend = "alpha", alpha = 0.6, grow = { 0.6, 1.3 } }),
 		glow = 0,
 	}, c.from)
@@ -54,7 +54,7 @@ function R.impact(F, c)
 		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.16, max = 0.26 }, node = COBBLE, glow = 0,
 	})
 	F.burst({ pos = at, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 16, speed = 3,
-		life = { 0.6, 1.0 }, size = { 0.5, 0.8 }, gravity = -0.4, glow = 0 })
+		life = { 0.6, 1.0 }, size = { 0.35, 0.55 }, gravity = -0.4, glow = 0 })
 	F.ring({ pos = at, colour = c.palette.edge, size = 0.4, grow = 3.0, life = 0.35 })
 	F.sound("default_dig_cracky", { pos = at, gain = 0.9, pitch = 0.7 })
 end

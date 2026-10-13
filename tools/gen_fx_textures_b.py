@@ -57,7 +57,7 @@ def _convex_sdf(x, y, pts):
 
 # ---------------------------------------------------------------- flipbooks
 
-def tex_leaf_spin_anim(n=16, frames=8):
+def tex_leaf_spin_anim(n=32, frames=8):
     """A pointed leaf with a vein that spins: across its width it foreshortens as it turns (flips front to back)."""
     x, y = base.grid(n)
     rows = []

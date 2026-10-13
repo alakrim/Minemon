@@ -113,7 +113,7 @@ function R.beam(F, c)
 	}, c.from)
 	F.emit({
 		amount = 20, time = 0.3, pos = c.from, vel = vector.multiply(dir, speed * 0.5),
-		exptime = { min = 0.5, max = 0.9 }, size = { min = 0.5, max = 0.8 },
+		exptime = { min = 0.5, max = 0.9 }, size = { min = 0.35, max = 0.55 },
 		texture = F.tex(F.tint(F.TEX.dust, c.palette.smoke), { blend = "alpha", alpha = 0.6, grow = { 0.6, 1.3 } }),
 		glow = 0,
 	}, c.from)
@@ -121,7 +121,7 @@ function R.beam(F, c)
 		life = { 0.4, 0.7 }, size = { 0.12, 0.2 } })
 	F.flare({ pos = c.from, colour = c.palette.core, size = 0.8 })
 	F.burst({ pos = c.to, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 16, speed = 3,
-		life = { 0.6, 1.0 }, size = { 0.5, 0.8 }, gravity = -0.4, glow = 0 })
+		life = { 0.6, 1.0 }, size = { 0.35, 0.55 }, gravity = -0.4, glow = 0 })
 	stones(F, c.to, { amount = 10, time = 0.05, life = { 0.5, 0.9 }, size = { 0.12, 0.2 }, gravity = 14,
 		vel = { min = { x = -2, y = 1.5, z = -2 }, max = { x = 2, y = 3.5, z = 2 } } })
 	F.sound("default_place_node_hard", { pos = c.to, gain = 0.8, pitch = 0.7 })
@@ -140,7 +140,7 @@ function R.melee(F, c)
 	end
 	F.emit({
 		amount = 10, time = 0.12, pos = c.centre, radius = { min = 0.2, max = 0.5, bias = 0 }, vel = ZERO,
-		exptime = { min = 0.5, max = 0.8 }, size = { min = 0.5, max = 0.8 },
+		exptime = { min = 0.5, max = 0.8 }, size = { min = 0.35, max = 0.55 },
 		texture = F.tex(F.tint(F.TEX.dust, c.palette.smoke), { blend = "alpha", alpha = 0.6, grow = { 0.6, 1.3 } }),
 		glow = 0,
 	})
@@ -163,7 +163,7 @@ function R.area(F, c)
 	core.after(0.6, function()
 		F.flare({ pos = ctr, colour = c.palette.core, size = 1.4, life = 0.15 })
 		F.burst({ pos = ctr, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 30,
-			speed = r * 1.2, radius = 0.4, life = { 0.8, 1.4 }, size = { 0.7, 1.1 }, gravity = -0.4, glow = 0 })
+			speed = r * 1.2, radius = 0.4, life = { 0.8, 1.4 }, size = { 0.45, 0.7 }, gravity = -0.4, glow = 0 })
 		stones(F, ctr, { amount = 36, time = 0.1, radius = { min = 0.2, max = 0.5, bias = 0 },
 			vel = { min = { x = -r * 0.7, y = 2, z = -r * 0.7 }, max = { x = r * 0.7, y = 4.5, z = r * 0.7 } },
 			gravity = 14, life = { 0.8, 1.4 }, size = { 0.2, 0.35 } })
@@ -184,7 +184,7 @@ function R.impact(F, c)
 	F.emit({
 		amount = 12, time = 0.1, pos = at, radius = { min = 0.2, max = 0.4, bias = 0 },
 		vel = { min = { x = -0.3, y = 0.4, z = -0.3 }, max = { x = 0.3, y = 1.0, z = 0.3 } },
-		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.5, max = 0.8 },
+		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.35, max = 0.55 },
 		texture = F.tex(F.tint(F.TEX.dust, c.palette.smoke), { blend = "alpha", alpha = 0.6, grow = { 0.6, 1.3 } }),
 		glow = 0,
 	})

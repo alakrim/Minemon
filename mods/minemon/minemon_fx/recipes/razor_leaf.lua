@@ -34,8 +34,8 @@ function R.area(F, c)
 	local ctr = c.centre
 	F.flare({ pos = ctr, colour = c.palette.core, size = 1.2, life = 0.2 })
 	F.ring({ pos = ctr, colour = c.palette.main, size = 0.6, grow = r * 1.6, life = 0.4 })
-	leaves(F, ctr, c.palette.main, r * 1.8, 50, { 0.8, 1.4 }, { 0.22, 0.34 })
-	leaves(F, ctr, "#c8ff9a", r * 0.9, 20, { 0.5, 0.9 }, { 0.14, 0.22 })
+	leaves(F, ctr, c.palette.main, r * 1.8, 50, { 0.8, 1.4 }, { 0.13, 0.2 })
+	leaves(F, ctr, "#c8ff9a", r * 0.9, 20, { 0.5, 0.9 }, { 0.09, 0.14 })
 	F.sound("mcl_tools_shears_cut", { pos = ctr, gain = 0.8, pitch = 1.2 })
 end
 
@@ -52,7 +52,7 @@ function R.impact(F, c)
 			{ blend = "add", fade = true, grow = { 0.6, 1.0 } }), glow = 14,
 	})
 	F.flare({ pos = at, colour = c.palette.core, size = 0.9, life = 0.12 })
-	leaves(F, at, c.palette.main, 3, 16, { 0.5, 0.9 }, { 0.2, 0.3 })
+	leaves(F, at, c.palette.main, 3, 16, { 0.5, 0.9 }, { 0.12, 0.18 })
 	F.sound("default_dig_snappy", { pos = at, gain = 0.8, pitch = 1.5 })
 end
 

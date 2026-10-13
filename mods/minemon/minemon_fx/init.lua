@@ -151,7 +151,9 @@ core.register_entity(PART, {
 		static_save = false,
 		collisionbox = { 0, 0, 0, 0, 0, 0 },
 		selectionbox = { 0, 0, 0, 0, 0, 0 },
-		use_texture_alpha = true,
+		-- Clipped, not blended: a blended entity sprite writes depth over its whole quad and hides every particle
+		-- behind it (a dark square in the smoke, M2.1 review). The soft glow comes from the part's halo particles.
+		use_texture_alpha = false,
 		glow = 14,
 		shaded = false,
 	},

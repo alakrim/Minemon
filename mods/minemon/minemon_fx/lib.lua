@@ -28,7 +28,7 @@ F.TEX = {
 	blank = "minemon_fx_blank.png",
 }
 F.FRAMES = { smoke = 8, flame = 8, fireball = 4, blast = 8 }
-F.SIZE = { smoke = 32, flame = 32, fireball = 32, blast = 64 }
+F.SIZE = { smoke = 64, flame = 32, fireball = 32, blast = 64 }
 
 F.RANGE = tonumber(core.settings:get("minemon_fx_range")) or 64
 
@@ -38,6 +38,20 @@ F.UNIT = 10
 -- PRESENCE_LIFE longer than its recipe says. Tune the whole look here, not recipe by recipe.
 F.PRESENCE_SIZE = 1.35
 F.PRESENCE_LIFE = 1.15
+-- The boost fades out for big particles (no boost from PRESENCE_FULL nodes up): smoke and dust that drift past the
+-- camera must stay a haze, not fill the screen. Node particles (real blocks) show a crop of a 16 px tile, so they
+-- are never boosted and stay chip-sized (NODE_MAX nodes).
+F.PRESENCE_FULL = 0.9
+F.NODE_MAX = 0.16
+
+-- One recipe size (nodes) to engine units, with the presence boost.
+function F.scale_size(s, node)
+	if node then
+		return math.min(s, F.NODE_MAX) * F.UNIT
+	end
+	local k = math.max(0, math.min(1, (F.PRESENCE_FULL - s) / 0.5))
+	return s * (1 + (F.PRESENCE_SIZE - 1) * k) * F.UNIT
+end
 
 local ZERO = { x = 0, y = 0, z = 0 }
 
@@ -117,11 +131,11 @@ function F.emit(def, at)
 	local ids = {}
 	local base = def.amount or 1
 	local size = def.size
-	local unit = F.UNIT * F.PRESENCE_SIZE
+	local node = def.node ~= nil
 	if type(size) == "number" then
-		size = size * unit
+		size = F.scale_size(size, node)
 	elseif type(size) == "table" then
-		size = { min = (size.min or 0) * unit, max = (size.max or 0) * unit, bias = size.bias }
+		size = { min = F.scale_size(size.min or 0, node), max = F.scale_size(size.max or 0, node), bias = size.bias }
 	end
 	local exptime = def.exptime
 	if type(exptime) == "number" then

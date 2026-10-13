@@ -34,12 +34,12 @@ function R.area(F, c)
 		F.flare({ pos = ctr, colour = c.palette.core, size = 1.6, life = 0.15 })
 		F.ring({ pos = ctr, colour = c.palette.edge, size = 0.8, grow = r * 2.2, life = 0.5 })
 		F.burst({ pos = ctr, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 34,
-			speed = r * 1.3, radius = 0.4, life = { 0.8, 1.5 }, size = { 0.8, 1.2 }, gravity = -0.4, glow = 0 })
+			speed = r * 1.3, radius = 0.4, life = { 0.8, 1.4 }, size = { 0.45, 0.7 }, gravity = -0.1, glow = 0 })
 		F.emit({
 			amount = 40, time = 0.1, pos = ctr, radius = { min = 0.2, max = 0.5, bias = 0 },
 			vel = { min = { x = -r * 0.7, y = 2, z = -r * 0.7 }, max = { x = r * 0.7, y = 4.5, z = r * 0.7 } },
 			acc = { x = 0, y = -14, z = 0 }, collisiondetection = true, bounce = { min = 0.2, max = 0.4 },
-			exptime = { min = 0.8, max = 1.4 }, size = { min = 0.2, max = 0.35 }, node = COBBLE, glow = 0,
+			exptime = { min = 0.8, max = 1.4 }, size = { min = 0.1, max = 0.16 }, node = COBBLE, glow = 0,
 		})
 		F.decal({ pos = ctr, tex = F.tint(CRATER, c.palette.edge) .. "^[opacity:170", size = r * 1.1, life = 7 })
 		F.sound("default_place_node_hard", { pos = ctr, gain = 1.0, pitch = 0.5 })

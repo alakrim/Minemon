@@ -118,7 +118,7 @@ FIRE = [
 
 # ---------------------------------------------------------------- neutral textures
 
-def tex_glow(n=32):
+def tex_glow(n=64):
     x, y = grid(n)
     r = np.sqrt(x * x + y * y)
     a = np.exp(-(r / 0.42) ** 2) * (1 - smoothstep(0.85, 1.0, r))
@@ -172,7 +172,7 @@ def tex_ring(n=64):
     return white(np.clip(edge + wash, 0, 1))
 
 
-def tex_dust(n=16):
+def tex_dust(n=48):
     """A grainy dirt puff (alpha blend), for footfalls, landings and ground hits."""
     x, y = grid(n)
     r = np.sqrt(x * x + y * y)
@@ -182,7 +182,7 @@ def tex_dust(n=16):
     return grey(level, a * 0.9)
 
 
-def tex_smoke_anim(n=32, frames=8):
+def tex_smoke_anim(n=64, frames=8):
     """Billowing smoke puff that grows and thins over 8 frames (alpha blend, grey; tint it dark or coloured)."""
     rows = []
     for f in range(frames):

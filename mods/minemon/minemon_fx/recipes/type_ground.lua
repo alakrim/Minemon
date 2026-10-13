@@ -64,7 +64,7 @@ function R.launch(F, c)
 			max = vector.add(vector.multiply(c.dir, 6), { x = 1, y = 2.5, z = 1 }) },
 		gravity = 14, life = { 0.5, 0.9 }, size = { 0.18, 0.28 } })
 	F.burst({ pos = c.from, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 12, speed = 2.5,
-		life = { 0.5, 0.9 }, size = { 0.5, 0.8 }, gravity = -0.3, glow = 0 })
+		life = { 0.5, 0.9 }, size = { 0.35, 0.55 }, gravity = -0.3, glow = 0 })
 	F.sound("default_dig_crumbly", { pos = c.from, gain = 0.7, pitch = 0.8 })
 end
 
@@ -105,12 +105,12 @@ function R.beam(F, c)
 	}, c.from)
 	F.emit({
 		amount = 30, time = 0.3, pos = c.from, vel = vector.multiply(dir, speed * 0.5),
-		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.6, max = 0.9 },
+		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.4, max = 0.6 },
 		texture = dust(F, c.palette.smoke, { blend = "alpha", alpha = 0.6, grow = { 0.7, 1.3 } }), glow = 0,
 	}, c.from)
 	F.flare({ pos = c.from, colour = c.palette.core, size = 0.8 })
 	F.burst({ pos = c.to, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 18, speed = 3,
-		life = { 0.6, 1.0 }, size = { 0.5, 0.8 }, gravity = -0.5, glow = 0 })
+		life = { 0.6, 1.0 }, size = { 0.35, 0.55 }, gravity = -0.5, glow = 0 })
 	F.ring({ pos = c.to, colour = c.palette.edge, size = 0.3, grow = 2.2, life = 0.3 })
 	F.sound("default_gravel_dig", { pos = c.to, gain = 0.7, pitch = 0.9 })
 end
@@ -129,7 +129,7 @@ function R.melee(F, c)
 	F.emit({
 		amount = 12, time = 0.12, pos = ahead, radius = { min = 0.3, max = 0.6, bias = 0 },
 		vel = { min = vector.multiply(c.fwd, 1.5), max = vector.multiply(c.fwd, 3) },
-		exptime = { min = 0.5, max = 0.9 }, size = { min = 0.6, max = 0.9 },
+		exptime = { min = 0.5, max = 0.9 }, size = { min = 0.4, max = 0.6 },
 		texture = dust(F, c.palette.smoke, { blend = "alpha", alpha = 0.6, grow = { 0.6, 1.3 } }), glow = 0,
 	})
 end
@@ -144,7 +144,7 @@ function R.area(F, c)
 		F.ring({ pos = at, colour = c.palette.edge, size = 0.6, grow = r * 2.2, life = 0.6 })
 	end)
 	F.burst({ pos = at, tex = F.TEX.dust, colour = c.palette.smoke, blend = "alpha", amount = 30, speed = r * 1.2,
-		radius = 0.4, life = { 0.8, 1.4 }, size = { 0.7, 1.1 }, gravity = -0.4, glow = 0 })
+		radius = 0.4, life = { 0.8, 1.4 }, size = { 0.45, 0.7 }, gravity = -0.4, glow = 0 })
 	dirt(F, at, { amount = 40, time = 0.1, radius = { min = 0.2, max = 0.5, bias = 0 },
 		vel = { min = { x = -r * 0.8, y = 2.5, z = -r * 0.8 }, max = { x = r * 0.8, y = 5, z = r * 0.8 } },
 		gravity = 14, life = { 0.8, 1.4 }, size = { 0.2, 0.35 } })
@@ -159,7 +159,7 @@ function R.impact(F, c)
 	F.emit({
 		amount = 14, time = 0.1, pos = at, radius = { min = 0.2, max = 0.4, bias = 0 },
 		vel = { min = { x = -0.3, y = 0.5, z = -0.3 }, max = { x = 0.3, y = 1.2, z = 0.3 } },
-		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.6, max = 0.9 },
+		exptime = { min = 0.6, max = 1.0 }, size = { min = 0.4, max = 0.6 },
 		texture = dust(F, c.palette.smoke, { blend = "alpha", alpha = 0.7, grow = { 0.6, 1.4 } }), glow = 0,
 	})
 	dirt(F, at, { amount = 16, time = 0.05, radius = { min = 0.1, max = 0.3, bias = 0 },
