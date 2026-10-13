@@ -48,6 +48,10 @@ Lessons from the in-engine reviews (they are rules now):
   drifts past the camera and fills the screen.
 - Never give an entity a blended sprite (`use_texture_alpha = true` on a sprite near effects): it writes depth over
   its whole square and hides every particle behind it. Art parts are clipped; glow comes from halo particles.
+- Glows: write `blend = "add"` as usual; `F.tex` draws it as a screen blend on the texture's premultiplied copy
+  (Luanti's own add/sub multiply by the framebuffer alpha, which smoke and water lower: dark squares). After adding
+  or regenerating a texture, run `python3 tools/premultiply_fx.py`. Fades on glows become brightness flipbooks.
+  `blend = "sub"` becomes a dark alpha smoke.
 - Capturing effects: give the scene `repeat_s` (the move is re-cast every repeat_s seconds), so a shot always
   catches it whatever the capture lag. Every shot needs its own scene `at` (closer than 0.004 nodes = same scene).
 
