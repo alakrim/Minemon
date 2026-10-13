@@ -233,8 +233,8 @@ function API.make_dread(obj)
 end
 
 -- A wild creature (owner_name nil) despawns through the sweep in spawning.lua. An owned one is tamed,
--- persistent and never despawns.
-function API.spawn(pos, species_id, level, owner_name)
+-- persistent and never despawns. shiny (T-33, optional): true or false decides a wild spawn's shiny flag; nil rolls.
+function API.spawn(pos, species_id, level, owner_name, shiny)
 	local species = minemon.data.get_species(species_id)
 	if not species then
 		return nil
@@ -249,8 +249,12 @@ function API.spawn(pos, species_id, level, owner_name)
 		staticdata.persistent = true
 		staticdata.can_despawn = false
 	else
-		-- A wild spawn rolls for shiny (T-25c). Owned spawns (captures) keep the instance's own flag.
-		inst.shiny = defs.roll_shiny(rng, knob("shiny_mult"))
+		-- A wild spawn rolls for shiny (T-25c) unless the caller decides it. Owned spawns (captures) keep the flag.
+		if shiny ~= nil then
+			inst.shiny = shiny == true
+		else
+			inst.shiny = defs.roll_shiny(rng, knob("shiny_mult"))
+		end
 	end
 	return core.add_entity(pos, defs.entity_name(species), core.serialize(staticdata))
 end
