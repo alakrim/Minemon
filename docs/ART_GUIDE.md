@@ -39,6 +39,22 @@ Library (lib.lua): `F.flare`, `F.burst` (radial), `F.smoke`, `F.flames`, `F.embe
 `F.inhale`, `F.on(obj, def)`, `F.decal`, `F.number`, `F.hitstop`, `F.sound`, `F.anchor`, `F.tex`, `F.tint`.
 Colours come from `c.palette` (core, main, edge, smoke per type). **Sizes are in nodes.**
 
+Lessons from the in-engine reviews (they are rules now):
+- `F.emit` makes particles up to 0.4 nodes 35% larger and lets them live 15% longer (`F.PRESENCE_*`, battles are
+  watched from 5-10 nodes); the boost fades out by 0.9 nodes. Block particles (`node = {...}`) are capped at 0.16.
+- The engine draws particles with nearest filtering: a big particle shows its texels. Smoke, dust and glow are 48-64
+  px; keep dust and smoke at most 0.7 per particle, leaves and feathers at most 0.2.
+- The trainer's camera is 2-3 nodes behind the user: area moves keep their dust low (vertical speed <= 0.3), or it
+  drifts past the camera and fills the screen.
+- Never give an entity a blended sprite (`use_texture_alpha = true` on a sprite near effects): it writes depth over
+  its whole square and hides every particle behind it. Art parts are clipped; glow comes from halo particles.
+- Glows: write `blend = "add"` as usual; `F.tex` draws it as a screen blend on the texture's premultiplied copy
+  (Luanti's own add/sub multiply by the framebuffer alpha, which smoke and water lower: dark squares). After adding
+  or regenerating a texture, run `python3 tools/premultiply_fx.py`. Fades on glows become brightness flipbooks.
+  `blend = "sub"` becomes a dark alpha smoke.
+- Capturing effects: give the scene `repeat_s` (the move is re-cast every repeat_s seconds), so a shot always
+  catches it whatever the capture lag. Every shot needs its own scene `at` (closer than 0.004 nodes = same scene).
+
 Textures: neutral (white/grey) ones are tinted with `F.tint`; painted ones (fire) are not. To add one, write a
 `tex_<name>` function in tools/gen_fx_textures.py (numpy; deterministic), add it to `TEXTURES`, regenerate, add a
 row to ASSETS_LICENSES.md.
