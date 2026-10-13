@@ -161,6 +161,28 @@ local function arm(sc, player)
 	if sc.status then
 		minemon.combat.apply_status(target or user, sc.status, user)
 	end
+	if sc.move and target and sc.repeat_s then
+		-- Repeat mode (effects review): cast again every repeat_s until the next scene, so any capture moment
+		-- shows some phase of the move whatever the capture lag.
+		local name = sc.name
+		local function again()
+			if armed ~= name or not user:get_pos() or not target:get_pos() then
+				return
+			end
+			local le = user:get_luaentity()
+			if le then
+				le._mm_cooldown = nil
+			end
+			local inst = minemon.creatures.get_instance(user)
+			if inst and inst.moves and inst.moves[1] then
+				inst.moves[1].pp = 99
+			end
+			minemon.combat.use_move(user, target, sc.move)
+			core.after(sc.repeat_s, again)
+		end
+		core.after(0.3, again)
+		return
+	end
 	if sc.move and target then
 		local m = minemon.data.get_move(sc.move)
 		local delay = (sc.wait_s + 1) - m.cast_s - (sc.show_s or 0.3) - (sc.cast_early_s or 0)

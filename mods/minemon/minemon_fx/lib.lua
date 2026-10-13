@@ -34,6 +34,10 @@ F.RANGE = tonumber(core.settings:get("minemon_fx_range")) or 64
 
 -- Particle sizes in recipes are in nodes; the engine counts them in tenths of a node. F.emit converts.
 F.UNIT = 10
+-- Presence (M2.1 review: battles are watched from 5-10 nodes away): every particle is PRESENCE_SIZE larger and lives
+-- PRESENCE_LIFE longer than its recipe says. Tune the whole look here, not recipe by recipe.
+F.PRESENCE_SIZE = 1.35
+F.PRESENCE_LIFE = 1.15
 
 local ZERO = { x = 0, y = 0, z = 0 }
 
@@ -113,10 +117,18 @@ function F.emit(def, at)
 	local ids = {}
 	local base = def.amount or 1
 	local size = def.size
+	local unit = F.UNIT * F.PRESENCE_SIZE
 	if type(size) == "number" then
-		size = size * F.UNIT
+		size = size * unit
 	elseif type(size) == "table" then
-		size = { min = (size.min or 0) * F.UNIT, max = (size.max or 0) * F.UNIT, bias = size.bias }
+		size = { min = (size.min or 0) * unit, max = (size.max or 0) * unit, bias = size.bias }
+	end
+	local exptime = def.exptime
+	if type(exptime) == "number" then
+		exptime = exptime * F.PRESENCE_LIFE
+	elseif type(exptime) == "table" then
+		exptime = { min = (exptime.min or 0) * F.PRESENCE_LIFE, max = (exptime.max or 0) * F.PRESENCE_LIFE,
+			bias = exptime.bias }
 	end
 	for _, v in ipairs(F.viewers(ref)) do
 		local n = L.amount(base, v.scale)
@@ -127,6 +139,7 @@ function F.emit(def, at)
 			end
 			d.amount = n
 			d.size = size
+			d.exptime = exptime
 			d.playername = v.name
 			d.time = d.time or 0.05
 			ids[#ids + 1] = core.add_particlespawner(d)
