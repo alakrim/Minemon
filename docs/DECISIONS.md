@@ -256,3 +256,10 @@ Addendum (2026-10-13, in-engine reviews): glows use the screen blend on premulti
 read the framebuffer alpha); every particle up to 0.4 nodes is 35% larger and 15% longer-lived (presence, fading out
 by 0.9 nodes); eldritch darkening is lighter at night and the eyes glow from dusk; fire species carry living flames
 and Gastly its gas as art profiles. Owner paused M2.1 on 2026-10-13 before the final re-shoot (docs/STATE.md).
+
+## D-033 — Admin panel and live tuning (owner request, 2026-10-13)
+The owner wants an in-game ADMIN panel: make capture harder or easier, spawn a creature in front of them, and change the game live.
+- **Tuning store** in minemon_core (`tuning.lua` pure + glue): `minemon.tuning.get/set/reset`, saved in mod storage, fires `tuning_changed`. Every knob's default leaves the game as designed. Knobs: catch_mode (normal/always/never), catch_mult, spawn_enabled, spawn_cap_mult, level_offset, dread_mult, shiny_mult, exp_mult. Mods read a knob when they use it (no caching), so changes apply at once.
+- **Hooks** (T-32): capture (odds HUD and the real roll), spawning (on/off, local cap, level offset), Dread roll, shiny roll, exp gain.
+- **Panel** (T-33): new mod `minemon_admin`, privilege `minemon_admin` (given to singleplayer and the server admin, not to the friend by default), `/admin` opens a tabbed formspec: Tuning, Spawn, Player, World. Actions reuse the existing public APIs.
+- Why a core store and not panel-owned settings: gameplay mods must not depend on the admin mod, and tests can set knobs without a UI.
