@@ -1,0 +1,966 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "water_hydro_pump_0",
+  "pos": [
+   186,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "hydro_pump",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "water_hydro_pump_1",
+  "pos": [
+   186,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "hydro_pump",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "ice_ice_beam_0",
+  "pos": [
+   186,
+   10,
+   174.22
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.82
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "ice_beam",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "ice_ice_beam_1",
+  "pos": [
+   186,
+   10,
+   174.23
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.83
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "ice_beam",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "electric_thunder_0",
+  "pos": [
+   186,
+   10,
+   174.24
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.84
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "thunder",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "electric_thunder_1",
+  "pos": [
+   186,
+   10,
+   174.25
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.85
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "thunder",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "flying_aeroblast_0",
+  "pos": [
+   186,
+   10,
+   174.26
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.86
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "aeroblast",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "flying_aeroblast_1",
+  "pos": [
+   186,
+   10,
+   174.27
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.87
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "aeroblast",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "normal_hyper_beam_0",
+  "pos": [
+   186,
+   10,
+   174.28
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.88
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "hyper_beam",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "normal_hyper_beam_1",
+  "pos": [
+   186,
+   10,
+   174.29
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.89
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "hyper_beam",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "steel_metal_claw_0",
+  "pos": [
+   186,
+   10,
+   174.3
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.9
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 1.7,
+   "move": "metal_claw",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "steel_metal_claw_1",
+  "pos": [
+   186,
+   10,
+   174.31
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.91
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 1.7,
+   "move": "metal_claw",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "grass_razor_leaf_0",
+  "pos": [
+   186,
+   10,
+   174.32
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.92
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 3.5,
+   "move": "razor_leaf",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "grass_razor_leaf_1",
+  "pos": [
+   186,
+   10,
+   174.33
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.93
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 3.5,
+   "move": "razor_leaf",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "bug_megahorn_0",
+  "pos": [
+   186,
+   10,
+   174.34
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.94
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 1.7,
+   "move": "megahorn",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "bug_megahorn_1",
+  "pos": [
+   186,
+   10,
+   174.35
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.95
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 1.7,
+   "move": "megahorn",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "poison_sludge_bomb_0",
+  "pos": [
+   186,
+   10,
+   174.36
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.96
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sludge_bomb",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "poison_sludge_bomb_1",
+  "pos": [
+   186,
+   10,
+   174.37
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.97
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sludge_bomb",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "ground_earthquake_0",
+  "pos": [
+   186,
+   10,
+   174.38
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.98
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 3.5,
+   "move": "earthquake",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "ground_earthquake_1",
+  "pos": [
+   186,
+   10,
+   174.39
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    178.99
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 3.5,
+   "move": "earthquake",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "rock_rock_slide_0",
+  "pos": [
+   186,
+   10,
+   174.4
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.0
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 3.5,
+   "move": "rock_slide",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "rock_rock_slide_1",
+  "pos": [
+   186,
+   10,
+   174.41
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.01
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 3.5,
+   "move": "rock_slide",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "fighting_cross_chop_0",
+  "pos": [
+   186,
+   10,
+   174.42
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.02
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 1.7,
+   "move": "cross_chop",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "fighting_cross_chop_1",
+  "pos": [
+   186,
+   10,
+   174.43
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.03
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 1.7,
+   "move": "cross_chop",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "psychic_confusion_0",
+  "pos": [
+   186,
+   10,
+   174.44
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.04
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "confusion",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "psychic_confusion_1",
+  "pos": [
+   186,
+   10,
+   174.45
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.05
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "confusion",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "ghost_night_shade_0",
+  "pos": [
+   186,
+   10,
+   174.46
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.06
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "night_shade",
+   "show_s": -0.7,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "ghost_night_shade_1",
+  "pos": [
+   186,
+   10,
+   174.47
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.07
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "night_shade",
+   "show_s": -0.3,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "dark_crunch_0",
+  "pos": [
+   186,
+   10,
+   174.48
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.08
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "crunch",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "dark_crunch_1",
+  "pos": [
+   186,
+   10,
+   174.49
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.09
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "crunch",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "dragon_dragon_rage_0",
+  "pos": [
+   186,
+   10,
+   174.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.1
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "dragon_rage",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "dragon_dragon_rage_1",
+  "pos": [
+   186,
+   10,
+   174.51
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.11
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "dragon_rage",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "fire_fire_blast_0",
+  "pos": [
+   186,
+   10,
+   174.52
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.12
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "fire_blast",
+   "show_s": -0.34,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ },
+ {
+  "name": "fire_fire_blast_1",
+  "pos": [
+   186,
+   10,
+   174.53
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "at": [
+    186,
+    179.13
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "fire_blast",
+   "show_s": 0.06,
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ]
+  }
+ }
+]
