@@ -148,7 +148,8 @@ end
 -- Visual data for one species (T-25c). pack_entry is minemon_pack.models[dex], or nil. shiny picks the shiny texture.
 -- With a pack entry: the pack mesh and texture, visual_size = the entry's scale (1 when absent: true Cobblemon
 -- scale), and a collision box from the pack's width and height times that scale. Without one: the stand-in mesh
--- for the body plan, the type texture and the size class scale. Returns { mesh, textures, visual_size, collisionbox, selectionbox, animation }.
+-- for the body plan, the type texture and the size class scale.
+-- Returns { mesh, textures, visual_size, collisionbox, selectionbox, animation }.
 function M.visual_for(species, pack_entry, shiny)
 	assert(type(species) == "table", "species must be a table")
 	shiny = shiny == true
