@@ -1,0 +1,1315 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   176
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 15
+ },
+ {
+  "name": "psy_cast",
+  "pos": [
+   186,
+   10,
+   172.51
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.01
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "psybeam",
+   "show_s": -0.25
+  }
+ },
+ {
+  "name": "psy_flight",
+  "pos": [
+   186,
+   10,
+   172.52
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.02
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "psybeam",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "psy_impact",
+  "pos": [
+   186,
+   10,
+   172.53
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.03
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "psybeam",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "psy_after",
+  "pos": [
+   186,
+   10,
+   172.54
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.04
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "psybeam",
+   "show_s": 1.2
+  }
+ },
+ {
+  "name": "gst_cast",
+  "pos": [
+   186,
+   10,
+   172.55
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.05
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 1.2,
+   "move": "lick",
+   "show_s": -0.2
+  }
+ },
+ {
+  "name": "gst_flight",
+  "pos": [
+   186,
+   10,
+   172.56
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.06
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 1.2,
+   "move": "lick",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "gst_impact",
+  "pos": [
+   186,
+   10,
+   172.57
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.07
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 1.2,
+   "move": "lick",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "gst_after",
+  "pos": [
+   186,
+   10,
+   172.58
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.08
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 1.2,
+   "move": "lick",
+   "show_s": 1.2
+  }
+ },
+ {
+  "name": "drk_cast",
+  "pos": [
+   186,
+   10,
+   172.59
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.09
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "pursuit",
+   "show_s": -0.25
+  }
+ },
+ {
+  "name": "drk_flight",
+  "pos": [
+   186,
+   10,
+   172.6
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.1
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "pursuit",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "drk_impact",
+  "pos": [
+   186,
+   10,
+   172.61
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.11
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "pursuit",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "drk_after",
+  "pos": [
+   186,
+   10,
+   172.62
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.12
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "pursuit",
+   "show_s": 1.2
+  }
+ },
+ {
+  "name": "drg_cast",
+  "pos": [
+   186,
+   10,
+   172.63
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.13
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "outrage",
+   "show_s": -0.3
+  }
+ },
+ {
+  "name": "drg_flight",
+  "pos": [
+   186,
+   10,
+   172.64
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.14
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "outrage",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "drg_impact",
+  "pos": [
+   186,
+   10,
+   172.65
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.15
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "outrage",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "drg_after",
+  "pos": [
+   186,
+   10,
+   172.66
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.16
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "outrage",
+   "show_s": 1.2
+  }
+ },
+ {
+  "name": "fir_cast",
+  "pos": [
+   186,
+   10,
+   172.67
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.17
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "fire_punch",
+   "show_s": -0.3
+  }
+ },
+ {
+  "name": "fir_flight",
+  "pos": [
+   186,
+   10,
+   172.68
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.18
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "fire_punch",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "fir_impact",
+  "pos": [
+   186,
+   10,
+   172.69
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.19
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "fire_punch",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "fir_after",
+  "pos": [
+   186,
+   10,
+   172.7
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.2
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "fire_punch",
+   "show_s": 1.2
+  }
+ },
+ {
+  "name": "sig_psychic_flight",
+  "pos": [
+   186,
+   10,
+   172.71
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.21
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "psychic",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "sig_psychic_impact",
+  "pos": [
+   186,
+   10,
+   172.72
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.22
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "psychic",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_hypnosis_t05",
+  "pos": [
+   186,
+   10,
+   172.73
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.23
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "hypnosis",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_hypnosis_t2",
+  "pos": [
+   186,
+   10,
+   172.74
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.24
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "hypnosis",
+   "show_s": 1.8
+  }
+ },
+ {
+  "name": "sig_night_shade_beam",
+  "pos": [
+   186,
+   10,
+   172.75
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.25
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "night_shade",
+   "show_s": 0.1
+  }
+ },
+ {
+  "name": "sig_night_shade_impact",
+  "pos": [
+   186,
+   10,
+   172.76
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.26
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "night_shade",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_curse_t05",
+  "pos": [
+   186,
+   10,
+   172.77
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.27
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "curse",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_curse_t2",
+  "pos": [
+   186,
+   10,
+   172.78
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.28
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "curse",
+   "show_s": 1.8
+  }
+ },
+ {
+  "name": "sig_crunch_flight",
+  "pos": [
+   186,
+   10,
+   172.79
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.29
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "crunch",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "sig_crunch_impact",
+  "pos": [
+   186,
+   10,
+   172.8
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.3
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "crunch",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_bite_flight",
+  "pos": [
+   186,
+   10,
+   172.81
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.31
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "bite",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "sig_bite_impact",
+  "pos": [
+   186,
+   10,
+   172.82
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.32
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "bite",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_dragon_rage_flight",
+  "pos": [
+   186,
+   10,
+   172.83
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.33
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "dragon_rage",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "sig_dragon_rage_impact",
+  "pos": [
+   186,
+   10,
+   172.84
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.34
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "dragon_rage",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_twister_t01",
+  "pos": [
+   186,
+   10,
+   172.85
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.35
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "twister",
+   "show_s": 0.1
+  }
+ },
+ {
+  "name": "sig_twister_t06",
+  "pos": [
+   186,
+   10,
+   172.86
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.36
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "twister",
+   "show_s": 0.6
+  }
+ },
+ {
+  "name": "sig_flamethrower_flight",
+  "pos": [
+   186,
+   10,
+   172.87
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.37
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "flamethrower",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "sig_flamethrower_impact",
+  "pos": [
+   186,
+   10,
+   172.88
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.38
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "flamethrower",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "sig_fire_blast_flight",
+  "pos": [
+   186,
+   10,
+   172.89
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.39
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "fire_blast",
+   "show_s": 0.2
+  }
+ },
+ {
+  "name": "sig_fire_blast_impact",
+  "pos": [
+   186,
+   10,
+   172.9
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.4
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "fire_blast",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "night_shade_night",
+  "pos": [
+   186,
+   10,
+   172.91
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.0,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.41
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "night_shade",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "crunch_night",
+  "pos": [
+   186,
+   10,
+   172.92
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.0,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.42
+   ],
+   "cam": [
+    0,
+    1.6,
+    -5.5
+   ],
+   "target": 19,
+   "d": 6.0,
+   "move": "crunch",
+   "show_s": 0.5
+  }
+ },
+ {
+  "name": "status_burn",
+  "pos": [
+   186,
+   10,
+   174.93
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.43
+   ],
+   "cam": [
+    0,
+    1.0,
+    -3.5
+   ],
+   "status": "burn"
+  }
+ },
+ {
+  "name": "status_poison",
+  "pos": [
+   186,
+   10,
+   174.94
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.44
+   ],
+   "cam": [
+    0,
+    1.0,
+    -3.5
+   ],
+   "status": "poison"
+  }
+ },
+ {
+  "name": "status_paralysis",
+  "pos": [
+   186,
+   10,
+   174.95
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.45
+   ],
+   "cam": [
+    0,
+    1.0,
+    -3.5
+   ],
+   "status": "paralysis"
+  }
+ },
+ {
+  "name": "status_sleep",
+  "pos": [
+   186,
+   10,
+   174.96
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.46
+   ],
+   "cam": [
+    0,
+    1.0,
+    -3.5
+   ],
+   "status": "sleep"
+  }
+ },
+ {
+  "name": "status_freeze",
+  "pos": [
+   186,
+   10,
+   174.97
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.42,
+  "wait_s": 4,
+  "scene": {
+   "user": 4,
+   "at": [
+    186,
+    178.47
+   ],
+   "cam": [
+    0,
+    1.0,
+    -3.5
+   ],
+   "status": "freeze"
+  }
+ }
+]
