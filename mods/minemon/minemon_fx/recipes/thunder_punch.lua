@@ -65,7 +65,7 @@ function R.impact(F, c)
 	local at = c.pos
 	F.flare({ pos = at, colour = c.palette.core, size = 1.2, life = 0.12 })
 	F.emit({
-		amount = 1, time = 0.02, pos = at, vel = ZERO, exptime = 0.24, size = 2.0,
+		amount = 1, time = 0.02, pos = at, vel = ZERO, exptime = 0.3, size = 2.8,
 		texture = F.tex(F.tint(TEX.star, c.palette.core), { blend = "add", fade = true, grow = { 0.7, 1.2 } }),
 		glow = 14,
 	})
@@ -73,7 +73,7 @@ function R.impact(F, c)
 	for _, f in ipairs(forks) do
 		F.emit({
 			amount = 1, time = 0.02, pos = vector.add(at, { x = f.x * 0.45, y = f.y * 0.45, z = 0 }), vel = ZERO,
-			exptime = 0.2, size = 1.1, texture = bolt(F, c.palette.main), glow = 14,
+			exptime = 0.26, size = 1.8, texture = bolt(F, c.palette.main), glow = 14,
 		})
 	end
 	F.ring({ pos = at, colour = c.palette.main, size = 0.3, grow = 2.6, life = 0.2 })

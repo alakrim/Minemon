@@ -31,7 +31,7 @@ end
 -- The orb: a big bubble ring with a solid tint, and a chain of bubbles that rises from it, each one a little
 -- smaller and fainter than the last (the chain is a single trail, so it reads as one beam of bubbles).
 function R.projectile(F, c)
-	c.obj:set_properties({ textures = { F.tint(TEX.bubble, c.palette.main) }, visual_size = { x = 0.75, y = 0.75 },
+	c.obj:set_properties({ textures = { F.tint(TEX.glow, c.palette.main) }, visual_size = { x = 0.9, y = 0.9 },
 		glow = 6 })
 	F.on(c.obj, {
 		amount = 26, time = 1.5, pos = { min = { x = -0.1, y = -0.1, z = -0.1 }, max = { x = 0.1, y = 0.1, z = 0.1 } },

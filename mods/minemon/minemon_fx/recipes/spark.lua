@@ -31,16 +31,16 @@ end
 
 -- The orb: a bright yellow point with a soft halo, and a round fizz of sparks that spit out of it at all angles.
 function R.projectile(F, c)
-	c.obj:set_properties({ textures = { F.tint(TEX.glow, c.palette.core) }, visual_size = { x = 0.6, y = 0.6 },
+	c.obj:set_properties({ textures = { F.tint(TEX.glow, c.palette.core) }, visual_size = { x = 0.9, y = 0.9 },
 		glow = 14 })
 	F.on(c.obj, {
 		amount = 34, time = 1.5, pos = ZERO, vel = ZERO, jitter = FIZZ,
-		exptime = { min = 0.15, max = 0.3 }, size = { min = 0.1, max = 0.16 },
+		exptime = { min = 0.15, max = 0.3 }, size = { min = 0.16, max = 0.24 },
 		texture = F.tex(F.tint(TEX.spark, c.palette.main), { blend = "add", fade = true }), glow = 14,
 	})
 	F.on(c.obj, {
 		amount = 8, time = 1.5, pos = ZERO, vel = ZERO,
-		exptime = { min = 0.2, max = 0.3 }, size = { min = 0.6, max = 0.8 },
+		exptime = { min = 0.2, max = 0.3 }, size = { min = 0.9, max = 1.2 },
 		texture = F.tex(F.tint(TEX.glow, c.palette.main), { blend = "add", fade = true }), glow = 14,
 	})
 	return true
@@ -51,13 +51,13 @@ function R.impact(F, c)
 	local at = c.pos
 	F.flare({ pos = at, colour = c.palette.core, size = 1.3, life = 0.14 })
 	F.burst({ pos = at, tex = TEX.spark, colour = c.palette.main, amount = 26, speed = 6, radius = 0.15,
-		life = { 0.2, 0.4 }, size = { 0.12, 0.2 }, glow = 14 })
+		life = { 0.2, 0.4 }, size = { 0.18, 0.28 }, glow = 14 })
 	F.ring({ pos = at, colour = c.palette.main, size = 0.3, grow = 2.2, life = 0.2 })
 	if c.victim and c.victim:get_pos() then
 		F.on(c.victim, {
 			amount = 10, time = 0.5,
 			pos = { min = { x = -0.25, y = 0.2, z = -0.25 }, max = { x = 0.25, y = 1.0, z = 0.25 } },
-			vel = ZERO, jitter = CLING, exptime = { min = 0.12, max = 0.22 }, size = { min = 0.1, max = 0.16 },
+			vel = ZERO, jitter = CLING, exptime = { min = 0.12, max = 0.22 }, size = { min = 0.16, max = 0.24 },
 			texture = F.tex(F.tint(TEX.spark, c.palette.core), { blend = "add", fade = true }), glow = 14,
 		})
 	end

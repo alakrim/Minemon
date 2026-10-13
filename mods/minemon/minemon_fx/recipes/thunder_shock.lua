@@ -24,7 +24,7 @@ end
 -- The shot: a single bolt at the muzzle, then a few sparks thrown forward.
 function R.launch(F, c)
 	F.emit({
-		amount = 1, time = 0.02, pos = c.from, vel = ZERO, exptime = 0.14, size = 0.75,
+		amount = 1, time = 0.02, pos = c.from, vel = ZERO, exptime = 0.16, size = 1.3,
 		texture = bolt(F, c.palette.core), glow = 14,
 	})
 	F.emit({
@@ -53,7 +53,7 @@ function R.impact(F, c)
 	local at = c.pos
 	F.flare({ pos = at, colour = c.palette.core, size = 0.9, life = 0.1 })
 	F.emit({
-		amount = 1, time = 0.02, pos = at, vel = ZERO, exptime = 0.14, size = 1.2,
+		amount = 1, time = 0.02, pos = at, vel = ZERO, exptime = 0.18, size = 2.2,
 		texture = bolt(F, c.palette.core), glow = 14,
 	})
 	F.emit({
