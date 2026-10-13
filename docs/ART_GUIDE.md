@@ -61,6 +61,39 @@ glowing eyes at night, gems, ghost wisps). Keep one or two parts per species.
 Never add a per-step network update (no `set_properties` or `add_particlespawner` in an on_step without a timer).
 Long effects are attached spawners (`F.on`), not repeated calls.
 
-## 5. Creature style
-The owner picks the creature style from four options (D-032; screenshots in docs/milestones/M2.1-styles.png). This
-section is completed with the chosen pipeline and its per-species checklist once the choice is made.
+## 5. Creature style: Micro-Voxel (owner's choice, D-032)
+Reference: Charmander (`tools/sculpt/charmander.py`, built by `tools/sculpt/build_voxel.py`). Fine voxels (36 per
+creature height), baked ambient occlusion, a ±3% colour jitter per voxel, top-lit faces, and **face-detail texels**:
+voxel faces that show an eye, mouth or nostril are painted at 6x6 texels, so faces are crisp. Owner feedback that
+shaped it: eyes stay on the curved head (no flat face plate); the body is chunky; the face gets extra effort.
+
+How every species is built (`scripts/setup.sh` → `tools/cobblemon_import.py --style microvoxel`):
+1. A hand-made sculpt `tools/sculpt/<species>.py` (with `build()` and `H`) wins: it is voxelized exactly like
+   Charmander. Write these for the species that matter most (starters, early routes, eldritch giants).
+2. Otherwise `tools/sculpt/voxel_cobblemon.py` voxelizes Cobblemon's model in the same style: its cubes, skin,
+   skeleton and clips, with **anime eyes repainted** on every eye bone (pupil from the skin's darkest eye colour,
+   iris from its most saturated one, two catch lights).
+3. Size: `fx_logic.visual_height(height_m)` (mirrored in voxel_cobblemon.visual_height): small creatures read a
+   bit larger than life, big ones are compressed, capped at 3.2 nodes; serpents are sized by bulk.
+
+### Reviewing species (worker task)
+Shoot lineups (`tests/screenshot/art_lineup.json` is the template: rows of 3-5 species at eye level, yaw 160) and
+check each creature: upright, facing forward, feet on the ground, proportions, eyes readable, no stray geometry,
+size believable next to the player (1.8 nodes). Fix with `tools/sculpt/voxel_overrides.json` (`hide` bones that are
+attack props, `scale`, extra `eye_bones`), then re-run `bash scripts/setup.sh && bash scripts/assemble_game.sh`.
+When the conversion cannot be made good, write a hand-made sculpt.
+
+### Sculpting a creature (worker task)
+Copy `tools/sculpt/charmander.py`. Keep its structure: PALETTE, BONES (same names as Charmander where the anatomy
+matches, so `pose()` can be reused or adapted), LOCATORS (mouth, head, target, middle, eye_left/right, plus
+anything an art profile rides), parts (ellipsoids and capsules, smooth-unioned), decals (belly, markings, eyes),
+`pose(clip, u)`. Faces: eyes are tall ovals on the curved head with an iris low, an `iris_light` crescent and two
+`eye_white` glints, high on the face and wide apart; a thin smile decal; nostrils. Preview with
+`python3 -m tools.sculpt.preview <species> out.png`, build with `python3 -m tools.sculpt.build_voxel <species> out/`
+and check in-engine through the stage (mesh/texture overrides from a test mod).
+
+## 6. Eldritch creatures
+Species with `fx_logic.is_eldritch` (weight >= 80 kg, or the huge and colossal classes; 42 species) carry a
+presence (`mods/minemon/minemon_fx/eldritch.lua`): subtractive void smoke and violet motes around the body, eyes
+that glow red at night on the model's eye locators, and for players within 14 / 8 nodes the world loses colour and
+light (set_lighting, restored when they leave). Tune it there; never make them bigger than the size rule.

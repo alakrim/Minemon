@@ -1,0 +1,164 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "charizard_far_day",
+  "pos": [
+   186,
+   10,
+   163.8
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -3,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "user": 6,
+   "user_yaw_deg": 160,
+   "at": [
+    186,
+    178.8
+   ],
+   "cam": [
+    0,
+    0.6,
+    -15.0
+   ]
+  }
+ },
+ {
+  "name": "charizard_near_day",
+  "pos": [
+   186,
+   10,
+   174.31
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -2,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "user": 6,
+   "user_yaw_deg": 160,
+   "at": [
+    186,
+    178.81
+   ],
+   "cam": [
+    0,
+    0.2,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "charizard_near_night",
+  "pos": [
+   186,
+   10,
+   174.32
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -2,
+  "time_of_day": 0.02,
+  "wait_s": 5,
+  "scene": {
+   "user": 6,
+   "user_yaw_deg": 160,
+   "at": [
+    186,
+    178.82
+   ],
+   "cam": [
+    0,
+    0.2,
+    -4.5
+   ]
+  }
+ },
+ {
+  "name": "onix_near_dusk",
+  "pos": [
+   186,
+   10,
+   172.33
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": 2,
+  "time_of_day": 0.78,
+  "wait_s": 5,
+  "scene": {
+   "user": 95,
+   "user_yaw_deg": 150,
+   "at": [
+    186,
+    178.83
+   ],
+   "cam": [
+    0,
+    0.6,
+    -6.5
+   ]
+  }
+ },
+ {
+  "name": "onix_near_night",
+  "pos": [
+   186,
+   10,
+   172.34
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": 2,
+  "time_of_day": 0.02,
+  "wait_s": 5,
+  "scene": {
+   "user": 95,
+   "user_yaw_deg": 150,
+   "at": [
+    186,
+    178.84
+   ],
+   "cam": [
+    0,
+    0.6,
+    -6.5
+   ]
+  }
+ },
+ {
+  "name": "snorlax_near_day",
+  "pos": [
+   186,
+   10,
+   174.35
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -2,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "user": 143,
+   "user_yaw_deg": 160,
+   "at": [
+    186,
+    178.85
+   ],
+   "cam": [
+    0,
+    0.2,
+    -4.5
+   ]
+  }
+ }
+]

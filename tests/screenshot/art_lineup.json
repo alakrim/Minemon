@@ -1,0 +1,394 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "starters_k",
+  "pos": [
+   186,
+   10,
+   175.8
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -9,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 1,
+     "dx": -1.6500000000000001,
+     "yaw_deg": 160
+    },
+    {
+     "species": 4,
+     "dx": -0.55,
+     "yaw_deg": 160
+    },
+    {
+     "species": 7,
+     "dx": 0.55,
+     "yaw_deg": 160
+    },
+    {
+     "species": 25,
+     "dx": 1.6500000000000001,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.8
+   ],
+   "cam": [
+    0,
+    -0.4,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "starters_j",
+  "pos": [
+   186,
+   10,
+   175.81
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -9,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 152,
+     "dx": -1.6500000000000001,
+     "yaw_deg": 160
+    },
+    {
+     "species": 155,
+     "dx": -0.55,
+     "yaw_deg": 160
+    },
+    {
+     "species": 158,
+     "dx": 0.55,
+     "yaw_deg": 160
+    },
+    {
+     "species": 133,
+     "dx": 1.6500000000000001,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.81
+   ],
+   "cam": [
+    0,
+    -0.4,
+    -3.0
+   ]
+  }
+ },
+ {
+  "name": "route",
+  "pos": [
+   186,
+   10,
+   175.62
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -9,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 16,
+     "dx": -2.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 19,
+     "dx": -1.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 74,
+     "dx": 0.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 92,
+     "dx": 1.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 10,
+     "dx": 2.0,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.82
+   ],
+   "cam": [
+    0,
+    -0.4,
+    -3.2
+   ]
+  }
+ },
+ {
+  "name": "evolved",
+  "pos": [
+   186,
+   10,
+   175.03
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 2,
+     "dx": -2.0999999999999996,
+     "yaw_deg": 160
+    },
+    {
+     "species": 5,
+     "dx": -0.7,
+     "yaw_deg": 160
+    },
+    {
+     "species": 8,
+     "dx": 0.7,
+     "yaw_deg": 160
+    },
+    {
+     "species": 26,
+     "dx": 2.0999999999999996,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.83
+   ],
+   "cam": [
+    0,
+    -0.1,
+    -3.8
+   ]
+  }
+ },
+ {
+  "name": "big1",
+  "pos": [
+   186,
+   10,
+   172.84
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -4,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 6,
+     "dx": -2.4,
+     "yaw_deg": 160
+    },
+    {
+     "species": 143,
+     "dx": 0.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 68,
+     "dx": 2.4,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.84
+   ],
+   "cam": [
+    0,
+    0.4,
+    -6.0
+   ]
+  }
+ },
+ {
+  "name": "big2",
+  "pos": [
+   186,
+   10,
+   172.35
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -4,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 59,
+     "dx": -2.6,
+     "yaw_deg": 160
+    },
+    {
+     "species": 131,
+     "dx": 0.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 149,
+     "dx": 2.6,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.85
+   ],
+   "cam": [
+    0,
+    0.4,
+    -6.5
+   ]
+  }
+ },
+ {
+  "name": "serpents",
+  "pos": [
+   186,
+   10,
+   169.86
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -6,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 95,
+     "dx": -2.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 130,
+     "dx": 2.0,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.86
+   ],
+   "cam": [
+    0,
+    1.2,
+    -9.0
+   ]
+  }
+ },
+ {
+  "name": "legend",
+  "pos": [
+   186,
+   10,
+   172.87
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -4,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 150,
+     "dx": -2.4,
+     "yaw_deg": 160
+    },
+    {
+     "species": 248,
+     "dx": 0.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 3,
+     "dx": 2.4,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.87
+   ],
+   "cam": [
+    0,
+    0.4,
+    -6.0
+   ]
+  }
+ },
+ {
+  "name": "big_night",
+  "pos": [
+   186,
+   10,
+   171.88
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -4,
+  "time_of_day": 0.02,
+  "wait_s": 5,
+  "scene": {
+   "lineup": [
+    {
+     "species": 6,
+     "dx": -3.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 143,
+     "dx": 0.0,
+     "yaw_deg": 160
+    },
+    {
+     "species": 95,
+     "dx": 3.0,
+     "yaw_deg": 160
+    }
+   ],
+   "at": [
+    186,
+    178.88
+   ],
+   "cam": [
+    0,
+    0.6,
+    -7.0
+   ]
+  }
+ }
+]
