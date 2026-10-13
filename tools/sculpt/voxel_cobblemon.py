@@ -35,7 +35,7 @@ VOXELS_TALL = 36
 # ROUND_FRAC of its thinnest half-extent (at most ROUND_MAX_PX), and cubes melt into each other with a smooth union
 # of BLEND_PX. Thin planes (flames, fins) stay sharp.
 ROUND_FRAC = 0.7
-ROUND_MAX_PX = 3.0
+ROUND_MAX_PX = 6.0
 BLEND_PX = 1.2
 EYE_MAX_PX = 4.5  # only small eye boxes get the anime eye (big "eyes" boxes are internal sockets)
 HEIGHT_CAP = 3.2
@@ -316,6 +316,13 @@ def overrides(dex):
         return {}
 
 
+# Bones every species hides (M2.1 lineup review): Cobblemon models carry alternate expressions (angry, sad...
+# pupils, an open mouth) and attack props (vine whips) that its game code toggles; at rest only the neutral face
+# and body must show.
+import re  # noqa: E402
+GLOBAL_HIDE = re.compile(r"^(angry|sad|happy|surprised|shocked|sleepy|cry|blush)_|^mouth_open$|^vines?(_|$)")
+
+
 def hidden_bones(model, anim, hide_names=()):
     """Bones not to voxelize: scaled to (near) zero in the stand clip's first frame, named in the overrides' hide
     list, or under such a bone."""
@@ -324,7 +331,7 @@ def hidden_bones(model, anim, hide_names=()):
     hidden = set()
     for i in model.get("order", range(len(model["names"]))):
         sc = scales[i] if i < len(scales) else (1, 1, 1)
-        if (min(abs(c) for c in sc) < 0.05 or model["names"][i] in hide_names
+        if (min(abs(c) for c in sc) < 0.05 or model["names"][i] in hide_names or GLOBAL_HIDE.search(model["names"][i])
                 or (parent[i] is not None and parent[i] in hidden)):
             hidden.add(i)
     return hidden
@@ -389,12 +396,12 @@ def convert(model, anim, png_path, height_m, out_glb, out_png, body_plan=None, f
     if shiny_png and out_png_shiny:
         Image.fromarray(out[3]).save(out_png_shiny, optimize=True)
     # Extents from the voxels themselves. The size rule targets the creature's bulk: its height, or for serpents
-    # (Onix, Gyarados, Ekans) 60% of their length, so they do not stretch across the landscape.
+    # (Onix, Gyarados, Ekans) 35% of their length: imposing, yet they do not stretch across the landscape.
     pos = np.array(mesh["positions"])
     ext = pos.max(axis=0) - pos.min(axis=0)
     model_h = float(ext[1])
     width = float(max(ext[0], ext[2]))
-    bulk = max(model_h, 0.6 * width) if body_plan == "serpent" else model_h
+    bulk = max(model_h, 0.35 * width) if body_plan == "serpent" else model_h
     scale = visual_height(height_m) / max(bulk, 1e-3) * float(fix.get("scale", 1.0))
     return len(mesh["indices"]) // 3, side, scale, model_h, width
 
