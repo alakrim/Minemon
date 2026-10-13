@@ -8,7 +8,7 @@ from code alone. Read this whole file before any art task.
 |---|---|
 | `tests/screenshot/minemon_stage` + `scripts/screenshot.sh` | Stages a scene on real terrain (lakeside meadow at x 182-190, z 174-182, seed 1337) and captures it. Shots are JSON (see the stage's header comment): creatures, a move cast on cue (`show_s`), a status, a lineup, mesh/texture overrides, any entity. |
 | `tools/gen_fx_textures.py` | Our procedural effect textures (flipbooks, glows, rings, decals). Add a function, run it, look at `--preview`. |
-| `tools/sculpt/` | Creatures as code: `sdf.py` primitives, `<species>.py` sculpt (shape, materials, bones, locators, clips), `preview.py` (ray-marched preview in seconds), `rig.py` (skin + clips + GLB), builders (`build_mesh.py`, `build_voxel.py`, `render_sprites.py`). |
+| `tools/sculpt/` | Creatures as code: `sdf.py` primitives, `<species>.py` sculpt (shape, materials, bones, locators, clips), `preview.py` (ray-marched preview in seconds), `rig.py` (skin + clips + GLB), the builder `build_voxel.py` (micro-voxel), `voxel_cobblemon.py` (converts every Cobblemon model in the same style) and `voxel_overrides.json`. |
 | `tools/render_glb.py` | Offline four-view check of any GLB (pose, winding, orientation). Coarse colours: one texel per face. |
 | `tools/cobblemon_import.py` | The Cobblemon converter (fallback models, and their locator bones). |
 
