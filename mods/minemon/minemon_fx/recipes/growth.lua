@@ -26,7 +26,7 @@ function R.aura(F, c)
 		local ca, sa = math.cos(a), math.sin(a)
 		local p = { x = feet.x + ca * 0.8, y = feet.y + 0.05, z = feet.z + sa * 0.8 }
 		F.emit({
-			amount = 2, time = 0.1, pos = p,
+			amount = 3, time = 0.1, pos = p,
 			vel = { min = { x = ca * 0.2, y = 0.9, z = sa * 0.2 }, max = { x = ca * 0.4, y = 1.5, z = sa * 0.4 } },
 			drag = { x = 0.5, y = 0.2, z = 0.5 },
 			exptime = { min = 0.9, max = 1.2 }, size = { min = 0.16, max = 0.2 },
@@ -36,7 +36,7 @@ function R.aura(F, c)
 	F.ring({ pos = vector.add(feet, { x = 0, y = 0.05, z = 0 }), colour = PALE, size = 0.5, grow = 2.4, life = 0.5 })
 	core.after(0.3, function()
 		F.burst({ pos = c.centre, tex = F.TEX.mote, colour = "#e8ffb0", amount = 14, speed = 1.4, radius = 0.2,
-			life = { 0.5, 0.9 }, size = { 0.1, 0.16 }, gravity = -0.6, glow = 14 })
+			life = { 0.5, 0.9 }, size = { 0.16, 0.24 }, gravity = -0.6, glow = 14 })
 	end)
 	F.sound("default_grass_footstep", { pos = feet, gain = 0.25, pitch = 1.2 })
 end

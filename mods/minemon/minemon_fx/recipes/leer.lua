@@ -25,7 +25,6 @@ end
 
 -- Cloud: two eyes open on the target's face (wide, then a blink), held in place; each eye is a sprite on the head.
 function R.cloud(F, c)
-	local target = c.target
 	local head = vector.add(c.centre, { x = 0, y = 0.35, z = 0 })
 	local t = c.time or 3
 	local function open(z, life)

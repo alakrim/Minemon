@@ -26,7 +26,7 @@ function R.aura(F, c)
 		core.after(0.2 + k * 0.45, function()
 			F.emit({
 				amount = 1, time = 0.02, pos = vector.add(head, { x = 0.1 * k, y = 0.1 * k, z = 0 }),
-				vel = { x = 0.15, y = 0.55, z = 0 }, exptime = 1.4, size = 0.3 + 0.08 * k,
+				vel = { x = 0.15, y = 0.55, z = 0 }, exptime = 1.4, size = 0.5 + 0.1 * k,
 				texture = F.tex(F.tint(ZED, BLUE), { blend = "alpha", fade = { 1, 0 }, grow = { 0.8, 1.2 } }), glow = 6,
 			})
 		end)

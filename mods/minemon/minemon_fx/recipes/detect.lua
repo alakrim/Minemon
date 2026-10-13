@@ -6,7 +6,6 @@
 
 local R = {}
 
-local SPEED = "minemon_fx_speedline.png"
 local ZERO = { x = 0, y = 0, z = 0 }
 
 function R.aura(F, c)
@@ -22,8 +21,11 @@ function R.aura(F, c)
 			local y = feet.y + 0.2 + k * 0.35
 			local tone = (k % 2 == 0) and c.palette.core or c.palette.main
 			F.emit({
-				amount = 1, time = 0.02, pos = { x = feet.x, y = y, z = feet.z }, vel = ZERO, exptime = 0.4, size = 1.5,
-				texture = F.tex(F.tint(SPEED, tone), { blend = "add", fade = true, grow = { 1.0, 1.3 } }), glow = 14,
+				amount = 14, time = 0.05,
+				pos = { min = { x = feet.x - 0.6, y = y - 0.05, z = feet.z - 0.6 },
+					max = { x = feet.x + 0.6, y = y + 0.05, z = feet.z + 0.6 } },
+				vel = ZERO, exptime = 0.4, size = 0.16,
+				texture = F.tex(F.tint(F.TEX.spark, tone), { blend = "add", fade = true, grow = { 1.0, 1.3 } }), glow = 14,
 			})
 			F.emit({
 				amount = 4, time = 0.05,

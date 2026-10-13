@@ -21,7 +21,7 @@ function R.aura(F, c)
 		texture = F.tex(F.tint(F.TEX.glow, "#dfe8ff"), { blend = "add", grow = { 0.6, 1.0 }, alpha = 0.3 }), glow = 10,
 	})
 	F.emit({
-		amount = 1, time = 0.02, pos = moon, vel = ZERO, exptime = 1.6, size = 0.75,
+		amount = 1, time = 0.02, pos = moon, vel = ZERO, exptime = 1.6, size = 1.1,
 		texture = F.tex(F.tint(CRESCENT, SILVER), { blend = "add", fade = { 0.2, 1 }, grow = { 0.8, 1.0 } }), glow = 12,
 	})
 	F.emit({
