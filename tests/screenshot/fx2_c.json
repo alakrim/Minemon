@@ -1,0 +1,2310 @@
+[
+ {
+  "name": "warmup",
+  "pos": [
+   186,
+   10,
+   170
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -10,
+  "time_of_day": 0.5,
+  "wait_s": 12
+ },
+ {
+  "name": "fx2c_sleep_powder_0",
+  "pos": [
+   182.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    182.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sleep_powder",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sleep_powder_1",
+  "pos": [
+   182.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    182.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sleep_powder",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_stun_spore_0",
+  "pos": [
+   182.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    182.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "stun_spore",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_stun_spore_1",
+  "pos": [
+   182.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    182.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "stun_spore",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_poison_powder_0",
+  "pos": [
+   183.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    183.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "poison_powder",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_poison_powder_1",
+  "pos": [
+   183.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    183.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "poison_powder",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_spore_0",
+  "pos": [
+   183.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    183.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "spore",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_spore_1",
+  "pos": [
+   183.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    183.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "spore",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_cotton_spore_0",
+  "pos": [
+   184.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    184.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "cotton_spore",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_cotton_spore_1",
+  "pos": [
+   184.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    184.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "cotton_spore",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_leech_seed_0",
+  "pos": [
+   184.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    184.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "leech_seed",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_leech_seed_1",
+  "pos": [
+   184.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    184.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "leech_seed",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sing_0",
+  "pos": [
+   185.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    185.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sing",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sing_1",
+  "pos": [
+   185.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    185.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sing",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_supersonic_0",
+  "pos": [
+   185.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    185.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "supersonic",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_supersonic_1",
+  "pos": [
+   185.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    185.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "supersonic",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_confuse_ray_0",
+  "pos": [
+   186.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    186.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "confuse_ray",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_confuse_ray_1",
+  "pos": [
+   186.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    186.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "confuse_ray",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_thunder_wave_0",
+  "pos": [
+   186.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    186.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "thunder_wave",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_thunder_wave_1",
+  "pos": [
+   186.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    186.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "thunder_wave",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_leer_0",
+  "pos": [
+   187.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    187.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "leer",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_leer_1",
+  "pos": [
+   187.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    187.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "leer",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_growl_0",
+  "pos": [
+   187.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    187.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "growl",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_growl_1",
+  "pos": [
+   187.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    187.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "growl",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_scary_face_0",
+  "pos": [
+   188.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    188.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "scary_face",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_scary_face_1",
+  "pos": [
+   188.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    188.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "scary_face",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_glare_0",
+  "pos": [
+   188.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    188.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "glare",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_glare_1",
+  "pos": [
+   188.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    188.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "glare",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_mean_look_0",
+  "pos": [
+   189.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    189.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "mean_look",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_mean_look_1",
+  "pos": [
+   189.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    189.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "mean_look",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sand_attack_0",
+  "pos": [
+   189.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    189.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sand_attack",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sand_attack_1",
+  "pos": [
+   189.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    189.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sand_attack",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_smokescreen_0",
+  "pos": [
+   190.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    190.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "smokescreen",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_smokescreen_1",
+  "pos": [
+   190.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    190.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "smokescreen",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_string_shot_0",
+  "pos": [
+   190.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    190.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "string_shot",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_string_shot_1",
+  "pos": [
+   190.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    190.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "string_shot",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_spider_web_0",
+  "pos": [
+   191.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    191.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "spider_web",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_spider_web_1",
+  "pos": [
+   191.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    191.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "spider_web",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sweet_scent_0",
+  "pos": [
+   191.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    191.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sweet_scent",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sweet_scent_1",
+  "pos": [
+   191.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    191.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sweet_scent",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_haze_0",
+  "pos": [
+   192.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    192.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "haze",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_haze_1",
+  "pos": [
+   192.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    192.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "haze",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_swords_dance_0",
+  "pos": [
+   192.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    192.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "swords_dance",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_swords_dance_1",
+  "pos": [
+   192.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    192.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "swords_dance",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_harden_0",
+  "pos": [
+   193.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    193.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "harden",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_harden_1",
+  "pos": [
+   193.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    193.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "harden",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_agility_0",
+  "pos": [
+   193.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    193.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "agility",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_agility_1",
+  "pos": [
+   193.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    193.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "agility",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_amnesia_0",
+  "pos": [
+   194.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    194.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "amnesia",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_amnesia_1",
+  "pos": [
+   194.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    194.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "amnesia",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_barrier_0",
+  "pos": [
+   194.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    194.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "barrier",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_barrier_1",
+  "pos": [
+   194.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    194.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "barrier",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_reflect_0",
+  "pos": [
+   195.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    195.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "reflect",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_reflect_1",
+  "pos": [
+   195.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    195.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "reflect",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_light_screen_0",
+  "pos": [
+   195.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    195.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "light_screen",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_light_screen_1",
+  "pos": [
+   195.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    195.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "light_screen",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_protect_0",
+  "pos": [
+   196.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    196.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "protect",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_protect_1",
+  "pos": [
+   196.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    196.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "protect",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_detect_0",
+  "pos": [
+   196.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    196.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "detect",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_detect_1",
+  "pos": [
+   196.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    196.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "detect",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_recover_0",
+  "pos": [
+   197.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    197.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "recover",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_recover_1",
+  "pos": [
+   197.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    197.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "recover",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_synthesis_0",
+  "pos": [
+   197.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    197.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "synthesis",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_synthesis_1",
+  "pos": [
+   197.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    197.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "synthesis",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_moonlight_0",
+  "pos": [
+   198.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    198.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "moonlight",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_moonlight_1",
+  "pos": [
+   198.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    198.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "moonlight",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_rest_0",
+  "pos": [
+   198.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    198.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "rest",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_rest_1",
+  "pos": [
+   198.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    198.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "rest",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_focus_energy_0",
+  "pos": [
+   199.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    199.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "focus_energy",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_focus_energy_1",
+  "pos": [
+   199.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    199.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "focus_energy",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_growth_0",
+  "pos": [
+   199.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    199.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "growth",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_growth_1",
+  "pos": [
+   199.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    199.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "growth",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_double_team_0",
+  "pos": [
+   200.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    200.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "double_team",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_double_team_1",
+  "pos": [
+   200.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    200.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "double_team",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_substitute_0",
+  "pos": [
+   200.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    200.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "substitute",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_substitute_1",
+  "pos": [
+   200.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    200.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "substitute",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sunny_day_0",
+  "pos": [
+   201.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    201.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sunny_day",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sunny_day_1",
+  "pos": [
+   201.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    201.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sunny_day",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_rain_dance_0",
+  "pos": [
+   201.5,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    201.5,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "rain_dance",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_rain_dance_1",
+  "pos": [
+   201.5,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    201.5,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "rain_dance",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sandstorm_0",
+  "pos": [
+   202.0,
+   10,
+   174.2
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 5,
+  "scene": {
+   "at": [
+    202.0,
+    178.8
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sandstorm",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ },
+ {
+  "name": "fx2c_sandstorm_1",
+  "pos": [
+   202.0,
+   10,
+   174.21
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.42,
+  "wait_s": 6,
+  "scene": {
+   "at": [
+    202.0,
+    178.81
+   ],
+   "user": 4,
+   "target": 1,
+   "d": 5.0,
+   "move": "sandstorm",
+   "cam": [
+    0,
+    1.3,
+    -4.6
+   ],
+   "repeat_s": 1.1
+  }
+ }
+]
