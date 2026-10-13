@@ -37,6 +37,16 @@ local function display_of(inst)
 	return L.display_name(sp and sp.name or "creature", inst.nickname)
 end
 
+-- The catch knobs of the admin panel (D-033): catch mode and multiplier, applied after the ball's own odds. Without
+-- minemon.tuning the odds are unchanged.
+local function tuned_p(p)
+	local T = minemon.tuning
+	if not T then
+		return p
+	end
+	return T.logic.apply_catch(p, T.get("catch_mode"), T.get("catch_mult"))
+end
+
 local function eye_pos(player)
 	local props = player:get_properties() or {}
 	return vector.add(player:get_pos(), vector.new(0, props.eye_height or EYE_HEIGHT, 0))
@@ -245,6 +255,7 @@ local function odds_for(obj, ball_id)
 	local max = minemon.instance.stats(inst, sp).hp
 	local frac = max > 0 and inst.hp / max or 0
 	local p = L.effective_p(ball_id, minemon.formulas.catch_chance(sp.catch_rate, frac, mult, inst.status))
+	p = tuned_p(p)
 	return L.odds_percent(p)
 end
 
@@ -472,6 +483,7 @@ local function begin(player, obj, ball_id, rng)
 	local max = minemon.instance.stats(inst, sp).hp
 	local frac = max > 0 and inst.hp / max or 0
 	local p = L.effective_p(ball_id, minemon.formulas.catch_chance(sp.catch_rate, frac, mult, inst.status))
+	p = tuned_p(p)
 	local n, caught = L.shakes(p, rng)
 
 	local ctx = {

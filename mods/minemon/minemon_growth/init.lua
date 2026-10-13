@@ -715,7 +715,15 @@ minemon.events.register("creature_defeated", function(victim_le, attacker)
 	if m == nil then
 		return
 	end
-	grant_exp(player, uid, minemon.formulas.exp_gain(vsp.base_exp, victim.level, m.bond))
+	-- The admin's exp knob (D-033) scales the gain; a gain of 0 grants nothing.
+	local gain = minemon.formulas.exp_gain(vsp.base_exp, victim.level, m.bond)
+	local T = minemon.tuning
+	if T then
+		gain = math.floor(gain * T.get("exp_mult") + 0.5)
+	end
+	if gain > 0 then
+		grant_exp(player, uid, gain)
+	end
 end)
 
 -- A fainted owned creature loses 5 bond. The party's own handler runs first (it depends on this mod's party).

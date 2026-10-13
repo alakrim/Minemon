@@ -40,13 +40,17 @@ function M.chance(distance, timeofday)
 	return M.CHANCE_NEAR + (M.CHANCE_FAR - M.CHANCE_NEAR) * d / M.FAR_DISTANCE
 end
 
--- The spawn roll. in_ward (a Sanctuary ward) refuses it outright. rng is a minemon.rng (float()). Returns true when the
--- spawn is Dread. The roll always draws one float when the chance is not zero, so the same seed gives the same result.
-function M.roll(distance, timeofday, in_ward, rng)
+-- The spawn roll. in_ward (a Sanctuary ward) refuses it outright. rng is a minemon.rng (float()). mult (the admin's
+-- Dread knob, D-033) scales the chance, default 1, clamped to 0..1. Returns true when the spawn is Dread. The roll
+-- draws one float when the effective chance is not zero, so the same seed gives the same result.
+function M.roll(distance, timeofday, in_ward, rng, mult)
 	if in_ward == true then
 		return false
 	end
 	local p = M.chance(distance, timeofday)
+	if mult ~= nil then
+		p = math.max(0, math.min(1, p * mult))
+	end
 	if p <= 0 then
 		return false
 	end

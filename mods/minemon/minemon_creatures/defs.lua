@@ -190,9 +190,15 @@ function M.visual_for(species, pack_entry, shiny)
 	}
 end
 
--- Whether a new wild creature is shiny: one roll in SHINY_ODDS. rng is a minemon.rng (rng:int(a, b)).
-function M.roll_shiny(rng)
-	return rng:int(1, M.SHINY_ODDS) == 1
+-- Whether a new wild creature is shiny: one roll in SHINY_ODDS. rng is a minemon.rng (rng:int(a, b)). mult (the
+-- admin's shiny knob, D-033) scales the odds, default 1: at 1 the roll is the plain int draw; otherwise the chance is
+-- mult / SHINY_ODDS clamped to 1, drawn with one float.
+function M.roll_shiny(rng, mult)
+	if mult == nil or mult == 1 then
+		return rng:int(1, M.SHINY_ODDS) == 1
+	end
+	local p = math.max(0, math.min(1, mult / M.SHINY_ODDS))
+	return rng:float() < p
 end
 
 -- The mcl_mobs definition data for one species. pack_entry is minemon_pack.models[dex] or nil (T-25c).

@@ -24,6 +24,15 @@ local function pack_entry(dex)
 	return models and models[dex] or nil
 end
 
+-- The admin's Dread and shiny knobs (D-033), read at the moment of the roll. Without minemon.tuning they are 1.
+local function knob(key)
+	local T = minemon.tuning
+	if not T then
+		return 1
+	end
+	return T.get(key)
+end
+
 -- A wild creature is one without an owner and not tamed (T-30 uses it for the Dread hostility).
 local function wild_entity(self)
 	return (self.owner == nil or self.owner == "") and self.tamed ~= true
@@ -92,12 +101,12 @@ local function make_on_spawn(species, min_level)
 			local level = math.max(spawning.level_at(pos), min_level)
 			local rng = spawning.rng_at(pos)
 			self._mm = minemon.instance.new(species, level, rng)
-			self._mm.shiny = defs.roll_shiny(rng)
+			self._mm.shiny = defs.roll_shiny(rng, knob("shiny_mult"))
 			-- The Dread roll (T-30, D-031): only at night, rarer near the origin, never inside a Sanctuary ward.
 			local in_ward = minemon.sanctuary ~= nil and minemon.sanctuary.is_safe ~= nil
 				and minemon.sanctuary.is_safe(pos) == true
 			local dist = math.sqrt(pos.x * pos.x + pos.z * pos.z)
-			if dread.roll(dist, core.get_timeofday(), in_ward, rng) then
+			if dread.roll(dist, core.get_timeofday(), in_ward, rng, knob("dread_mult")) then
 				set_dread(self, species, rng)
 			end
 		end
@@ -241,7 +250,7 @@ function API.spawn(pos, species_id, level, owner_name)
 		staticdata.can_despawn = false
 	else
 		-- A wild spawn rolls for shiny (T-25c). Owned spawns (captures) keep the instance's own flag.
-		inst.shiny = defs.roll_shiny(rng)
+		inst.shiny = defs.roll_shiny(rng, knob("shiny_mult"))
 	end
 	return core.add_entity(pos, defs.entity_name(species), core.serialize(staticdata))
 end
