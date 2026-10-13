@@ -39,10 +39,10 @@ function R.cloud(F, c)
 		life = 0.5 })
 	F.decal({ pos = c.centre, tex = F.tint(F.TEX.ring, c.palette.edge), size = 1.8, life = t, glow = 0 })
 	F.on(target, {
-		amount = 14, time = t,
+		amount = 24, time = t,
 		pos = { min = { x = -0.3, y = 0.1, z = -0.3 }, max = { x = 0.3, y = 1.0, z = 0.3 } },
 		vel = { min = { x = -0.05, y = 0.3, z = -0.05 }, max = { x = 0.05, y = 0.7, z = 0.05 } },
-		exptime = { min = 0.7, max = 1.0 }, size = { min = 0.2, max = 0.3 }, vertical = true,
+		exptime = { min = 0.7, max = 1.0 }, size = { min = 0.3, max = 0.4 }, vertical = true,
 		texture = F.tex(F.tint(VINE, c.palette.main), { blend = "alpha", fade = { 1, 0.6 } }), glow = 0,
 	})
 	F.on(target, {

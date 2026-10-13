@@ -16,7 +16,7 @@ function R.cast(F, c)
 		return false
 	end
 	local t = math.max(0.15, c.time or 0.4)
-	F.smoke({ pos = head, colour = c.palette.smoke, amount = 5, size = { 0.3, 0.5 }, life = { t, t + 0.3 },
+	F.smoke({ pos = head, colour = c.palette.smoke, amount = 8, size = { 0.5, 0.7 }, life = { t, t + 0.3 },
 		rise = 0.2, spread = 0.15, alpha = 0.5, time = t })
 	F.sound("mobs_mc_vex_hurt", { pos = head, gain = 0.2, pitch = 0.5 })
 end
@@ -28,13 +28,13 @@ function R.cloud(F, c)
 	for k = 0, 2 do
 		core.after(k * 0.6, function()
 			F.emit({
-				amount = 1, time = 0.02, pos = head, vel = ZERO, exptime = 0.5, size = 1.0 + 0.1 * k,
-				texture = F.tex(F.tint(STAR, c.palette.smoke), { blend = "alpha", fade = { 1, 0 }, grow = { 0.7, 1.2 } }),
+				amount = 1, time = 0.02, pos = head, vel = ZERO, exptime = 0.7, size = 1.6 + 0.2 * k,
+				texture = F.tex(F.tint(STAR, "#2e2630"), { blend = "alpha", fade = { 1, 0 }, grow = { 0.7, 1.2 } }),
 				glow = 0,
 			})
 		end)
 	end
-	F.smoke({ pos = head, colour = c.palette.smoke, amount = 6, size = { 0.3, 0.5 }, life = { 1.0, 1.4 },
+	F.smoke({ pos = head, colour = "#4a4048", amount = 10, size = { 0.5, 0.7 }, life = { 1.0, 1.4 },
 		rise = 0.15, spread = 0.35, alpha = 0.4, time = t })
 end
 

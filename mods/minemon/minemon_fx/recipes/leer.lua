@@ -26,12 +26,12 @@ end
 -- Cloud: two eyes open on the target's face (wide, then a blink), held in place; each eye is a sprite on the head.
 function R.cloud(F, c)
 	local target = c.target
-	local head = target and target:get_pos() and (F.anchor(target, "head", 1.0) or c.centre) or c.centre
+	local head = vector.add(c.centre, { x = 0, y = 0.35, z = 0 })
 	local t = c.time or 3
 	local function open(z, life)
 		F.emit({
 			amount = 1, time = 0.02, pos = vector.add(head, { x = -0.15, y = 0, z = z }), vel = ZERO,
-			exptime = life, size = 0.7,
+			exptime = life, size = 0.9,
 			texture = F.tex(F.tint(EYE, c.palette.core), { blend = "alpha", grow = { 0.6, 1.0 }, fade = { 1, 0.4 } }),
 			glow = 8,
 		})

@@ -42,9 +42,9 @@ function R.cloud(F, c)
 			local p = { x = at.x + math.cos(a) * 0.5, y = y, z = at.z + math.sin(a) * 0.5 }
 			local colour = (i % 2 == 0) and c.palette.main or c.palette.core
 			F.emit({
-				amount = 3, time = 0.05, pos = p,
+				amount = 4, time = 0.05, pos = p,
 				vel = { min = { x = -0.1, y = 0.1, z = -0.1 }, max = { x = 0.1, y = 0.3, z = 0.1 } },
-				exptime = { min = 0.7, max = 1.0 }, size = { min = 0.22, max = 0.32 },
+				exptime = { min = 0.7, max = 1.0 }, size = { min = 0.34, max = 0.46 },
 				texture = F.tex(F.tint(WISP, colour), { blend = "add", fade = true }), glow = 8,
 			})
 		end)

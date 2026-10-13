@@ -20,8 +20,8 @@ function R.aura(F, c)
 		amount = 12, time = 1.0,
 		pos = { min = { x = -0.38, y = 0.25, z = -0.38 }, max = { x = 0.38, y = 1.15, z = 0.38 } },
 		vel = ZERO,
-		exptime = { min = 0.9, max = 1.2 }, size = { min = 0.22, max = 0.34 },
-		texture = F.tex(F.tint(CHIP, "#c8d0d8"), { blend = "alpha", fade = { 1, 0.6 } }), glow = 0,
+		exptime = { min = 0.9, max = 1.2 }, size = { min = 0.3, max = 0.44 },
+		texture = F.tex(F.tint(CHIP, "#6f7880"), { blend = "alpha", fade = { 1, 0.6 } }), glow = 0,
 	})
 	core.after(0.35, function()
 		F.ring({ pos = centre, colour = "#d8e4f4", size = 0.3, grow = 2.0, life = 0.35 })

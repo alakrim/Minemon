@@ -34,7 +34,7 @@ function R.cloud(F, c)
 	for k = 1, 6 do
 		core.after((k - 1) * (t / 6.5), function()
 			local p = vector.add(at, { x = sides[k], y = (k % 2 == 0) and 0.25 or -0.1, z = 0 })
-			F.ring({ pos = p, colour = (k % 2 == 0) and c.palette.core or c.palette.main, size = 0.35, grow = 2.6,
+			F.ring({ pos = p, colour = (k % 2 == 0) and c.palette.core or c.palette.main, size = 0.5, grow = 3.2,
 				life = 0.55 })
 		end)
 	end

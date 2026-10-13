@@ -22,7 +22,7 @@ function R.aura(F, c)
 				amount = 1, time = 0.02, pos = head,
 				vel = { x = math.cos(a) * 1.0, y = 1.4, z = math.sin(a) * 1.0 }, acc = { x = 0, y = -0.4, z = 0 },
 				exptime = { min = 0.9, max = 1.2 }, size = 0.3,
-				texture = F.tex(F.tint(F.TEX.star, c.palette.core), { blend = "add", fade = true, grow = { 0.7, 1.1 } }),
+				texture = F.tex(F.tint("minemon_fx_star.png", c.palette.core), { blend = "add", fade = true, grow = { 0.7, 1.1 } }),
 				glow = 14,
 			})
 		end)

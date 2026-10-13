@@ -38,12 +38,12 @@ function R.cloud(F, c)
 	local at = c.centre
 	local t = c.time or 3
 	local r = (c.radius or 2.5) * 0.8
-	local high = { min = { x = at.x - r, y = at.y + 1.4, z = at.z - r },
-		max = { x = at.x + r, y = at.y + 2.4, z = at.z + r } }
+	local high = { min = { x = at.x - r, y = at.y + 0.7, z = at.z - r },
+		max = { x = at.x + r, y = at.y + 1.8, z = at.z + r } }
 	local sink = { min = { x = -0.1, y = -0.4, z = -0.1 }, max = { x = 0.1, y = -0.2, z = 0.1 } }
 	F.emit({
-		amount = 34, time = t, pos = high, vel = sink, drag = { x = 0.5, y = 0.3, z = 0.5 },
-		exptime = { min = 1.8, max = 2.4 }, size = { min = 0.12, max = 0.18 },
+		amount = 44, time = t, pos = high, vel = sink, drag = { x = 0.5, y = 0.3, z = 0.5 },
+		exptime = { min = 1.8, max = 2.4 }, size = { min = 0.2, max = 0.28 },
 		texture = F.tex(F.tint(MOTE, POLLEN), { blend = "alpha", fade = true }), glow = 0,
 	})
 	F.emit({

@@ -7,6 +7,7 @@
 local R = {}
 
 local GRAIN = "minemon_fx_mote.png"
+local SAND = "#c8a050"
 local DUST = "minemon_fx_dust.png"
 
 -- Cast: the user scuffs a foot; a small puff of dust kicks up from the ground.
@@ -33,13 +34,13 @@ function R.cloud(F, c)
 	for k = 0, 2 do
 		core.after(k * 0.25, function()
 			F.emit({
-				amount = 22, time = 0.05, pos = from,
+				amount = 30, time = 0.05, pos = from,
 				vel = { min = vector.add(vector.multiply(horiz, 5), { x = -0.6, y = 2.0, z = -0.6 }),
 					max = vector.add(vector.multiply(horiz, 7), { x = 0.6, y = 3.4, z = 0.6 }) },
 				acc = { x = 0, y = -9, z = 0 }, drag = { x = 0.2, y = 0, z = 0.2 },
 				collisiondetection = true, bounce = { min = 0.1, max = 0.25 },
-				exptime = { min = 0.6, max = 1.0 }, size = { min = 0.07, max = 0.11 },
-				texture = F.tex(F.tint(GRAIN, c.palette.main), { blend = "alpha", fade = { 1, 0.5 } }), glow = 0,
+				exptime = { min = 0.6, max = 1.0 }, size = { min = 0.14, max = 0.2 },
+				texture = F.tex(F.tint(GRAIN, SAND), { blend = "alpha", fade = { 1, 0.5 } }), glow = 0,
 			})
 		end)
 	end

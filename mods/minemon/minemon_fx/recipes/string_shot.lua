@@ -18,7 +18,7 @@ function R.cast(F, c)
 	local t = math.max(0.15, c.time or 0.4)
 	F.emit({
 		amount = 14, time = t, pos = at, vel = vector.multiply(dir, 9), exptime = { min = 0.35, max = 0.45 },
-		size = { min = 0.08, max = 0.12 },
+		size = { min = 0.14, max = 0.18 },
 		texture = F.tex(F.tint(BEAD, c.palette.core), { blend = "add", fade = true }), glow = 8,
 	})
 	F.sound("default_dig_snappy", { pos = at, gain = 0.2, pitch = 2.4 })
@@ -37,7 +37,7 @@ function R.cloud(F, c)
 				F.emit({
 					amount = 1, time = 0.02, pos = p,
 					vel = { x = -math.sin(a) * 1.4 * sense, y = 0, z = math.cos(a) * 1.4 * sense },
-					exptime = 0.6, size = 0.14,
+					exptime = 0.6, size = 0.2,
 					texture = F.tex(F.tint(BEAD, c.palette.core), { blend = "add", fade = true }), glow = 8,
 				})
 			end

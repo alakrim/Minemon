@@ -30,7 +30,7 @@ function R.aura(F, c)
 			local p = vector.add(vector.add(centre, vector.multiply(side, 0.3 * s)), { x = 0, y = y, z = 0 })
 			F.emit({
 				amount = 3, time = 0.05, pos = p, vel = vector.multiply(fwd, -7),
-				exptime = { min = 0.3, max = 0.45 }, size = { min = 0.6, max = 0.8 },
+				exptime = { min = 0.3, max = 0.45 }, size = { min = 1.2, max = 1.5 },
 				texture = F.tex(F.tint(SPEED, c.palette.main), { blend = "add", fade = true }), glow = 14,
 			})
 		end)

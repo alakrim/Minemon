@@ -21,8 +21,8 @@ function R.cast(F, c)
 	F.emit({
 		amount = 8, time = 0.3, pos = feet, radius = { min = 0.2, max = 0.4, bias = 0 },
 		vel = { min = vector.multiply(dir, 0.6), max = vector.multiply(dir, 1.0) },
-		drag = { x = 0.4, y = 0.4, z = 0.4 }, exptime = { min = 0.8, max = 1.2 }, size = { min = 0.5, max = 0.7 },
-		texture = F.tex(F.tint(F.TEX.smoke, c.palette.smoke), { blend = "alpha", alpha = 0.6, anim = "smoke" }),
+		drag = { x = 0.4, y = 0.4, z = 0.4 }, exptime = { min = 0.8, max = 1.2 }, size = { min = 0.7, max = 0.95 },
+		texture = F.tex(F.tint(F.TEX.smoke, c.palette.smoke), { blend = "alpha", alpha = 0.8, anim = "smoke" }),
 	})
 	F.sound("default_dig_crumbly", { pos = feet, gain = 0.3, pitch = 0.6 })
 end
@@ -30,8 +30,8 @@ end
 -- Cloud: a bank of grey smoke rolls out flat from the target's knees, and a second bank follows it out.
 function R.cloud(F, c)
 	local low = vector.add(c.centre, { x = 0, y = -0.15, z = 0 })
-	F.burst({ pos = low, tex = F.TEX.smoke, anim = "smoke", colour = c.palette.smoke, blend = "alpha", amount = 18,
-		speed = 1.0, radius = 0.3, life = { 1.8, 2.4 }, size = { 0.5, 0.7 }, grow = { 0.8, 1.6 }, gravity = 0,
+	F.burst({ pos = low, tex = F.TEX.smoke, anim = "smoke", colour = c.palette.smoke, blend = "alpha", amount = 26,
+		speed = 1.0, radius = 0.3, life = { 1.8, 2.4 }, size = { 0.7, 0.95 }, grow = { 0.8, 1.6 }, gravity = 0,
 		glow = 0 })
 	F.ring({ pos = low, colour = c.palette.smoke, size = 0.6, grow = 4.0, life = 0.8 })
 	core.after(0.6, function()
