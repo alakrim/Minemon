@@ -31,6 +31,13 @@ from . import build_voxel as BV  # noqa: E402
 
 PX = 16.0
 VOXELS_TALL = 36
+# Organic shapes (to match the sculpted reference): every solid cube is a rounded box whose corner radius is
+# ROUND_FRAC of its thinnest half-extent (at most ROUND_MAX_PX), and cubes melt into each other with a smooth union
+# of BLEND_PX. Thin planes (flames, fins) stay sharp.
+ROUND_FRAC = 0.7
+ROUND_MAX_PX = 3.0
+BLEND_PX = 1.2
+EYE_MAX_PX = 4.5  # only small eye boxes get the anime eye (big "eyes" boxes are internal sockets)
 HEIGHT_CAP = 3.2
 EYE_EXCLUDE = ("lid", "brow", "locator", "lash")
 
@@ -74,9 +81,11 @@ class CobbleSculpt:
             faces = {f: (rect, mirror) for f, rect, mirror in c["faces"]}
             if self._invisible(c["faces"]):
                 continue  # helper geometry drawn fully transparent (shadows, hidden variants)
-            is_eye = "eye" in name and not any(x in name for x in EYE_EXCLUDE)
+            is_eye = ("eye" in name and not any(x in name for x in EYE_EXCLUDE)
+                      and max(hi[0] - lo[0], hi[1] - lo[1]) <= EYE_MAX_PX)
+            r = 0.0 if thin else min(ROUND_FRAC * float(np.min(half)), ROUND_MAX_PX)
             self.cubes.append({"bone": c["bone"], "name": name, "lo": lo, "hi": hi, "c": centre, "h": half,
-                               "R": R, "t": t, "faces": faces, "thin": thin, "eye": is_eye})
+                               "R": R, "t": t, "faces": faces, "thin": thin, "eye": is_eye, "r": r})
         self.eye_colours = {}
         for i, c in enumerate(self.cubes):
             if c["eye"]:
@@ -101,31 +110,51 @@ class CobbleSculpt:
         return (p_px - c["t"]) @ c["R"]
 
     def _box(self, p_px, c):
-        q = np.abs(self._local(p_px, c) - c["c"]) - c["h"]
-        return np.sqrt((np.maximum(q, 0) ** 2).sum(axis=1)) + np.minimum(q.max(axis=1), 0)
+        r = c["r"]
+        q = np.abs(self._local(p_px, c) - c["c"]) - (c["h"] - r)
+        return np.sqrt((np.maximum(q, 0) ** 2).sum(axis=1)) + np.minimum(q.max(axis=1), 0) - r
+
+    def _union(self, d):
+        """Smooth union of the per-cube distances (columns), in nodes."""
+        k = BLEND_PX / PX
+        out = d[:, 0]
+        for i in range(1, d.shape[1]):
+            b = d[:, i]
+            h = np.clip(0.5 + 0.5 * (b - out) / k, 0.0, 1.0)
+            out = b + (out - b) * h - k * h * (1.0 - h)
+        return out
 
     def _dists(self, p):
         p_px = p * PX
         return np.stack([self._box(p_px, c) for c in self.cubes], axis=1) / PX
 
     def sdf(self, p):
+        """The smooth union of the cubes; where the winning cube's skin is transparent (Cobblemon cuts shapes out of
+        boxes with alpha: lips, flames, fins), that cube is a hole and the next one decides."""
         d = self._dists(p)
-        out = d.min(axis=1)
-        # Thin planes are holes where their skin is transparent.
-        idx = d.argmin(axis=1)
-        for i, c in enumerate(self.cubes):
-            if c["thin"]:
-                m = (idx == i) & (out <= 0.03)
-                if np.any(m):
-                    _rgb, a = self._sample(p[m] * PX, c)
-                    clear = a < 0.5
-                    sub = np.where(m)[0][clear]
-                    out[sub] = 0.05
+        out = self._union(d)
+        band = out <= 0.06
+        for _ in range(2):
+            idx = d.argmin(axis=1)
+            changed = False
+            for i, c in enumerate(self.cubes):
+                m = band & (idx == i)
+                if not np.any(m):
+                    continue
+                _rgb, a = self._sample(p[m] * PX, c)
+                clear = np.where(m)[0][a < 0.5]
+                if len(clear):
+                    d[clear, i] = 1.0
+                    changed = True
+            if not changed:
+                break
+            out = self._union(d)
+            band = out <= 0.06
         return out
 
     def normal(self, p, eps=0.004):
         e = np.eye(3) * eps
-        n = np.stack([self._dists(p + e[i]).min(axis=1) - self._dists(p - e[i]).min(axis=1) for i in range(3)],
+        n = np.stack([self._union(self._dists(p + e[i])) - self._union(self._dists(p - e[i])) for i in range(3)],
                      axis=1)
         return n / np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-9)
 
@@ -134,7 +163,7 @@ class CobbleSculpt:
         occ = np.zeros(len(p))
         for i in range(1, count + 1):
             h = step * i
-            occ += (h - self._dists(p + n * h).min(axis=1)) / (2.0 ** i)
+            occ += (h - self._union(self._dists(p + n * h))) / (2.0 ** i)
         return np.clip(1.0 - 2.6 * occ / step, 0.0, 1.0)
 
     def bone_weights(self, p):
@@ -149,12 +178,24 @@ class CobbleSculpt:
     # ------------------------------------------------------------ skin
 
     def _face_of(self, local, c):
-        """The face a cube-space point is nearest to, with its (s, t) on that face."""
-        dl = local - c["lo"]
-        dh = c["hi"] - local
-        cand = np.stack([dl[:, 0], dh[:, 0], dl[:, 1], dh[:, 1], dl[:, 2], dh[:, 2]], axis=1)
-        names = np.array(["east", "west", "down", "up", "north", "south"])
-        return names[np.argmin(np.abs(cand), axis=1)]
+        """The face whose texture a cube-space surface point shows: from the outward direction (the point minus its
+        nearest point on the rounded box's inner core). On rounded edges sides win over the bottom (bottom faces
+        often hold dark mouth or shadow texels) and over the top a little."""
+        r = c.get("r", 0.0)
+        core = np.clip(local, c["lo"] + r, c["hi"] - r)
+        q = local - core
+        flat = np.linalg.norm(q, axis=1) < 1e-6
+        if np.any(flat):  # exactly on the core (sharp boxes): fall back to the nearest plane
+            dl = local[flat] - c["lo"]
+            dh = c["hi"] - local[flat]
+            near = np.argmin(np.abs(np.stack([dl[:, 0], dh[:, 0], dl[:, 1], dh[:, 1], dl[:, 2], dh[:, 2]], 1)), 1)
+            q[flat] = np.eye(3)[near // 2] * np.where(near % 2 == 0, -1.0, 1.0)[:, None]
+        w = np.abs(q) * np.array([1.0, 1.0, 1.0])
+        w[:, 1] *= np.where(q[:, 1] < 0, 0.6, 0.9)
+        axis = np.argmax(w, axis=1)
+        sign = np.sign(q[np.arange(len(q)), axis])
+        names = np.array([["east", "west"], ["down", "up"], ["north", "south"]])
+        return names[axis, (sign > 0).astype(int)]
 
     def _sample(self, p_px, c):
         local = self._local(p_px, c)
@@ -240,10 +281,21 @@ class CobbleSculpt:
             m = idx == i
             if not np.any(m):
                 continue
-            sub_rgb, _a = self._sample(p_px[m], c)
+            sub_rgb, sub_a = self._sample(p_px[m], c)
+            faces, st = self._last_faces, self._last_st
+            clear = sub_a < 0.5
+            if np.any(clear):  # transparent here: take the next nearest cube's colour
+                d2 = self._dists(p[m][clear])
+                d2[:, i] = 1e9
+                j = d2.argmin(axis=1)
+                fill = np.zeros((int(clear.sum()), 3))
+                for k in np.unique(j):
+                    mk = j == k
+                    fill[mk] = self._sample(p_px[m][clear][mk], self.cubes[k])[0]
+                sub_rgb[clear] = fill
             if c["eye"]:
                 sub_m = mats[m]
-                self._paint_eye(sub_rgb, sub_m, self._last_faces, self._last_st, self.eye_colours.get(i))
+                self._paint_eye(sub_rgb, sub_m, faces, st, self.eye_colours.get(i))
                 mats[m] = sub_m
             rgb[m] = sub_rgb
         return rgb, mats
