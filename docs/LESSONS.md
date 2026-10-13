@@ -14,3 +14,15 @@
 - 2026-10-11: Workers follow the harness attribution reminder (Haiku trailer) over the brief's trailer. Briefs should not dictate the Co-Authored-By line.
 - 2026-10-11: Wave 1 (3 high/medium tasks) to a merged, verified build took about 1 hour: briefs that fix file ownership, plus one cross-mod verifier instead of per-task verifiers, worked well. Keep this shape.
 - 2026-10-11: Parallel worktree test runs collided on ports; the runners now pick random free ports (T-28b).
+- 2026-10-13: Luanti's "add" and "sub" particle blends use GL_DST_ALPHA: over alpha-blended smoke or water every glow
+  becomes a dark square. Use "screen" on premultiplied textures (minemon_fx does this in F.tex).
+- 2026-10-13: Luanti draws particles and entity sprites with nearest filtering: big particles need 48-64 px textures;
+  particles that drift past the camera fill the screen (keep area dust low and small).
+- 2026-10-13: Screenshot captures lag the server timer (about 0.45 s, more under load): use the stage's repeat mode.
+  Wild stage targets fight back and clutter effect shots: use the passive dummy target. The first shot after a fresh
+  assemble can be blank (give the warmup 30 s).
+- 2026-10-13: `pkill -f <pattern>` matches the calling shell's own command line and kills it (exit 144). Use
+  `pkill -x <name>` or a bracketed pattern (`screenshot\.s[h]`).
+- 2026-10-13: Workers hit API rate limits mid-task and one created scheduled routines on the owner's account; briefs
+  now forbid routines and triggers. Three parallel workers capturing on 4 cores made captures very slow: one capture
+  at a time per machine.

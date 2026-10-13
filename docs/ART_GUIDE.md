@@ -52,6 +52,8 @@ Lessons from the in-engine reviews (they are rules now):
   (Luanti's own add/sub multiply by the framebuffer alpha, which smoke and water lower: dark squares). After adding
   or regenerating a texture, run `python3 tools/premultiply_fx.py`. Fades on glows become brightness flipbooks.
   `blend = "sub"` becomes a dark alpha smoke.
+- Delayed steps in a recipe use `F.after(t, fn)` (guarded: an error is logged, never crashes the server), not
+  `core.after`.
 - Capturing effects: give the scene `repeat_s` (the move is re-cast every repeat_s seconds), so a shot always
   catches it whatever the capture lag. Every shot needs its own scene `at` (closer than 0.004 nodes = same scene).
 
@@ -63,7 +65,8 @@ row to ASSETS_LICENSES.md.
 `mods/minemon/minemon_fx/art/<species>.lua`, registered with `minemon.fx.register_art("<species>", profile)`.
 `art/charmander.lua` is the reference. A profile has `parts` (glowing sprites riding locator bones, each with an
 `emit` function for its particles, re-sent every 2 s to nearby players) and event handlers (`cast`).
-What deserves a part: anything that glows, burns, sparks, drips or floats in the design (flames, electric cheeks,
+Profiles so far: art/charmander.lua (reference), art/fire_tails.lua (Charmeleon, Charizard, Magmar, Cyndaquil line:
+a flame factory per locator), art/gastly.lua (an invisible anchor that emits the gas). What deserves a part: anything that glows, burns, sparks, drips or floats in the design (flames, electric cheeks,
 glowing eyes at night, gems, ghost wisps). Keep one or two parts per species.
 
 ## 4. Performance budget (Vega 8, 30+ fps with 20 creatures on screen)

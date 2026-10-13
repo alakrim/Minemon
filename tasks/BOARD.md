@@ -24,3 +24,11 @@
 | T-29 | M2 / w2 | medium | DONE | move command bar (Z cycles, ordered moves) |
 | T-30 | M2 / w2 | high | DONE | Dread variants, shards, Umbral Ball |
 | T-31 | M2 / w2 | medium | DONE | status-move pass |
+| M2.1-A | M2.1 / Opus | high | DONE | converter fixes, minemon_fx library, Ember + Charmander reference, style options, micro-voxel pack |
+| S-voxel | M2.1 / scout | medium | DONE (chosen style) | micro-voxel builder trial |
+| S-hd2d | M2.1 / scout | medium | DONE (not chosen; files removed) | HD-2D sprite trial |
+| T-FX-a/b/c | M2.1 / w1 | low | DONE (Opus reviewed) | 17 type looks + signature moves, status looks |
+| T-FX2-a | M2.1 / w2 | low | MERGED, partly verified | 27 physical-hit effects |
+| T-FX2-b | M2.1 / w2 | low | MERGED, 10 of 31 verified | 31 early special effects |
+| T-FX2-c | M2.1 / w2 | low | MERGED, first round only | 41 status, stat, aura, weather effects |
+| M2.1-B | M2.1 / Opus | medium | OPEN (paused) | pack rebuild with new hide rule, lineup/eldritch/fx re-shoot and tuning, owner review, build |

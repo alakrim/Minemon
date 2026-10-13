@@ -74,12 +74,15 @@ local function spawn_checks(pos)
 	local want_h = 0.25
 	core.log("action", "[creatures_test] T-25c visuals: pack entry for Rattata " .. (entry and "present" or "absent"))
 	if entry then
-		want_h = math.min(4, math.max(0.3, entry.height))
+		-- M2.1: the micro-voxel pack carries the size rule's scale; the box is scaled with it.
+		local s = entry.scale or 1
+		want_h = math.min(4, math.max(0.3, entry.height * s))
 		check(props.mesh == entry.mesh, "Rattata mesh should be " .. entry.mesh .. ", got " .. tostring(props.mesh))
 		local want_tex = inst.shiny and entry.texture_shiny or entry.texture
 		check(props.textures[1] == want_tex,
 			"Rattata texture should be " .. want_tex .. ", got " .. tostring(props.textures[1]))
-		check(props.visual_size.x == 1 and props.visual_size.y == 1, "pack models have visual_size 1")
+		check(math.abs(props.visual_size.x - s) < 1e-6 and math.abs(props.visual_size.y - s) < 1e-6,
+			"pack models have visual_size = the entry's scale (" .. s .. ")")
 	else
 		check(props.mesh == "mm_quadruped.glb", "stand-in Rattata mesh should be mm_quadruped.glb")
 	end

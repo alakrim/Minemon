@@ -252,3 +252,7 @@ Decisions:
   (fx_logic.visual_height, capped at 3.2 nodes).
 What would change this: owner preference after seeing the options; Vega 8 frame rate below 30 fps with 20
 creatures on screen.
+Addendum (2026-10-13, in-engine reviews): glows use the screen blend on premultiplied textures (Luanti's add/sub
+read the framebuffer alpha); every particle up to 0.4 nodes is 35% larger and 15% longer-lived (presence, fading out
+by 0.9 nodes); eldritch darkening is lighter at night and the eyes glow from dusk; fire species carry living flames
+and Gastly its gas as art profiles. Owner paused M2.1 on 2026-10-13 before the final re-shoot (docs/STATE.md).
