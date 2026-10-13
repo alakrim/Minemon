@@ -115,7 +115,17 @@ local function run_shot(player, shots, index)
 	if not shot.keep_hud then
 		clear_hud(player)
 	end
-	core.set_player_privs(player:get_player_name(), { fly = true, noclip = true, fast = true, interact = true })
+	core.set_player_privs(player:get_player_name(), { fly = true, noclip = true, fast = true, interact = true,
+		minemon_admin = shot.admin_tab ~= nil or nil })
+	-- admin_tab (T-33 review): open the admin panel on that tab (1..4) through the same submit path a click takes.
+	if shot.admin_tab ~= nil and minemon ~= nil and minemon.admin ~= nil then
+		minemon.admin.open(player)
+		for _, handler in ipairs(core.registered_on_player_receive_fields) do
+			if handler(player, "minemon_admin:panel", { tabs = tostring(shot.admin_tab) }) then
+				break
+			end
+		end
+	end
 
 	local marker = worldpath .. "/shot_" .. name .. ".ready"
 	core.after(shot.wait_s or 10, function()

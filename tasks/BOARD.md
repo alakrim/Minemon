@@ -32,3 +32,5 @@
 | T-FX2-b | M2.1 / w2 | low | MERGED, 10 of 31 verified | 31 early special effects |
 | T-FX2-c | M2.1 / w2 | low | MERGED, first round only | 41 status, stat, aura, weather effects |
 | M2.1-B | M2.1 / Opus | medium | OPEN (paused) | pack rebuild with new hide rule, lineup/eldritch/fx re-shoot and tuning, owner review, build |
+| T-32 | M2.2 / w1 | medium | DONE (Opus reviewed diff; check.sh green) | tuning hooks: capture, spawns, level, Dread, shiny, exp |
+| T-33 | M2.2 / w1 | medium | DONE (Opus reviewed; check.sh green; screenshot review) | admin panel minemon_admin |

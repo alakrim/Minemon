@@ -2,7 +2,7 @@
 
 - **Phase:** C build loop. **M2 built** (Windows build Minemon-M2 sent to the owner). **M2.1 art pass in progress, paused by the owner on 2026-10-13** (see "M2.1 status"). Then M3 (dread and atmosphere).
 - **Stack:** Luanti 5.17.0 + VoxeLibre 0.92.3 + mods/minemon; Pokémon models converted from Cobblemon (D-029; generated in .tools, never committed).
-- **Last session:** 2026-10-13 (M2.1, paused on owner request; everything committed and pushed)
+- **Last session:** 2026-10-13 (M2.2: admin panel, storyline options)
 
 ## Done in M1
 Core API, 251-species data, Cobblemon models and animations (247 species), creature registration and spawning by biome and distance level, runtime hooks (single damage path, exhausted and faint), real-time combat (6 archetypes, statuses), wild brain (temperaments, aggression gate, danger tuning), party (starters, Party Ball, owned brain, HUD), lives.
@@ -33,12 +33,19 @@ Not verified yet (do first on resume):
    list them: e.g. sand_attack, string_shot, scary_face, rest, growth, focus_energy; water_gun faint on grass).
 4. Then close M2.1: owner review with screenshots, Windows build.
 
+## M2.2 (owner requests, 2026-10-13)
+- Admin panel DONE (D-033): minemon.tuning store (core), T-32 hooks, T-33 `minemon_admin` (/admin, 4 tabs). check.sh green.
+- Storylines: docs/STORY_OPTIONS.md (A The Long Night, B Rocket's Harvest, C Ashes of Kanto). **Owner picks one**;
+  then plan M3-M5 around it.
+- Build M2.1-preview sent to the owner (M2.1 art unverified in-game).
+
 ## Next action
-1. Resume M2.1 at "Not verified yet" above (owner decides when).
+1. Owner: pick a storyline; playtest the admin build.
+2. Resume M2.1 at "Not verified yet" above (owner decides when).
 2. Owner playtest of M2. Owner decision pending: Cobblemon cries/ball sounds/ball models (D-031).
 3. M3 (dread and atmosphere: fog, ambience, rare scares, graphics presets). Start with a Haiku shortcut scout. BACKLOG has M2 follow-ups.
 4. Max 3 workers; one cross-mod verifier per wave.
 
 ## Notes
 - check.sh: luacheck, busted, Python tests, 9 integration suites (headless luantiserver). Screenshots: scripts/screenshot.sh (real client under Xvfb).
-- Build: `bash scripts/build_windows.sh` (MINEMON_VERSION=Mx). Deliver the parts via SendUserFile, then device_commit_files (100 MB per call limit).
+- Build: `bash scripts/build_windows.sh` (MINEMON_VERSION=Mx). Deliver the parts via SendUserFile.

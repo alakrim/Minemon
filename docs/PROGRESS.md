@@ -25,3 +25,9 @@ Wave 1: T-26 capture, T-27 growth, T-28 Sanctuary (+T-28b fix), W1 cross-mod ver
 - Wave 2 (T-FX2-a/b/c, Haiku): 99 more signature moves (physical hits, early specials, status/stat/weather); merged
   partly verified. Flame profiles for 6 fire species, Gastly gas, eldritch night tuning, converter hides alternate
   expressions. Unverified items and resume steps: docs/STATE.md "M2.1 status".
+
+### 2026-10-13 (M2.2)
+- Owner asked for an admin panel and three storylines. D-033: minemon.tuning store in core (8 knobs, mod storage), T-32 hooks
+  (capture odds and roll, spawn on/off and crowd, level offset, Dread and shiny chance, exp), T-33 minemon_admin (/admin:
+  Tuning with Easy/Normal/Hard/Nightmare presets, Spawn, Player, World). check.sh: 576 unit specs, 17 integration suites green.
+- docs/STORY_OPTIONS.md: three plots (recommend A, The Long Night). Builds M2 and M2.1-preview sent to the owner.
