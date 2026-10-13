@@ -211,21 +211,22 @@ local function tuning_tab(tuning)
 	local defs, order, values = tuning.defs, tuning.order, tuning.values
 	local x_names = { 0.5, 3.0, 5.5, 8.0 }
 	for i, p in ipairs(M.PRESETS) do
-		fs[#fs + 1] = string.format("button[%.2f,0.9;2.3,0.7;preset_%s;%s]", x_names[i], p.name:lower(), esc(p.name))
+		fs[#fs + 1] = string.format("button[%.2f,0.5;2.3,0.8;preset_%s;%s]", x_names[i], p.name:lower(), esc(p.name))
 	end
-	local y = 2.0
+	-- Real coordinates (formspec_version 6): a label's and a checkbox's y is the middle of the row.
+	local y = 1.8
 	for _, key in ipairs(order) do
 		local def = defs[key]
 		local value = values[key]
 		local changed = M.is_changed(key, value, defs) and "  (changed)" or ""
-		fs[#fs + 1] = string.format("label[0.5,%.2f;%s]", y + 0.35, esc(def.label))
+		fs[#fs + 1] = string.format("label[0.5,%.2f;%s]", y + 0.33, esc(def.label))
 		if def.kind == "number" then
-			fs[#fs + 1] = string.format("field[4.6,%.2f;2.0,0.6;t_%s;;%s]", y, key,
+			fs[#fs + 1] = string.format("field[4.6,%.2f;2.0,0.65;t_%s;;%s]", y, key,
 				esc(M.format_value(key, value, defs)))
-			fs[#fs + 1] = string.format("button[6.8,%.2f;0.8,0.6;minus_%s;-]", y, key)
-			fs[#fs + 1] = string.format("button[7.7,%.2f;0.8,0.6;plus_%s;+]", y, key)
+			fs[#fs + 1] = string.format("button[6.8,%.2f;0.8,0.65;minus_%s;-]", y, key)
+			fs[#fs + 1] = string.format("button[7.7,%.2f;0.8,0.65;plus_%s;+]", y, key)
 		elseif def.kind == "bool" then
-			fs[#fs + 1] = string.format("checkbox[4.6,%.2f;t_%s;;%s]", y + 0.05, key, value and "true" or "false")
+			fs[#fs + 1] = string.format("checkbox[4.6,%.2f;t_%s;;%s]", y + 0.33, key, value and "true" or "false")
 		else
 			local items, index = {}, 1
 			for i, opt in ipairs(def.options) do
@@ -234,11 +235,11 @@ local function tuning_tab(tuning)
 					index = i
 				end
 			end
-			fs[#fs + 1] = string.format("dropdown[4.6,%.2f;2.6,0.6;t_%s;%s;%d]", y, key, table.concat(items, ","),
+			fs[#fs + 1] = string.format("dropdown[4.6,%.2f;2.6,0.65;t_%s;%s;%d]", y, key, table.concat(items, ","),
 				index)
 		end
-		fs[#fs + 1] = string.format("label[8.7,%.2f;%s]", y + 0.35, esc(changed))
-		y = y + 0.6
+		fs[#fs + 1] = string.format("label[8.7,%.2f;%s]", y + 0.33, esc(changed))
+		y = y + 0.8
 	end
 	return fs
 end
@@ -250,11 +251,11 @@ local function spawn_tab(st)
 		string.format("field[0.5,1.2;4.0,0.8;f_species;Species (name or dex no.);%s]", esc(s.species)),
 		string.format("field[4.8,1.2;2.0,0.8;f_level;Level %d-%d;%s]", M.LEVEL_MIN, M.LEVEL_MAX, esc(s.level)),
 		string.format("field[7.2,1.2;2.0,0.8;f_count;Count %d-%d;%s]", M.COUNT_MIN, M.COUNT_MAX, esc(s.count)),
-		string.format("checkbox[0.5,2.4;f_dread;Dread;%s]", s.dread and "true" or "false"),
-		string.format("checkbox[3.0,2.4;f_shiny;Shiny;%s]", s.shiny and "true" or "false"),
-		string.format("checkbox[5.5,2.4;f_exhausted;Exhausted (ready to catch);%s]",
+		string.format("checkbox[0.5,2.6;f_dread;Dread;%s]", s.dread and "true" or "false"),
+		string.format("checkbox[3.0,2.6;f_shiny;Shiny;%s]", s.shiny and "true" or "false"),
+		string.format("checkbox[5.5,2.6;f_exhausted;Exhausted (ready to catch);%s]",
 			s.exhausted and "true" or "false"),
-		string.format("checkbox[0.5,3.0;f_give;Give to me (party);%s]", s.give and "true" or "false"),
+		string.format("checkbox[0.5,3.3;f_give;Give to me (party);%s]", s.give and "true" or "false"),
 		"button[0.5,4.4;3.0,0.8;spawn;Spawn]",
 		string.format("button[3.8,4.4;3.8,0.8;clear_wild;Clear wild (%d nodes)]", M.CLEAR_RANGE),
 		string.format("button[7.9,4.4;3.6,0.8;exhaust_target;Exhaust target]"),
@@ -265,7 +266,7 @@ end
 local function player_tab(st)
 	local fs = {
 		"button[0.5,1.0;3.0,0.8;heal_party;Heal party]",
-		string.format("field[4.8,1.0;2.0,0.8;f_exp;Exp for the active creature;%s]", esc(st.exp)),
+		string.format("field[4.8,1.0;2.0,0.8;f_exp;Exp to give;%s]", esc(st.exp)),
 		"button[7.2,1.0;3.0,0.8;give_exp;Give exp]",
 		"button[0.5,2.2;3.0,0.8;life_give;+1 life]",
 		"button[3.8,2.2;3.0,0.8;life_revive;Revive]",
@@ -292,7 +293,8 @@ end
 
 -- The formspec string. tuning = { defs, order, values } from the store. st is the panel state.
 function M.formspec(st, tuning)
-	local fs = { "size[12,9]", "bgcolor[#101010ee;true]", header(st) }
+	local fs = { "formspec_version[6]", "size[12,9.5]", "no_prepend[]", "bgcolor[#00000088;true]",
+		"box[0,0;12,9.5;#16161ef2]", header(st) }
 	local tab = st.tab or 1
 	if tab == 1 then
 		for _, line in ipairs(tuning_tab(tuning)) do
@@ -311,7 +313,7 @@ function M.formspec(st, tuning)
 			fs[#fs + 1] = line
 		end
 	end
-	fs[#fs + 1] = string.format("label[0.5,8.4;%s]", esc(st.message or ""))
+	fs[#fs + 1] = string.format("label[0.5,9.0;%s]", esc(st.message or ""))
 	return table.concat(fs, "")
 end
 

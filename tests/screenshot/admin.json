@@ -1,6 +1,72 @@
 [
-	{"name": "admin_tuning", "pos": [0, 180.5, -4.5], "yaw_deg": 0, "pitch_deg": -8, "time_of_day": 0.5, "wait_s": 4, "keep_hud": true, "admin_tab": 1},
-	{"name": "admin_spawn", "pos": [0, 180.5, -4.5], "yaw_deg": 0, "pitch_deg": -8, "time_of_day": 0.5, "wait_s": 4, "keep_hud": true, "admin_tab": 2},
-	{"name": "admin_player", "pos": [0, 180.5, -4.5], "yaw_deg": 0, "pitch_deg": -8, "time_of_day": 0.5, "wait_s": 4, "keep_hud": true, "admin_tab": 3},
-	{"name": "admin_world", "pos": [0, 180.5, -4.5], "yaw_deg": 0, "pitch_deg": -8, "time_of_day": 0.5, "wait_s": 4, "keep_hud": true, "admin_tab": 4}
+ {
+  "name": "admin_tuning",
+  "pos": [
+   0,
+   180.5,
+   -4.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.5,
+  "wait_s": 2,
+  "keep_hud": true,
+  "admin_tab": 1
+ },
+ {
+  "name": "admin_spawn",
+  "pos": [
+   0,
+   180.5,
+   -4.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.5,
+  "wait_s": 4,
+  "keep_hud": true,
+  "admin_tab": 2
+ },
+ {
+  "name": "admin_player",
+  "pos": [
+   0,
+   180.5,
+   -4.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.5,
+  "wait_s": 4,
+  "keep_hud": true,
+  "admin_tab": 3
+ },
+ {
+  "name": "admin_world",
+  "pos": [
+   0,
+   180.5,
+   -4.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.5,
+  "wait_s": 4,
+  "keep_hud": true,
+  "admin_tab": 4
+ },
+ {
+  "name": "admin_tuning2",
+  "pos": [
+   0,
+   180.5,
+   -4.5
+  ],
+  "yaw_deg": 0,
+  "pitch_deg": -8,
+  "time_of_day": 0.5,
+  "wait_s": 4,
+  "keep_hud": true,
+  "admin_tab": 1
+ }
 ]

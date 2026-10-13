@@ -251,7 +251,7 @@ describe("admin_logic formspec", function()
 	it("names the four tabs in the tab header", function()
 		local fs = A.formspec(A.default_state(), tuning())
 		assert.is_truthy(fs:find("tabheader[0,0;tabs;Tuning,Spawn,Player,World;1;false;true]", 1, true))
-		assert.is_truthy(fs:find("size[12,9]", 1, true))
+		assert.is_truthy(fs:find("size[12,9.5]", 1, true))
 	end)
 
 	it("has one row per tuning key on the Tuning tab", function()

@@ -46,7 +46,8 @@ end)
 -- after a reset).
 local TUNING = load_module("tuning")
 local storage = core.get_mod_storage()
-minemon.tuning = TUNING.create(core.parse_json(storage:get_string("tuning")) or {}, function(values)
+local saved_tuning = storage:get_string("tuning")
+minemon.tuning = TUNING.create(saved_tuning ~= "" and core.parse_json(saved_tuning) or {}, function(values)
 	storage:set_string("tuning", core.write_json(values) or "{}")
 end)
 minemon.tuning.logic = TUNING
